@@ -1,7 +1,7 @@
 "use client";
 
 
-export default function ProjectsPage() {
+export default function ProjectPage() {
 
     return (
         <div className=""></div>

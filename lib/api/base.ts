@@ -76,9 +76,10 @@ export async function handleResponse<T extends z.ZodTypeAny>(
  *
  * @param endpoint The API endpoint to call.
  * @param options The fetch options.
+ * @param signal Optional AbortSignal for request cancellation.
  * @returns The fetch Response object.
  */
-async function http(endpoint: string, options: RequestInit): Promise<Response> {
+async function http(endpoint: string, options: RequestInit, signal?: AbortSignal): Promise<Response> {
     const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || '';
     const url = `${apiBaseUrl}${endpoint}`;
 
@@ -101,7 +102,7 @@ async function http(endpoint: string, options: RequestInit): Promise<Response> {
         if (options.body instanceof FormData) {
             headers.delete('Content-Type');
         }
-        return fetch(url, { ...options, headers });
+        return fetch(url, { ...options, headers, signal });
     };
 
     // 1. Make the initial request
@@ -173,6 +174,7 @@ async function http(endpoint: string, options: RequestInit): Promise<Response> {
 type FetcherConfig<T extends z.ZodTypeAny> = {
     endpoint: string;
     dataSchema: T;
+    signal?: AbortSignal;
 };
 
 /**
@@ -180,12 +182,14 @@ type FetcherConfig<T extends z.ZodTypeAny> = {
  *
  * @param endpoint The API endpoint to call.
  * @param dataSchema The Zod schema for the expected data payload (e.g., MUserSchema).
+ * @param signal Optional AbortSignal for request cancellation.
  */
 export const fetcher = async <T extends z.ZodTypeAny>(
     endpoint: string,
-    dataSchema: T
+    dataSchema: T,
+    signal?: AbortSignal
 ): Promise<z.infer<T>> => {
-    const response = await http(endpoint, { method: 'GET' }); // Assuming a proxy to your backend
+    const response = await http(endpoint, { method: 'GET' }, signal); // Assuming a proxy to your backend
 
     // We expect the data to be wrapped in a DataResponse
     const wrappedSchema = DataResponseSchema(dataSchema);
@@ -213,7 +217,7 @@ export async function fetcherWithRetry<T extends z.ZodTypeAny>(
     backoff = 300
 ): Promise<z.infer<T>> {
     try {
-        return await fetcher(config.endpoint, config.dataSchema);
+        return await fetcher(config.endpoint, config.dataSchema, config.signal);
     } catch (error) {
         if (retries > 0 && error instanceof ApiError && error.code >= 500) {
             await new Promise(resolve => setTimeout(resolve, backoff));
@@ -228,12 +232,14 @@ export async function fetcherWithRetry<T extends z.ZodTypeAny>(
  *
  * @param endpoint The API endpoint to call.
  * @param dataSchema The Zod schema for the expected raw data payload (e.g., MUserSchema).
+ * @param signal Optional AbortSignal for request cancellation.
  */
 export const fetcherUnwrapped = async <T extends z.ZodTypeAny>(
     endpoint: string,
-    dataSchema: T
+    dataSchema: T,
+    signal?: AbortSignal
 ): Promise<z.infer<T>> => {
-    const response = await http(endpoint, { method: 'GET' });
+    const response = await http(endpoint, { method: 'GET' }, signal);
 
     if (response.status === 204) {
         return null as z.infer<T>;
@@ -259,18 +265,20 @@ type MutatorOptions = {
  * @param method The HTTP method.
  * @param responseSchema The Zod schema for the entire expected response (e.g., TokenResponseSchema).
  * @param options The request body.
+ * @param signal Optional AbortSignal for request cancellation.
  */
 export const mutator = async <T extends z.ZodTypeAny>(
     endpoint: string,
     method: 'post' | 'put' | 'delete' | 'patch',
     responseSchema: T,
-    options: MutatorOptions
+    options: MutatorOptions,
+    signal?: AbortSignal
 ): Promise<z.infer<T>> => {
     const response = await http(endpoint, {
         method: method.toUpperCase(),
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(options.arg),
-    });
+    }, signal);
 
     return handleResponse(response, responseSchema);
 };
@@ -282,19 +290,21 @@ export const mutator = async <T extends z.ZodTypeAny>(
  * @param method The HTTP method.
  * @param responseSchema The Zod schema for the entire expected response.
  * @param options The FormData payload.
+ * @param signal Optional AbortSignal for request cancellation.
  */
 export const formDataMutator = async <T extends z.ZodTypeAny>(
     endpoint: string,
     method: 'post' | 'put' | 'patch',
     responseSchema: T,
-    options: { arg: FormData }
+    options: { arg: FormData },
+    signal?: AbortSignal
 ): Promise<z.infer<T>> => {
     const response = await http(endpoint, {
         method: method.toUpperCase(),
         // NOTE: DO NOT set the 'Content-Type' header.
         // The browser does this automatically for FormData and includes the required boundary.
         body: options.arg,
-    });
+    }, signal);
 
     // The handleResponse function you already have will work perfectly here.
     return handleResponse(response, responseSchema);

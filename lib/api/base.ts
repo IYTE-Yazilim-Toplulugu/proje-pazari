@@ -1,6 +1,5 @@
 import { z } from 'zod';
 import Cookies from 'js-cookie';
-
 import { refreshToken } from './auth';
 import { BasicResponseSchema, DataResponseSchema, ResponseCode, ResponseCodeSchema } from '../models/Api';
 
@@ -80,6 +79,14 @@ async function http(endpoint: string, options: RequestInit): Promise<Response> {
     const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || '';
     const url = `${apiBaseUrl}${endpoint}`;
 
+    // Add request/response logging in dev
+    if (process.env.NODE_ENV === 'development') {
+        console.group('API Request');
+        console.log('URL:', url);
+        console.log('Options:', options);
+        console.groupEnd();
+    }
+
     // Get the current access token
     const token = Cookies.get('authToken');
 
@@ -158,6 +165,14 @@ async function http(endpoint: string, options: RequestInit): Promise<Response> {
 
 
 /**
+ * Configuration for fetcher functions.
+ */
+type FetcherConfig<T extends z.ZodTypeAny> = {
+    endpoint: string;
+    dataSchema: T;
+};
+
+/**
  * The revised fetcher for GET requests.
  *
  * @param endpoint The API endpoint to call.
@@ -180,6 +195,30 @@ export const fetcher = async <T extends z.ZodTypeAny>(
     // @ts-ignore
     return parsed.data;
 };
+
+/**
+ * Fetcher with retry logic for handling server errors.
+ * Automatically retries requests on 5xx errors with exponential backoff.
+ *
+ * @param config The fetcher configuration containing endpoint and schema.
+ * @param retries Number of retry attempts (default: 3).
+ * @param backoff Initial backoff delay in milliseconds (default: 300).
+ */
+export async function fetcherWithRetry<T extends z.ZodTypeAny>(
+    config: FetcherConfig<T>,
+    retries = 3,
+    backoff = 300
+): Promise<z.infer<T>> {
+    try {
+        return await fetcher(config.endpoint, config.dataSchema);
+    } catch (error) {
+        if (retries > 0 && error instanceof ApiError && error.code >= 500) {
+            await new Promise(resolve => setTimeout(resolve, backoff));
+            return fetcherWithRetry(config, retries - 1, backoff * 2);
+        }
+        throw error;
+    }
+}
 
 /**
  * A fetcher for GET requests that return the raw data object directly, not wrapped in a DataResponse.

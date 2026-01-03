@@ -5,6 +5,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { AuthProvider } from '@/lib/contexts/AuthContext';
 import { useState } from 'react';
 import { useToast } from '@/lib/hooks/useToast';
+import ApiStatus from '@/components/shared/ApiStatus';
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   const { error: showError } = useToast();
@@ -37,6 +38,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
 
   return (
     <QueryClientProvider client={queryClient}>
+      <ApiStatus />
       <AuthProvider>
         {children}
       </AuthProvider>

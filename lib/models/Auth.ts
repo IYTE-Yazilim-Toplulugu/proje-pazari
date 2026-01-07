@@ -19,7 +19,7 @@ export const RegisterRequestSchema = z.object({
     password: z.string().optional(),
     oauth_code: z.string().optional(),
     email: z.email(),
-    phone_number: z.string().regex(/^\+\d+$/, "Phone number must start with a country code (e.g., +90) and contain no spaces."),
+    phone_number: z.string().regex(/^\+\d+$/, "Phone number must start with a country code (e.g., +90) and contain no spaces.").optional(),
     birth_date: z.string().optional(),
 }).refine(data => data.password != null || data.oauth_code != null, {
     message: "Either 'password' or 'oauth_code' must be provided.",

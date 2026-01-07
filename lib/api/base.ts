@@ -26,10 +26,10 @@ import { BasicResponseSchema, DataResponseSchema, ResponseCode, ResponseCodeSche
  * A custom error class to handle structured API errors.
  */
 export class ApiError extends Error {
-    readonly code: number;
+    readonly code: ResponseCode;
     readonly details?: Record<string, number>;
 
-    constructor(message: string, code: number, details?: Record<string, number>) {
+    constructor(message: string, code: ResponseCode, details?: Record<string, number>) {
         super(message);
         this.name = 'ApiError';
         this.code = code;
@@ -50,7 +50,7 @@ export async function handleResponse<T extends z.ZodTypeAny>(
         // Handle HTTP errors (e.g., 500 Internal Server Error)
         throw new ApiError(
             `HTTP error! status: ${response.status}`,
-            response.status
+            response.status as ResponseCode
         );
     }
 
@@ -61,7 +61,7 @@ export async function handleResponse<T extends z.ZodTypeAny>(
         // Handle API-level errors defined by the `code` field
         throw new ApiError(
             parsedResponse.message || 'An API error occurred.',
-            response.status,
+            parsedResponse.code,
             parsedResponse.codes
         );
     }

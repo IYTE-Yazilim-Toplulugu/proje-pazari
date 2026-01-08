@@ -1,45 +1,46 @@
 'use client';
-import { useEffect, useState } from 'react';
-import Link from 'next/link';
+import { useState } from 'react';
 
-import { authModel } from '@/lib/models';
-import { RegisterCompleteStatusSchema } from '@/lib/models/Auth';
+export default function RegisterCompletePage() {
+    const [resending, setResending] = useState(false);
+    const [resent, setResent] = useState(false);
 
-const RegisterCompletePage = () => {
-    const [message, setMessage] = useState('Verifying your account...');
-
-    useEffect(() => {
-
-        const query = Object.fromEntries(new URLSearchParams(window.location.search));
-        const result = authModel.RegisterCompleteQuerySchema.safeParse(query);
-
-        if (!result.success) {
-            setMessage('Invalid verification link. Please try again.');
-            return;
+    const handleResend = async () => {
+        setResending(true);
+        try {
+            await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/auth/resend-verification`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: /* get from storage or form */ }),
+            });
+            setResent(true);
+        } catch (error) {
+            console.error('Error resending verification:', error);
+        } finally {
+            setResending(false);
         }
-
-        switch (result.data.code) {
-            case RegisterCompleteStatusSchema.enum.Success:
-                setMessage('Your account has been successfully verified! You can now log in.');
-                break;
-            case RegisterCompleteStatusSchema.enum.UserNotFound:
-            case RegisterCompleteStatusSchema.enum.FailedParse:
-                setMessage('This verification link is invalid or has expired.');
-                break;
-            case RegisterCompleteStatusSchema.enum.InternalError:
-            default:
-                setMessage('An internal error occurred. Please contact support.');
-                break;
-        }
-    }, []);
+    };
 
     return (
-        <div>
-            <h1>Registration Verification</h1>
-            <p>{message}</p>
-            <Link href="/login">Go to Login</Link>
+        <div className="form-container">
+            <h1 className="form-title">Verify Your Email</h1>
+            <p className="text-center text-gray-600 dark:text-gray-400 mb-6">
+                We've sent a verification email to your IYTE email address.
+            </p>
+
+            {resent ? (
+                <p className="text-center text-green-600 dark:text-green-400">
+                    Verification email resent successfully!
+                </p>
+            ) : (
+                <button
+                    onClick={handleResend}
+                    disabled={resending}
+                    className="form-button-secondary"
+                >
+                    {resending ? 'Sending...' : 'Resend Verification Email'}
+                </button>
+            )}
         </div>
     );
-};
-
-export default RegisterCompletePage;
+}

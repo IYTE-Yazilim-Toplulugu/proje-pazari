@@ -1,21 +1,27 @@
 'use client';
-import { useEffect } from 'react';
-import { useRouter } from 'next/router';
+import { useEffect, useState, Suspense } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 import { authModel } from '@/lib/models';
-import { useRegister, useLogin } from '@/lib/hooks/authHooks'; // Assuming login can be initiated from here
+import { useRegister } from '@/lib/hooks/authHooks';
 import { GStatusSchema } from '@/lib/models/Auth';
 
-const OAuthCompletePage = () => {
+function OAuthCompleteContent() {
     const router = useRouter();
+    const searchParams = useSearchParams();
     const { mutate: registerUser } = useRegister();
-    // You might need a way to log in without a password using a one-time code
-    // For now, we'll focus on the registration part.
+    const [processed, setProcessed] = useState(false);
 
     useEffect(() => {
-        if (!router.isReady) return;
+        if (processed) return;
 
-        const result = authModel.OAuthCompleteQuerySchema.safeParse(router.query);
+        // Convert searchParams to an object for parsing
+        const queryObject: Record<string, string> = {};
+        searchParams.forEach((value, key) => {
+            queryObject[key] = value;
+        });
+
+        const result = authModel.OAuthCompleteQuerySchema.safeParse(queryObject);
 
         if (!result.success) {
             // Handle invalid query parameters
@@ -25,12 +31,13 @@ const OAuthCompletePage = () => {
             return;
         }
 
+        setProcessed(true);
         const { status, name, surname, email, vcode, token, rtoken, msg, code } = result.data;
 
         switch (status) {
             case GStatusSchema.enum.SuccessfulJwtTokenProvided:
                 // User is already registered and logged in.
-                console.log('OAuth login successful, storing tokens...');
+                console.log('OAuth login successful, storing tokens...', token, rtoken);
                 // Store token and rtoken here, invalidate session, redirect.
                 alert('Successfully logged in!');
                 router.push('/dashboard');
@@ -55,9 +62,15 @@ const OAuthCompletePage = () => {
                 break;
         }
 
-    }, [router.isReady, router.query, registerUser, router]);
+    }, [searchParams, registerUser, router, processed]);
 
     return <div>Processing your authentication...</div>;
-};
+}
 
-export default OAuthCompletePage;
+export default function OAuthCompletePage() {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <OAuthCompleteContent />
+        </Suspense>
+    );
+}

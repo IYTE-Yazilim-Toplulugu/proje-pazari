@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { useToast } from '@/lib/hooks/useToast';
 
 const ForgotPasswordSchema = z.object({
     email: z.string().email('Invalid Email address'),
@@ -12,6 +13,7 @@ type ForgotPasswordForm = z.infer<typeof ForgotPasswordSchema>;
 
 export default function ForgotPasswordPage() {
     const [submitted, setSubmitted] = useState(false);
+    const { success, error: showError } = useToast();
     const { register, handleSubmit, formState: { errors } } = useForm<ForgotPasswordForm>({
         resolver: zodResolver(ForgotPasswordSchema),
     });
@@ -25,8 +27,9 @@ export default function ForgotPasswordPage() {
                 body: JSON.stringify(data),
             });
             setSubmitted(true);
+            success('Email Sent', 'Password reset instructions have been sent to your email.');
         } catch (error) {
-            console.error('Error sending reset email:', error);
+            showError('Error', 'Failed to send reset email. Please try again.');
         }
     };
 

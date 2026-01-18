@@ -1,18 +1,20 @@
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
+import { Suspense, useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSearchParams } from 'next/navigation';
 import { authModel } from '@/lib/models';
 import { useRegister } from '@/lib/hooks/authHooks';
 import { GStatusSchema } from '@/lib/models/Auth';
+import { useTranslations } from 'next-intl';
 
-export default function OAuthCompletePage() {
+function OAuthCompleteContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const { mutate: registerUser } = useRegister();
     const [isProcessing, setIsProcessing] = useState(true);
     const hasProcessed = useRef(false);
+    const t = useTranslations('oauth');
 
     useEffect(() => {
         // Prevent duplicate execution
@@ -38,13 +40,13 @@ export default function OAuthCompletePage() {
 
         if (!result.success) {
             console.error('Invalid OAuth callback params:', result.error);
-            alert('OAuth doğrulama sırasında geçersiz parametreler.');
+            alert(t('invalidParams'));
             router.push('/login');
             setIsProcessing(false);
             return;
         }
 
-        setProcessed(true);
+        hasProcessed.current = true;
         const { status, name, surname, email, vcode, token, rtoken, msg, code } = result.data;
 
         // Handle OAuth status inside useEffect to avoid dependency issues
@@ -62,15 +64,15 @@ export default function OAuthCompletePage() {
                             window.localStorage.setItem('access_token', token);
                             window.localStorage.setItem('refresh_token', rtoken);
 
-                            alert('Başarıyla giriş yaptınız!');
+                            alert(t('loginSuccess'));
                             router.push('/dashboard');
                         } catch (error) {
                             console.error('Tokenlar localStorage içine kaydedilirken bir hata oluştu:', error);
-                            alert('Oturum bilgileri saklanırken bir hata oluştu. Lütfen tekrar giriş yapın.');
+                            alert(t('tokenStorageError'));
                             router.push('/login');
                         }
                     } else {
-                        alert('Token bilgileri eksik');
+                        alert(t('missingTokens'));
                         router.push('/login');
                     }
                     setIsProcessing(false);
@@ -90,20 +92,20 @@ export default function OAuthCompletePage() {
                             {
                                 onSuccess: () => {
                                     console.log('Kayıt Başarılı');
-                                    alert('Kayıt başarılı! Hoş geldiniz.');
+                                    alert(t('registrationSuccess'));
                                     router.push('/dashboard');
                                     setIsProcessing(false);
                                 },
                                 onError: (error) => {
                                     console.error('Kayıt başarısız:', error);
-                                    alert('Kayıt sırasında bir hata oluştu. Lütfen tekrar deneyin.');
+                                    alert(t('registrationError'));
                                     router.push('/register');
                                     setIsProcessing(false);
                                 },
                             }
                         );
                     } else {
-                        alert('Kullanıcı bilgileri eksik');
+                        alert(t('missingUserInfo'));
                         router.push('/register');
                         setIsProcessing(false);
                     }
@@ -111,28 +113,28 @@ export default function OAuthCompletePage() {
 
                 case GStatusSchema.enum.SessionGenerationError:
                     console.error('Session error:', msg);
-                    alert(`Oturum Hatası: ${msg || 'Bilinmeyen hata'}`);
+                    alert(t('sessionError', { msg: msg || t('common.unknownError') }));
                     router.push('/login');
                     setIsProcessing(false);
                     break;
 
                 case GStatusSchema.enum.AuthenticationError:
                     console.error('Authentication error:', code);
-                    alert(`Kimlik Doğrulama Hatası: ${code || 'Bilinmeyen hata'}`);
+                    alert(t('authError', { code: code || t('common.unknownError') }));
                     router.push('/login');
                     setIsProcessing(false);
                     break;
 
                 default:
                     console.error('Unknown status:', status);
-                    alert('Beklenmeyen bir durum oluştu.');
+                    alert(t('unexpectedStatus'));
                     router.push('/login');
                     setIsProcessing(false);
             }
         };
 
         handleOAuthStatus();
-    }, [searchParams, registerUser, router]);
+    }, [searchParams, registerUser, router, t]);
 
     if (isProcessing) {
         return (
@@ -140,10 +142,10 @@ export default function OAuthCompletePage() {
                 <div className="text-center">
                     <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-blue-600 mx-auto mb-4"></div>
                     <h2 className="text-xl font-semibold text-gray-800 mb-2">
-                        Kimlik Doğrulaması Yapılıyor
+                        {t('processing.title')}
                     </h2>
                     <p className="text-gray-600">
-                        Lütfen bekleyin, bilgileriniz işleniyor...
+                        {t('processing.description')}
                     </p>
                 </div>
             </div>
@@ -151,4 +153,18 @@ export default function OAuthCompletePage() {
     }
 
     return null;
+}
+
+export default function OAuthCompletePage() {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen flex items-center justify-center bg-gray-50">
+                <div className="text-center">
+                    <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-blue-600 mx-auto mb-4"></div>
+                </div>
+            </div>
+        }>
+            <OAuthCompleteContent />
+        </Suspense>
+    );
 }

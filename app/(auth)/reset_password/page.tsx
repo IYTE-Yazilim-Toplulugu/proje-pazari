@@ -1,8 +1,7 @@
 'use client';
 
+import { Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-
-
 import { z } from 'zod';
 
 const ResetPasswordSchema = z.object({
@@ -15,10 +14,19 @@ const ResetPasswordSchema = z.object({
 
 type ResetPasswordForm = z.infer<typeof ResetPasswordSchema>;
 
-export default function ResetPasswordPage() {
+function ResetPasswordContent() {
     const router = useRouter();
-    const SearchParams = useSearchParams();
-    const token = SearchParams.get('token');
+    const searchParams = useSearchParams();
+    const token = searchParams.get('token');
 
     // Implementation similar to forgot password
+    return null;
+}
+
+export default function ResetPasswordPage() {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <ResetPasswordContent />
+        </Suspense>
+    );
 }

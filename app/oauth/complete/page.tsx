@@ -44,6 +44,7 @@ export default function OAuthCompletePage() {
             return;
         }
 
+        setProcessed(true);
         const { status, name, surname, email, vcode, token, rtoken, msg, code } = result.data;
 
         // Handle OAuth status inside useEffect to avoid dependency issues

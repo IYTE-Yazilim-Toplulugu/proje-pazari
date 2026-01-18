@@ -20,7 +20,7 @@ function ResetPasswordContent() {
     const token = searchParams.get('token');
 
     // Implementation similar to forgot password
-    return null;
+    return <div>Reset Password</div>;
 }
 
 export default function ResetPasswordPage() {

@@ -7,6 +7,7 @@ import { authModel } from '@/lib/models';
 import { useRegister } from '@/lib/hooks/authHooks';
 import { GStatusSchema } from '@/lib/models/Auth';
 import { useTranslations } from 'next-intl';
+import { useToast } from '@/lib/hooks/useToast';
 
 function OAuthCompleteContent() {
     const router = useRouter();
@@ -15,6 +16,7 @@ function OAuthCompleteContent() {
     const [isProcessing, setIsProcessing] = useState(true);
     const hasProcessed = useRef(false);
     const t = useTranslations('oauth');
+    const { success, error: showError } = useToast();
 
     useEffect(() => {
         // Prevent duplicate execution
@@ -40,7 +42,7 @@ function OAuthCompleteContent() {
 
         if (!result.success) {
             console.error('Invalid OAuth callback params:', result.error);
-            alert(t('invalidParams'));
+            showError(t('invalidParams'));
             router.push('/login');
             setIsProcessing(false);
             return;
@@ -64,15 +66,15 @@ function OAuthCompleteContent() {
                             window.localStorage.setItem('access_token', token);
                             window.localStorage.setItem('refresh_token', rtoken);
 
-                            alert(t('loginSuccess'));
+                            success(t('loginSuccess'));
                             router.push('/dashboard');
                         } catch (error) {
                             console.error('Tokenlar localStorage içine kaydedilirken bir hata oluştu:', error);
-                            alert(t('tokenStorageError'));
+                            showError(t('tokenStorageError'));
                             router.push('/login');
                         }
                     } else {
-                        alert(t('missingTokens'));
+                        showError(t('missingTokens'));
                         router.push('/login');
                     }
                     setIsProcessing(false);
@@ -92,20 +94,20 @@ function OAuthCompleteContent() {
                             {
                                 onSuccess: () => {
                                     console.log('Kayıt Başarılı');
-                                    alert(t('registrationSuccess'));
+                                    success(t('registrationSuccess'));
                                     router.push('/dashboard');
                                     setIsProcessing(false);
                                 },
                                 onError: (error) => {
                                     console.error('Kayıt başarısız:', error);
-                                    alert(t('registrationError'));
+                                    showError(t('registrationError'));
                                     router.push('/register');
                                     setIsProcessing(false);
                                 },
                             }
                         );
                     } else {
-                        alert(t('missingUserInfo'));
+                        showError(t('missingUserInfo'));
                         router.push('/register');
                         setIsProcessing(false);
                     }
@@ -113,28 +115,28 @@ function OAuthCompleteContent() {
 
                 case GStatusSchema.enum.SessionGenerationError:
                     console.error('Session error:', msg);
-                    alert(t('sessionError', { msg: msg || t('common.unknownError') }));
+                    showError(t('sessionError', { msg: msg || t('common.unknownError') }));
                     router.push('/login');
                     setIsProcessing(false);
                     break;
 
                 case GStatusSchema.enum.AuthenticationError:
                     console.error('Authentication error:', code);
-                    alert(t('authError', { code: code || t('common.unknownError') }));
+                    showError(t('authError', { code: code || t('common.unknownError') }));
                     router.push('/login');
                     setIsProcessing(false);
                     break;
 
                 default:
                     console.error('Unknown status:', status);
-                    alert(t('unexpectedStatus'));
+                    showError(t('unexpectedStatus'));
                     router.push('/login');
                     setIsProcessing(false);
             }
         };
 
         handleOAuthStatus();
-    }, [searchParams, registerUser, router, t]);
+    }, [searchParams, registerUser, router, t, success, showError]);
 
     if (isProcessing) {
         return (

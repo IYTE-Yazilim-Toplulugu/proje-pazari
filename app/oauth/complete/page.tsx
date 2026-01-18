@@ -90,6 +90,7 @@ function OAuthCompleteContent() {
                                 surname,
                                 email,
                                 oauth_code: vcode,
+                                phone_number: '',
                             },
                             {
                                 onSuccess: () => {

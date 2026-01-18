@@ -14,7 +14,7 @@ export const logout = (payload: authModel.LogoutRequest) =>
     mutator('/auth/logout', 'post', apiModel.BasicResponseSchema, { arg: payload });
 
 /** [POST] /auth/register - Registers a new user. */
-export const register = (payload: authModel.RegisterRequest) =>
+export const register = (payload: authModel.RegisterRequest | authModel.OAuthRegisterRequest) =>
     mutator('/auth/register', 'post', apiModel.BasicResponseSchema, { arg: payload });
 
 /** [POST] /auth/refresh - Refreshes the user session. */

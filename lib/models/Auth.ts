@@ -19,7 +19,7 @@ export const RegisterRequestSchema = z.object({
     password: z.string().optional(),
     oauth_code: z.string().optional(),
     email: z.email(),
-    phone_number: z.string().regex(/^\+\d+$/, "Phone number must start with a country code (e.g., +90) and contain no spaces.").optional(),
+    phone_number: z.string().regex(/^\+\d+$/, "Phone number must start with a country code (e.g., +90) and contain no spaces."),
     birth_date: z.string().optional(),
 }).refine(data => data.password != null || data.oauth_code != null, {
     message: "Either 'password' or 'oauth_code' must be provided.",
@@ -28,6 +28,9 @@ export const RegisterRequestSchema = z.object({
     message: "Cannot provide both 'password' and 'oauth_code'.",
     path: ["oauth_code"],
 });
+
+// OAuth registration doesn't have phone_number from provider
+export const OAuthRegisterRequestSchema = RegisterRequestSchema.omit({ phone_number: true });
 
 export const RefreshTokenRequestSchema = z.object({
     token: z.string(),
@@ -111,6 +114,8 @@ export const RegisterFormSchema = RegisterRequestSchema.safeExtend({
 export type LoginRequest = z.infer<typeof LoginRequestSchema>;
 export type LogoutRequest = z.infer<typeof LogoutRequestSchema>;
 export type RegisterRequest = z.infer<typeof RegisterRequestSchema>;
+export type OAuthRegisterRequest = z.infer<typeof OAuthRegisterRequestSchema>;
 export type RefreshTokenRequest = z.infer<typeof RefreshTokenRequestSchema>;
 export type OAuthCompleteQuery = z.infer<typeof OAuthCompleteQuerySchema>;
 export type RegisterForm = z.infer<typeof RegisterFormSchema>;
+

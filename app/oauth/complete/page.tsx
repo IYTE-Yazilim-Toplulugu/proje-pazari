@@ -53,11 +53,21 @@ export default function OAuthCompletePage() {
                     console.log('OAuth login başarılı, tokenlar kaydediliyor...');
 
                     if (token && rtoken) {
-                        localStorage.setItem('access_token', token);
-                        localStorage.setItem('refresh_token', rtoken);
+                        try {
+                            if (typeof window === 'undefined' || !window.localStorage) {
+                                throw new Error('localStorage is not available in this environment.');
+                            }
 
-                        alert('Başarıyla giriş yaptınız!');
-                        router.push('/dashboard');
+                            window.localStorage.setItem('access_token', token);
+                            window.localStorage.setItem('refresh_token', rtoken);
+
+                            alert('Başarıyla giriş yaptınız!');
+                            router.push('/dashboard');
+                        } catch (error) {
+                            console.error('Tokenlar localStorage içine kaydedilirken bir hata oluştu:', error);
+                            alert('Oturum bilgileri saklanırken bir hata oluştu. Lütfen tekrar giriş yapın.');
+                            router.push('/login');
+                        }
                     } else {
                         alert('Token bilgileri eksik');
                         router.push('/login');

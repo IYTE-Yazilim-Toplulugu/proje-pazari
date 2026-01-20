@@ -17,6 +17,12 @@ export const MUserSchema = z.object({
     email_verification_code_expires: z.iso.datetime().nullable().optional(),
     phone_verification_code_expires: z.iso.datetime().nullable().optional(),
     sessions: z.any().nullable().optional(),
+    // Profile fields
+    description: z.string().nullable().optional(),
+    phone: z.string().nullable().optional(),
+    profilePictureUrl: z.string().nullable().optional(),
+    linkedinUrl: z.string().nullable().optional(),
+    githubUrl: z.string().nullable().optional(),
 });
 
 // --- Type Exports ---

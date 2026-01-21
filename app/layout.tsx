@@ -22,8 +22,22 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Parayüz",
-  description: "",
+  title: {
+    default: 'IYTE Proje Pazarı',
+    template: '%s | IYTE Proje Pazarı',
+  },
+  description: 'İzmir Yüksek Teknoloji Enstitüsü öğrencilerinin projeler üzerinde işbirliği yapabileceği platform',
+  icons: {
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' }, // Good fallback for old browsers
+      { url: '/favicon.svg', type: 'image/svg+xml' }, // High quality for modern browsers
+      { url: '/favicon-96x96.png', sizes: '96x96', type: 'image/png' },
+    ],
+    apple: [
+      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+    ],
+  },
+  manifest: '/site.webmanifest',
 };
 
 export default async function RootLayout({

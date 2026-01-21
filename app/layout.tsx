@@ -61,8 +61,17 @@ export const metadata: Metadata = {
     images: ['/twitter-image.png'],
     creator: '@iyteyazilim',
   },
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
+    { media: '(prefers-color-scheme: dark)', color: '#0f172a' },
+  ],
+  viewport: {
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 5,
+  },
 };
-
+s
 export default async function RootLayout({
   children,
 }: Readonly<{

@@ -38,6 +38,29 @@ export const metadata: Metadata = {
     ],
   },
   manifest: '/site.webmanifest',
+  openGraph: {
+    title: 'IYTE Proje Pazarı',
+    description: 'İzmir Yüksek Teknoloji Enstitüsü öğrencileri için proje işbirliği platformu',
+    url: 'https://projepazari.iyte.edu.tr',
+    siteName: 'IYTE Proje Pazarı',
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'IYTE Proje Pazarı',
+      },
+    ],
+    locale: 'tr_TR',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'IYTE Proje Pazarı',
+    description: 'İzmir Yüksek Teknoloji Enstitüsü öğrencileri için proje işbirliği platformu',
+    images: ['/twitter-image.png'],
+    creator: '@iyteyazilim',
+  },
 };
 
 export default async function RootLayout({

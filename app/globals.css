@@ -16,7 +16,21 @@
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
+    --iyte-blue: #0ea5e9;
+    --iyte-dark-blue: #0284c7;
+    --iyte-light-blue: #38bdf8;
+    --primary: var(--iyte-blue);
+    --primary-foreground: 0 0% 100%;
   }
+}
+
+@keyframes progress {
+  0% { width: 0; }
+  100% { width: 100%; }
+}
+
+.animate-progress {
+  animation: progress 1.5s ease-in-out infinite;
 }
 
 body {

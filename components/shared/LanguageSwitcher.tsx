@@ -2,17 +2,19 @@
 
 import {useLocale, useTranslations} from 'next-intl';
 import {locales} from '@/i18n';
+import { setLocale } from '@/lib/actions/locale';
 import {useTransition} from 'react';
+import {useRouter} from 'next/navigation';
 
 export default function LanguageSwitcher() {
   const locale = useLocale();
-  const t = useTranslations('common');
+  const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
   const switchLocale = (newLocale: string) => {
-    startTransition(() => {
-      document.cookie = `NEXT_LOCALE=${newLocale}; path=/; max-age=31536000`;
-      window.location.reload();
+    startTransition(async () => {
+      await setLocale(newLocale as any);
+      router.refresh();
     });
   };
 

@@ -9,6 +9,12 @@ import { userModel, apiModel, authModel } from "../models";
 import { auth, user } from '../api';
 import { ApiError } from '../api/base';
 
+import { useEffect } from 'react';
+import { useLocale } from 'next-intl';
+import { setLocale } from '../actions/locale';
+import { getCurrentUser } from '../api/user';
+
+
 // The query key for the main user session from our previous discussion
 const SESSION_QUERY_KEY = ['session'];
 
@@ -112,3 +118,19 @@ export const useAuthStatus = () => {
         staleTime: 5 * 60 * 1000, // 5 minutes
     });
 };
+
+export const useUserLanguage = () => {
+    const currentLocale = useLocale();
+
+    const { data: user } = useQuery({
+        queryKey: SESSION_QUERY_KEY,
+        queryFn: getCurrentUser,
+        staleTime: 5 * 60 * 1000,
+    })
+
+    useEffect(() => {
+        if (user?.language && user.language !== currentLocale) {
+            setLocale(user.language as 'tr' | 'en');
+        }
+    }, [user?.language, currentLocale]);
+}

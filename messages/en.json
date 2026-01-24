@@ -1,0 +1,83 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "success": "Success",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "back": "Back",
+    "search": "Search"
+  },
+  "nav": {
+    "home": "Home",
+    "projects": "Projects",
+    "profile": "My Profile",
+    "login": "Login",
+    "register": "Register",
+    "logout": "Logout"
+  },
+  "auth": {
+    "login": {
+      "title": "Login",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Login",
+      "forgotPassword": "Forgot Password",
+      "noAccount": "Don't have an account?",
+      "signUp": "Sign up"
+    },
+    "register": {
+      "title": "Register",
+      "name": "First Name",
+      "surname": "Last Name",
+      "email": "Email",
+      "password": "Password",
+      "confirmPassword": "Confirm Password",
+      "submit": "Register",
+      "hasAccount": "Already have an account?",
+      "signIn": "Sign in"
+    }
+  },
+  "projects": {
+    "title": "Projects",
+    "create": "New Project",
+    "search": "Search projects...",
+    "filter": "Filter",
+    "status": {
+      "DRAFT": "Draft",
+      "OPEN": "Open",
+      "IN_PROGRESS": "In Progress",
+      "COMPLETED": "Completed",
+      "CANCELLED": "Cancelled"
+    },
+    "details": {
+      "apply": "Apply",
+      "applications": "Applications",
+      "owner": "Project Owner",
+      "team": "Team",
+      "requirements": "Requirements"
+    }
+  },
+  "profile": {
+    "title": "My Profile",
+    "edit": "Edit Profile",
+    "myProjects": "My Projects",
+    "myApplications": "My Applications",
+    "settings": "Settings",
+    "about": "About",
+    "contact": "Contact Information",
+    "social": "Social Links",
+    "language": "Language Preference"
+  },
+  "errors": {
+    "required": "This field is required",
+    "invalidEmail": "Invalid email address",
+    "passwordMismatch": "Passwords do not match",
+    "minLength": "Must be at least {min} characters",
+    "maxLength": "Must be at most {max} characters",
+    "notFound": "Page not found",
+    "serverError": "A server error occurred"
+  }
+}

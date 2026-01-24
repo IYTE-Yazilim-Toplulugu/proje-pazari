@@ -1,0 +1,83 @@
+{
+  "common": {
+    "loading": "Yükleniyor...",
+    "error": "Hata oluştu",
+    "success": "Başarılı",
+    "save": "Kaydet",
+    "cancel": "İptal",
+    "delete": "Sil",
+    "edit": "Düzenle",
+    "back": "Geri",
+    "search": "Ara"
+  },
+  "nav": {
+    "home": "Ana Sayfa",
+    "projects": "Projeler",
+    "profile": "Profilim",
+    "login": "Giriş Yap",
+    "register": "Kayıt Ol",
+    "logout": "Çıkış Yap"
+  },
+  "auth": {
+    "login": {
+      "title": "Giriş Yap",
+      "email": "E-posta",
+      "password": "Şifre",
+      "submit": "Giriş Yap",
+      "forgotPassword": "Şifremi Unuttum",
+      "noAccount": "Hesabınız yok mu?",
+      "signUp": "Kayıt olun"
+    },
+    "register": {
+      "title": "Kayıt Ol",
+      "name": "Ad",
+      "surname": "Soyad",
+      "email": "E-posta",
+      "password": "Şifre",
+      "confirmPassword": "Şifre Tekrar",
+      "submit": "Kayıt Ol",
+      "hasAccount": "Zaten hesabınız var mı?",
+      "signIn": "Giriş yapın"
+    }
+  },
+  "projects": {
+    "title": "Projeler",
+    "create": "Yeni Proje",
+    "search": "Proje ara...",
+    "filter": "Filtrele",
+    "status": {
+      "DRAFT": "Taslak",
+      "OPEN": "Açık",
+      "IN_PROGRESS": "Devam Ediyor",
+      "COMPLETED": "Tamamlandı",
+      "CANCELLED": "İptal Edildi"
+    },
+    "details": {
+      "apply": "Başvur",
+      "applications": "Başvurular",
+      "owner": "Proje Sahibi",
+      "team": "Ekip",
+      "requirements": "Gereksinimler"
+    }
+  },
+  "profile": {
+    "title": "Profilim",
+    "edit": "Profili Düzenle",
+    "myProjects": "Projelerim",
+    "myApplications": "Başvurularım",
+    "settings": "Ayarlar",
+    "about": "Hakkımda",
+    "contact": "İletişim Bilgileri",
+    "social": "Sosyal Bağlantılar",
+    "language": "Dil Tercihi"
+  },
+  "errors": {
+    "required": "Bu alan zorunludur",
+    "invalidEmail": "Geçersiz e-posta adresi",
+    "passwordMismatch": "Şifreler eşleşmiyor",
+    "minLength": "En az {min} karakter olmalıdır",
+    "maxLength": "En fazla {max} karakter olabilir",
+    "notFound": "Sayfa bulunamadı",
+    "serverError": "Sunucu hatası oluştu"
+  }
+}

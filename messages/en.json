@@ -8,7 +8,8 @@
     "delete": "Delete",
     "edit": "Edit",
     "back": "Back",
-    "search": "Search"
+    "search": "Search",
+    "unknownError": "Unknown error"
   },
   "nav": {
     "home": "Home",
@@ -38,6 +39,39 @@
       "submit": "Register",
       "hasAccount": "Already have an account?",
       "signIn": "Sign in"
+    }
+  },
+  "oauth": {
+    "invalidParams": "Invalid parameters during OAuth verification.",
+    "loginSuccess": "Successfully logged in!",
+    "tokenStorageError": "An error occurred while storing session. Please log in again.",
+    "missingTokens": "Token information is missing",
+    "registrationSuccess": "Registration successful! Welcome.",
+    "registrationError": "An error occurred during registration. Please try again.",
+    "missingUserInfo": "User information is missing",
+    "sessionError": "Session Error: {msg}",
+    "authError": "Authentication Error: {code}",
+    "unexpectedStatus": "An unexpected situation occurred.",
+    "processing": {
+      "title": "Authenticating",
+      "description": "Please wait, your information is being processed..."
+    }
+  },
+  "forgotPassword": {
+    "title": "Forgot Password",
+    "checkEmail": "Check Your Email",
+    "emailSentMessage": "If an account exists with that email, we've sent password reset instructions.",
+    "emailLabel": "Email",
+    "emailPlaceholder": "you@std.iyte.edu.tr",
+    "invalidEmail": "Invalid Email address",
+    "submitButton": "Send Reset Link",
+    "success": {
+      "title": "Email Sent",
+      "description": "Password reset instructions have been sent to your email."
+    },
+    "error": {
+      "title": "Error",
+      "description": "Failed to send reset email. Please try again."
     }
   },
   "projects": {

@@ -3,3 +3,4 @@ export * as apiModel from './Api';
 export * as commonModel from './Common';
 export * as authModel from './Auth';
 export * as userModel from './User';
+export * from './Project';

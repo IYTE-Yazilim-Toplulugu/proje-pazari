@@ -8,7 +8,8 @@
     "delete": "Sil",
     "edit": "Düzenle",
     "back": "Geri",
-    "search": "Ara"
+    "search": "Ara",
+    "unknownError": "Bilinmeyen hata"
   },
   "nav": {
     "home": "Ana Sayfa",
@@ -39,6 +40,39 @@
       "hasAccount": "Zaten hesabınız var mı?",
       "signIn": "Giriş yapın"
     }
+  },
+  "oauth": {
+      "invalidParams": "OAuth doğrulama sırasında geçersiz parametreler.",
+      "loginSuccess": "Başarıyla giriş yaptınız!",
+      "tokenStorageError": "Oturum bilgileri saklanırken bir hata oluştu. Lütfen tekrar giriş yapın.",
+      "missingTokens": "Token bilgileri eksik",
+      "registrationSuccess": "Kayıt başarılı! Hoş geldiniz.",
+      "registrationError": "Kayıt sırasında bir hata oluştu. Lütfen tekrar deneyin.",
+      "missingUserInfo": "Kullanıcı bilgileri eksik",
+      "sessionError": "Oturum Hatası: {msg}",
+      "authError": "Kimlik Doğrulama Hatası: {code}",
+      "unexpectedStatus": "Beklenmeyen bir durum oluştu.",
+      "processing": {
+          "title": "Kimlik Doğrulaması Yapılıyor",
+          "description": "Lütfen bekleyin, bilgileriniz işleniyor..."
+      }
+  },
+  "forgotPassword": {
+      "title": "Forgot Password",
+      "checkEmail": "Check Your Email",
+      "emailSentMessage": "If an account exists with that email, we've sent password reset instructions.",
+      "emailLabel": "Email",
+      "emailPlaceholder": "you@std.iyte.edu.tr",
+      "invalidEmail": "Invalid Email address",
+      "submitButton": "Send Reset Link",
+      "success": {
+          "title": "Email Sent",
+          "description": "Password reset instructions have been sent to your email."
+      },
+      "error": {
+          "title": "Error",
+          "description": "Failed to send reset email. Please try again."
+      }
   },
   "projects": {
     "title": "Projeler",

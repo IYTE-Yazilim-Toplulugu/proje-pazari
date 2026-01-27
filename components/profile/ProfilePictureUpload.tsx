@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
+import { useTranslations } from 'next-intl';
 
 interface ProfilePictureUploadProps {
   currentUrl?: string;
@@ -9,6 +10,7 @@ interface ProfilePictureUploadProps {
 }
 
 export default function ProfilePictureUpload({ currentUrl, onUpload }: ProfilePictureUploadProps) {
+  const t = useTranslations('profile.upload');
   const [uploading, setUploading] = useState(false);
   const [preview, setPreview] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -21,12 +23,12 @@ export default function ProfilePictureUpload({ currentUrl, onUpload }: ProfilePi
 
     // Validate file type and size
     if (!file.type.startsWith('image/')) {
-      setError('Lütfen bir resim dosyası seçin');
+      setError(t("errors.type"));
       return;
     }
 
     if (file.size > 5 * 1024 * 1024) { // 5MB
-      setError('Dosya boyutu 5MB\'dan küçük olmalıdır');
+      setError(t("errors.size"));
       return;
     }
 
@@ -43,7 +45,7 @@ export default function ProfilePictureUpload({ currentUrl, onUpload }: ProfilePi
       await onUpload(file);
     } catch (err) {
       console.error('Upload error:', err);
-      setError(err instanceof Error ? err.message : 'Yükleme sırasında bir hata oluştu');
+      setError(err instanceof Error ? err.message : t("errors.generic"));
       setPreview(null);
     } finally {
       setUploading(false);
@@ -59,14 +61,14 @@ export default function ProfilePictureUpload({ currentUrl, onUpload }: ProfilePi
           {displayUrl ? (
             <Image
               src={displayUrl}
-              alt="Profil fotoğrafı"
+              alt={t("alt")}
               width={128}
               height={128}
               className="object-cover w-full h-full"
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center text-4xl text-gray-400">
-              <span role="img" aria-label="Varsayılan profil">👤</span>
+              <span role="img" aria-label={t("default")}>👤</span>
             </div>
           )}
         </div>
@@ -74,7 +76,7 @@ export default function ProfilePictureUpload({ currentUrl, onUpload }: ProfilePi
         <label
           className="absolute bottom-0 right-0 bg-blue-600 hover:bg-blue-700 text-white
                         rounded-full p-2 cursor-pointer transition-colors"
-          aria-label="Profil fotoğrafı yükle"
+          aria-label={t("label")}
         >
           <span aria-hidden="true">{uploading ? '⏳' : '📷'}</span>
           <input
@@ -83,7 +85,7 @@ export default function ProfilePictureUpload({ currentUrl, onUpload }: ProfilePi
             onChange={handleFileChange}
             disabled={uploading}
             className="hidden"
-            aria-label="Profil fotoğrafı seç"
+            aria-label={t("select")}
           />
         </label>
       </div>

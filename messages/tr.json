@@ -1,4 +1,9 @@
 {
+  "HomePage": {
+    "title": "Proje Pazarı'na Hoş Geldiniz",
+    "subtitle": "Öğrenciler ve Akademisyenler için Proje Buluşma Noktası",
+    "cta": "Projeleri Keşfet"
+  },
   "common": {
     "loading": "Yükleniyor...",
     "error": "Hata oluştu",
@@ -12,6 +17,7 @@
     "unknownError": "Bilinmeyen hata"
   },
   "nav": {
+    "projectMarket": "Proje Pazarı",
     "home": "Ana Sayfa",
     "projects": "Projeler",
     "profile": "Profilim",
@@ -24,10 +30,23 @@
       "title": "Giriş Yap",
       "email": "E-posta",
       "password": "Şifre",
+      "rememberMe": "Beni Hatırla",
       "submit": "Giriş Yap",
-      "forgotPassword": "Şifremi Unuttum",
+      "submitting": "Giriş yapılıyor...",
+      "forgotPassword": "Şifremi unuttum",
       "noAccount": "Hesabınız yok mu?",
-      "signUp": "Kayıt olun"
+      "registerLink": "Buradan kayıt olun",
+      "placeholders": {
+        "email": "siz@std.iyte.edu.tr",
+        "password": "Şifrenizi girin"
+      },
+      "errors": {
+        "generic": "Beklenmedik bir hata oluştu. Lütfen tekrar deneyin.",
+        "emailRequired": "E-posta adresi zorunludur",
+        "emailInvalid": "Geçerli bir e-posta adresi girin",
+        "passwordRequired": "Şifre zorunludur",
+        "passwordMin": "Şifre en az 6 karakter olmalıdır"
+      }
     },
     "register": {
       "title": "Kayıt Ol",
@@ -42,6 +61,7 @@
     }
   },
   "oauth": {
+      "buttonLabel": "{provider} ile devam et",
       "invalidParams": "OAuth doğrulama sırasında geçersiz parametreler.",
       "loginSuccess": "Başarıyla giriş yaptınız!",
       "tokenStorageError": "Oturum bilgileri saklanırken bir hata oluştu. Lütfen tekrar giriş yapın.",
@@ -86,6 +106,9 @@
       "COMPLETED": "Tamamlandı",
       "CANCELLED": "İptal Edildi"
     },
+    "card": {
+      "applicationCount": "{count, plural, =0 {Başvuru yok} one {# Başvuru} other {# Başvuru}}"
+    },
     "details": {
       "apply": "Başvur",
       "applications": "Başvurular",
@@ -96,14 +119,48 @@
   },
   "profile": {
     "title": "Profilim",
-    "edit": "Profili Düzenle",
     "myProjects": "Projelerim",
     "myApplications": "Başvurularım",
     "settings": "Ayarlar",
     "about": "Hakkımda",
     "contact": "İletişim Bilgileri",
     "social": "Sosyal Bağlantılar",
-    "language": "Dil Tercihi"
+    "language": "Dil Tercihi",
+    "edit": {
+      "name": "İsim",
+      "surname": "Soyisim",
+      "about": "Hakkımda",
+      "phone": "Telefon",
+      "linkedin": "LinkedIn URL",
+      "github": "GitHub URL",
+      "save": "Kaydet",
+      "saving": "Kaydediliyor...",
+      "placeholders": {
+        "about": "Kendiniz hakkında kısa bir açıklama yazın...",
+        "phone": "+90XXXXXXXXXX",
+        "linkedin": "https://linkedin.com/in/kullanici-adiniz",
+        "github": "https://github.com/kullanici-adiniz"
+      },
+      "errors": {
+        "nameMin": "İsim en az 2 karakter olmalı",
+        "surnameMin": "Soyisim en az 2 karakter olmalı",
+        "descriptionMax": "Açıklama en fazla 500 karakter olabilir",
+        "phoneInvalid": "Geçerli bir telefon numarası girin",
+        "urlInvalid": "Geçerli bir URL girin",
+        "updateError": "Profil güncellenirken bir hata oluştu"
+      }
+    },
+    "upload": {
+      "alt": "Profil fotoğrafı",
+      "default": "Varsayılan profil",
+      "label": "Profil fotoğrafı yükle",
+      "select": "Profil fotoğrafı seç",
+      "errors": {
+        "type": "Lütfen geçerli bir resim dosyası seçin",
+        "size": "Dosya boyutu 5MB'dan küçük olmalıdır",
+        "generic": "Yükleme sırasında bir hata oluştu"
+      }
+    }
   },
   "errors": {
     "required": "Bu alan zorunludur",

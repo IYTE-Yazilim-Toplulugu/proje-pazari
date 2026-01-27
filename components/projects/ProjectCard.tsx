@@ -1,12 +1,17 @@
+'use client';
+
 import Link from 'next/link';
 import Image from 'next/image';
 import type { Project } from '@/lib/models';
+import { useTranslations } from 'next-intl';
 
 interface ProjectCardProps {
   project: Project;
 }
 
 export default function ProjectCard({ project }: ProjectCardProps) {
+  const t = useTranslations("projects");
+  
   const statusColors = {
     DRAFT: 'bg-gray-500',
     OPEN: 'bg-green-500',
@@ -24,7 +29,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
             {project.title}
           </h3>
           <span className={`px-2 py-1 text-xs font-medium text-white rounded-full ${statusColors[project.status]}`}>
-            {project.status}
+            {t('status.${project.status}')}
           </span>
         </div>
 
@@ -74,7 +79,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
           </div>
           
           <div className="text-sm text-gray-500 dark:text-gray-400">
-            {project.applicationsCount} başvuru
+            {t('card.applicationCount', { count: project.applicationsCount })}
           </div>
         </div>
       </div>

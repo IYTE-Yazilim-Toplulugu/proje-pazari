@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import Providers from "./providers";
@@ -22,6 +22,8 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://projepazari.iyte.edu.tr'),
+  
   title: {
     default: 'IYTE Proje Pazarı',
     template: '%s | IYTE Proje Pazarı',
@@ -29,8 +31,8 @@ export const metadata: Metadata = {
   description: 'İzmir Yüksek Teknoloji Enstitüsü öğrencilerinin projeler üzerinde işbirliği yapabileceği platform',
   icons: {
     icon: [
-      { url: '/favicon.ico', sizes: 'any' }, // Good fallback for old browsers
-      { url: '/favicon.svg', type: 'image/svg+xml' }, // High quality for modern browsers
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/favicon.svg', type: 'image/svg+xml' },
       { url: '/favicon-96x96.png', sizes: '96x96', type: 'image/png' },
     ],
     apple: [
@@ -61,15 +63,16 @@ export const metadata: Metadata = {
     images: ['/twitter-image.png'],
     creator: '@iyteyazilim',
   },
-   themeColor: [
+};
+
+export const viewport: Viewport = {
+  themeColor: [
     { media: '(prefers-color-scheme: light)', color: '#ffffff' },
     { media: '(prefers-color-scheme: dark)', color: '#0f172a' },
   ],
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-    maximumScale: 5,
-  },
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
 };
 
 export default async function RootLayout({
@@ -88,12 +91,15 @@ export default async function RootLayout({
             >
                 <NextIntlClientProvider messages={messages} locale={locale}>
                     <Providers>
-                        <Header />
-                        {children}
+                        <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-900">
+                            <Header />
+                            <main className="flex-grow">
+                                {children}
+                            </main>
+                        </div>
                     </Providers>
                 </NextIntlClientProvider>
             </body>
         </html>
     );
 }
-

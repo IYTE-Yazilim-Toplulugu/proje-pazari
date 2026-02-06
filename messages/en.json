@@ -53,11 +53,33 @@
       "name": "First Name",
       "surname": "Last Name",
       "email": "Email",
+      "phone": "Phone Number",
+      "birthdate": "Birthdate",
       "password": "Password",
       "confirmPassword": "Confirm Password",
+      "creatingAccount": "Creating Account...",
       "submit": "Register",
       "hasAccount": "Already have an account?",
-      "signIn": "Sign in"
+      "signIn": "Sign in",
+      "createAccount": "Create Account",
+      "loginLink": "Login here",
+      "errors": {
+        "generic":"An unexpected error occurred. Please try again."
+      },
+      "placeholders": {
+        "email": "you@std.iyte.edu.tr",
+        "password": "Enter your password",
+        "name": "Your name",
+        "surname": "Your surname",
+        "phone": "0555 555 55 55"
+      },
+      "complete": {
+        "verifyTitle": "Verify Your Email",
+        "verifyDesc": "We've sent a verification email to your IYTE email address.",
+        "resendSuccess": "Verification email resent successfully!",
+        "resendBtn": "Resend Verification Email",
+        "sending": "Sending..."
+      }
     }
   },
   "oauth": {
@@ -78,20 +100,20 @@
     }
   },
   "forgotPassword": {
-    "title": "Forgot Password",
-    "checkEmail": "Check Your Email",
-    "emailSentMessage": "If an account exists with that email, we've sent password reset instructions.",
-    "emailLabel": "Email",
-    "emailPlaceholder": "you@std.iyte.edu.tr",
-    "invalidEmail": "Invalid Email address",
-    "submitButton": "Send Reset Link",
-    "success": {
-      "title": "Email Sent",
-      "description": "Password reset instructions have been sent to your email."
+    "email": "Email",
+    "forgotPasswordTitle": "Forgot Password",
+    "sendResetLink": "Send Reset Link",
+    "backToLogin": "Back to login",
+    "checkEmailTitle": "Check Your Email",
+    "checkEmailDesc": "If an account exists with that email, we've sent password reset instructions.",
+    "emailSentTitle": "Email Sent",
+    "emailSentDesc": "Password reset instructions have been sent to your email.",
+    "errors": {
+      "invalidEmail": "Invalid email address",
+      "generic": "An error occurred. Please try again."
     },
-    "error": {
-      "title": "Error",
-      "description": "Failed to send reset email. Please try again."
+    "placeholders": {
+        "email": "you@std.iyte.edu.tr"
     }
   },
   "projects": {

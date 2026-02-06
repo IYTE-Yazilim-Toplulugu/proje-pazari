@@ -46,11 +46,11 @@ export default function Header() {
             </>
           ) : (
             <div className="flex items-center gap-4">
-              <Link href="/auth/login" className="text-gray-600 dark:text-gray-300 hover:text-blue-600 transition-colors">
+              <Link href="/login" className="text-gray-600 dark:text-gray-300 hover:text-blue-600 transition-colors">
                 {t('login')}
               </Link>
               <Link 
-                href="/auth/register" 
+                href="/register" 
                 className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
               >
                 {t('register')}

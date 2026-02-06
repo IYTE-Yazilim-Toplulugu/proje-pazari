@@ -1,22 +1,22 @@
 'use client';
+
 import { useEffect, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 
 export default function RegisterCompletePage() {
+    const t = useTranslations('auth.register.complete');
+    const searchParams = useSearchParams();
     const [resending, setResending] = useState(false);
     const [resent, setResent] = useState(false);
     const [email, setEmail] = useState<string | null>(null);
 
-    useEffect(() => {
-        try {
-            const params = new URLSearchParams(window.location.search);
-            const emailParam = params.get('email');
-            if (emailParam) {
-                setEmail(emailParam);
-            }
-        } catch (error) {
-            console.error('Error reading email from query parameters:', error);
+useEffect(() => {
+        const emailParam = searchParams.get('email');
+        if (emailParam) {
+            setEmail(emailParam);
         }
-    }, []);
+    }, [searchParams]);
 
     const handleResend = async () => {
         if (!email) {
@@ -41,14 +41,14 @@ export default function RegisterCompletePage() {
 
     return (
         <div className="form-container">
-            <h1 className="form-title">Verify Your Email</h1>
+            <h1 className="form-title">{t('verifyTitle')}</h1>
             <p className="text-center text-gray-600 dark:text-gray-400 mb-6">
-                We've sent a verification email to your IYTE email address.
+                {t('verifyDesc')}
             </p>
 
             {resent ? (
                 <p className="text-center text-green-600 dark:text-green-400">
-                    Verification email resent successfully!
+                    {t('resendSuccess')}
                 </p>
             ) : (
                 <button
@@ -56,7 +56,7 @@ export default function RegisterCompletePage() {
                     disabled={resending}
                     className="form-button-secondary"
                 >
-                    {resending ? 'Sending...' : 'Resend Verification Email'}
+                    {resending ? t('sending') : t('resendBtn')}
                 </button>
             )}
         </div>

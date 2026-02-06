@@ -53,11 +53,33 @@
       "name": "Ad",
       "surname": "Soyad",
       "email": "E-posta",
+      "phone": "Telefon Numarası",
+      "birthdate": "Doğum Tarihi",
       "password": "Şifre",
       "confirmPassword": "Şifre Tekrar",
+      "creatingAccount": "Hesap oluşturuluyor...",
       "submit": "Kayıt Ol",
       "hasAccount": "Zaten hesabınız var mı?",
-      "signIn": "Giriş yapın"
+      "signIn": "Giriş yapın",
+      "createAccount": "Hesap Oluştur",
+      "loginLink": "Buradan giriş yapın",
+      "errors": {
+        "generic": "Beklenmedik bir hata oluştu. Lütfen tekrar deneyin."
+      },
+      "placeholders": {
+        "email": "siz@std.iyte.edu.tr",
+        "password": "Şifrenizi girin",
+        "name": "Adınız",
+        "surname": "Soyadınız",
+        "phone": "0555 555 55 55"
+      },
+      "complete": {
+        "verifyTitle": "E-postanızı Doğrulayın",
+        "verifyDesc": "IYTE e-posta adresinize bir doğrulama e-postası gönderdik.",
+        "resendSuccess": "Doğrulama e-postası başarıyla tekrar gönderildi!",
+        "resendBtn": "Doğrulama E-postasını Tekrar Gönder",
+        "sending": "Gönderiliyor..."
+      }
     }
   },
   "oauth": {
@@ -78,21 +100,21 @@
       }
   },
   "forgotPassword": {
-      "title": "Forgot Password",
-      "checkEmail": "Check Your Email",
-      "emailSentMessage": "If an account exists with that email, we've sent password reset instructions.",
-      "emailLabel": "Email",
-      "emailPlaceholder": "you@std.iyte.edu.tr",
-      "invalidEmail": "Invalid Email address",
-      "submitButton": "Send Reset Link",
-      "success": {
-          "title": "Email Sent",
-          "description": "Password reset instructions have been sent to your email."
-      },
-      "error": {
-          "title": "Error",
-          "description": "Failed to send reset email. Please try again."
-      }
+    "email": "E-posta",
+    "forgotPasswordTitle": "Şifremi Unuttum",
+    "sendResetLink": "Sıfırlama Bağlantısı Gönder",
+    "backToLogin": "Giriş sayfasına dön",
+    "checkEmailTitle": "E-postanızı Kontrol Edin",
+    "checkEmailDesc": "Eğer bu adrese kayıtlı bir hesap varsa, şifre sıfırlama talimatlarını gönderdik.",
+    "emailSentTitle": "E-posta Gönderildi",
+    "emailSentDesc": "Sıfırlama talimatları e-posta adresinize gönderildi.",
+    "errors": {
+      "invalidEmail": "Geçersiz e-posta adresi",
+      "generic": "Bir hata oluştu. Lütfen tekrar deneyin."
+    },
+    "placeholders": {
+        "email": "siz@std.iyte.edu.tr"
+    }
   },
   "projects": {
     "title": "Projeler",

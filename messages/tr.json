@@ -1,41 +1,196 @@
 {
-    "oauth": {
-        "invalidParams": "OAuth doğrulama sırasında geçersiz parametreler.",
-        "loginSuccess": "Başarıyla giriş yaptınız!",
-        "tokenStorageError": "Oturum bilgileri saklanırken bir hata oluştu. Lütfen tekrar giriş yapın.",
-        "missingTokens": "Token bilgileri eksik",
-        "registrationSuccess": "Kayıt başarılı! Hoş geldiniz.",
-        "registrationError": "Kayıt sırasında bir hata oluştu. Lütfen tekrar deneyin.",
-        "missingUserInfo": "Kullanıcı bilgileri eksik",
-        "sessionError": "Oturum Hatası: {msg}",
-        "authError": "Kimlik Doğrulama Hatası: {code}",
-        "unexpectedStatus": "Beklenmeyen bir durum oluştu.",
-        "processing": {
-            "title": "Kimlik Doğrulaması Yapılıyor",
-            "description": "Lütfen bekleyin, bilgileriniz işleniyor..."
-        }
+  "HomePage": {
+    "title": "Proje Pazarı'na Hoş Geldiniz",
+    "subtitle": "Öğrenciler ve Akademisyenler için Proje Buluşma Noktası",
+    "cta": "Projeleri Keşfet"
+  },
+  "common": {
+    "loading": "Yükleniyor...",
+    "error": "Hata oluştu",
+    "success": "Başarılı",
+    "save": "Kaydet",
+    "cancel": "İptal",
+    "delete": "Sil",
+    "edit": "Düzenle",
+    "back": "Geri",
+    "search": "Ara",
+    "unknownError": "Bilinmeyen hata"
+  },
+  "nav": {
+    "projectMarket": "Proje Pazarı",
+    "home": "Ana Sayfa",
+    "projects": "Projeler",
+    "profile": "Profilim",
+    "login": "Giriş Yap",
+    "register": "Kayıt Ol",
+    "logout": "Çıkış Yap"
+  },
+  "auth": {
+    "login": {
+      "title": "Giriş Yap",
+      "email": "E-posta",
+      "password": "Şifre",
+      "rememberMe": "Beni Hatırla",
+      "submit": "Giriş Yap",
+      "submitting": "Giriş yapılıyor...",
+      "forgotPassword": "Şifremi unuttum",
+      "noAccount": "Hesabınız yok mu?",
+      "registerLink": "Buradan kayıt olun",
+      "placeholders": {
+        "email": "siz@std.iyte.edu.tr",
+        "password": "Şifrenizi girin"
+      },
+      "errors": {
+        "generic": "Beklenmedik bir hata oluştu. Lütfen tekrar deneyin.",
+        "emailRequired": "E-posta adresi zorunludur",
+        "emailInvalid": "Geçerli bir e-posta adresi girin",
+        "passwordRequired": "Şifre zorunludur",
+        "passwordMin": "Şifre en az 6 karakter olmalıdır"
+      }
     },
-    "forgotPassword": {
-        "title": "Forgot Password",
-        "checkEmail": "Check Your Email",
-        "emailSentMessage": "If an account exists with that email, we've sent password reset instructions.",
-        "emailLabel": "Email",
-        "emailPlaceholder": "you@std.iyte.edu.tr",
-        "invalidEmail": "Invalid Email address",
-        "submitButton": "Send Reset Link",
-        "success": {
-            "title": "Email Sent",
-            "description": "Password reset instructions have been sent to your email."
-        },
-        "error": {
-            "title": "Error",
-            "description": "Failed to send reset email. Please try again."
-        }
-    },
-    "common": {
-        "error": "Hata",
-        "success": "Başarılı",
-        "loading": "Yükleniyor...",
-        "unknownError": "Bilinmeyen hata"
+    "register": {
+      "title": "Kayıt Ol",
+      "name": "Ad",
+      "surname": "Soyad",
+      "email": "E-posta",
+      "phone": "Telefon Numarası",
+      "birthdate": "Doğum Tarihi",
+      "password": "Şifre",
+      "confirmPassword": "Şifre Tekrar",
+      "creatingAccount": "Hesap oluşturuluyor...",
+      "submit": "Kayıt Ol",
+      "hasAccount": "Zaten hesabınız var mı?",
+      "signIn": "Giriş yapın",
+      "createAccount": "Hesap Oluştur",
+      "loginLink": "Buradan giriş yapın",
+      "errors": {
+        "generic": "Beklenmedik bir hata oluştu. Lütfen tekrar deneyin."
+      },
+      "placeholders": {
+        "email": "siz@std.iyte.edu.tr",
+        "password": "Şifrenizi girin",
+        "name": "Adınız",
+        "surname": "Soyadınız",
+        "phone": "0555 555 55 55"
+      },
+      "complete": {
+        "verifyTitle": "E-postanızı Doğrulayın",
+        "verifyDesc": "IYTE e-posta adresinize bir doğrulama e-postası gönderdik.",
+        "resendSuccess": "Doğrulama e-postası başarıyla tekrar gönderildi!",
+        "resendBtn": "Doğrulama E-postasını Tekrar Gönder",
+        "sending": "Gönderiliyor..."
+      }
     }
+  },
+  "oauth": {
+      "buttonLabel": "{provider} ile devam et",
+      "invalidParams": "OAuth doğrulama sırasında geçersiz parametreler.",
+      "loginSuccess": "Başarıyla giriş yaptınız!",
+      "tokenStorageError": "Oturum bilgileri saklanırken bir hata oluştu. Lütfen tekrar giriş yapın.",
+      "missingTokens": "Token bilgileri eksik",
+      "registrationSuccess": "Kayıt başarılı! Hoş geldiniz.",
+      "registrationError": "Kayıt sırasında bir hata oluştu. Lütfen tekrar deneyin.",
+      "missingUserInfo": "Kullanıcı bilgileri eksik",
+      "sessionError": "Oturum Hatası: {msg}",
+      "authError": "Kimlik Doğrulama Hatası: {code}",
+      "unexpectedStatus": "Beklenmeyen bir durum oluştu.",
+      "processing": {
+          "title": "Kimlik Doğrulaması Yapılıyor",
+          "description": "Lütfen bekleyin, bilgileriniz işleniyor..."
+      }
+  },
+  "forgotPassword": {
+    "email": "E-posta",
+    "forgotPasswordTitle": "Şifremi Unuttum",
+    "sendResetLink": "Sıfırlama Bağlantısı Gönder",
+    "backToLogin": "Giriş sayfasına dön",
+    "checkEmailTitle": "E-postanızı Kontrol Edin",
+    "checkEmailDesc": "Eğer bu adrese kayıtlı bir hesap varsa, şifre sıfırlama talimatlarını gönderdik.",
+    "emailSentTitle": "E-posta Gönderildi",
+    "emailSentDesc": "Sıfırlama talimatları e-posta adresinize gönderildi.",
+    "errors": {
+      "invalidEmail": "Geçersiz e-posta adresi",
+      "generic": "Bir hata oluştu. Lütfen tekrar deneyin."
+    },
+    "placeholders": {
+        "email": "siz@std.iyte.edu.tr"
+    }
+  },
+  "projects": {
+    "title": "Projeler",
+    "create": "Yeni Proje",
+    "search": "Proje ara...",
+    "filter": "Filtrele",
+    "status": {
+      "DRAFT": "Taslak",
+      "OPEN": "Açık",
+      "IN_PROGRESS": "Devam Ediyor",
+      "COMPLETED": "Tamamlandı",
+      "CANCELLED": "İptal Edildi"
+    },
+    "card": {
+      "applicationCount": "{count, plural, =0 {Başvuru yok} one {# Başvuru} other {# Başvuru}}"
+    },
+    "details": {
+      "apply": "Başvur",
+      "applications": "Başvurular",
+      "owner": "Proje Sahibi",
+      "team": "Ekip",
+      "requirements": "Gereksinimler"
+    }
+  },
+  "profile": {
+    "title": "Profilim",
+    "myProjects": "Projelerim",
+    "myApplications": "Başvurularım",
+    "settings": "Ayarlar",
+    "about": "Hakkımda",
+    "contact": "İletişim Bilgileri",
+    "social": "Sosyal Bağlantılar",
+    "language": "Dil Tercihi",
+    "edit": {
+      "name": "İsim",
+      "surname": "Soyisim",
+      "about": "Hakkımda",
+      "phone": "Telefon",
+      "linkedin": "LinkedIn URL",
+      "github": "GitHub URL",
+      "save": "Kaydet",
+      "saving": "Kaydediliyor...",
+      "placeholders": {
+        "about": "Kendiniz hakkında kısa bir açıklama yazın...",
+        "phone": "+90XXXXXXXXXX",
+        "linkedin": "https://linkedin.com/in/kullanici-adiniz",
+        "github": "https://github.com/kullanici-adiniz"
+      },
+      "errors": {
+        "nameMin": "İsim en az 2 karakter olmalı",
+        "surnameMin": "Soyisim en az 2 karakter olmalı",
+        "descriptionMax": "Açıklama en fazla 500 karakter olabilir",
+        "phoneInvalid": "Geçerli bir telefon numarası girin",
+        "urlInvalid": "Geçerli bir URL girin",
+        "updateError": "Profil güncellenirken bir hata oluştu"
+      }
+    },
+    "upload": {
+      "alt": "Profil fotoğrafı",
+      "default": "Varsayılan profil",
+      "label": "Profil fotoğrafı yükle",
+      "select": "Profil fotoğrafı seç",
+      "errors": {
+        "type": "Lütfen geçerli bir resim dosyası seçin",
+        "size": "Dosya boyutu 5MB'dan küçük olmalıdır",
+        "generic": "Yükleme sırasında bir hata oluştu"
+      }
+    }
+  },
+  "errors": {
+    "required": "Bu alan zorunludur",
+    "invalidEmail": "Geçersiz e-posta adresi",
+    "passwordMismatch": "Şifreler eşleşmiyor",
+    "minLength": "En az {min} karakter olmalıdır",
+    "maxLength": "En fazla {max} karakter olabilir",
+    "notFound": "Sayfa bulunamadı",
+    "serverError": "Sunucu hatası oluştu"
+  }
 }

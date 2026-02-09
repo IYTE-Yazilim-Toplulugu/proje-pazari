@@ -1,41 +1,196 @@
 {
-    "oauth": {
-        "invalidParams": "Invalid parameters during OAuth verification.",
-        "loginSuccess": "Successfully logged in!",
-        "tokenStorageError": "An error occurred while storing session. Please log in again.",
-        "missingTokens": "Token information is missing",
-        "registrationSuccess": "Registration successful! Welcome.",
-        "registrationError": "An error occurred during registration. Please try again.",
-        "missingUserInfo": "User information is missing",
-        "sessionError": "Session Error: {msg}",
-        "authError": "Authentication Error: {code}",
-        "unexpectedStatus": "An unexpected situation occurred.",
-        "processing": {
-            "title": "Authenticating",
-            "description": "Please wait, your information is being processed..."
-        }
+  "HomePage": {
+    "title": "Welcome to Project Market",
+    "subtitle": "The Project Meeting Point for Students and Academicians",
+    "cta": "Explore Projects"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "success": "Success",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "back": "Back",
+    "search": "Search",
+    "unknownError": "Unknown error"
+  },
+  "nav": {
+    "projectMarket": "Project Market",
+    "home": "Home",
+    "projects": "Projects",
+    "profile": "My Profile",
+    "login": "Login",
+    "register": "Register",
+    "logout": "Logout"
+  },
+  "auth": {
+    "login": {
+      "title": "Login",
+      "email": "Email",
+      "password": "Password",
+      "rememberMe": "Remember me",
+      "submit": "Login",
+      "submitting": "Logging in...",
+      "forgotPassword": "Forgot password?",
+      "noAccount": "Don't have an account?",
+      "registerLink": "Register here",
+      "placeholders": {
+        "email": "you@std.iyte.edu.tr",
+        "password": "Enter your password"
+      },
+      "errors": {
+        "generic": "An unexpected error occurred. Please try again.",
+        "emailRequired": "Email is required",
+        "emailInvalid": "Please enter a valid email address",
+        "passwordRequired": "Password is required",
+        "passwordMin": "Password must be at least 6 characters"
+      }
     },
-    "forgotPassword": {
-        "title": "Forgot Password",
-        "checkEmail": "Check Your Email",
-        "emailSentMessage": "If an account exists with that email, we've sent password reset instructions.",
-        "emailLabel": "Email",
-        "emailPlaceholder": "you@std.iyte.edu.tr",
-        "invalidEmail": "Invalid Email address",
-        "submitButton": "Send Reset Link",
-        "success": {
-            "title": "Email Sent",
-            "description": "Password reset instructions have been sent to your email."
-        },
-        "error": {
-            "title": "Error",
-            "description": "Failed to send reset email. Please try again."
-        }
-    },
-    "common": {
-        "error": "Error",
-        "success": "Success",
-        "loading": "Loading...",
-        "unknownError": "Unknown error"
+    "register": {
+      "title": "Register",
+      "name": "First Name",
+      "surname": "Last Name",
+      "email": "Email",
+      "phone": "Phone Number",
+      "birthdate": "Birthdate",
+      "password": "Password",
+      "confirmPassword": "Confirm Password",
+      "creatingAccount": "Creating Account...",
+      "submit": "Register",
+      "hasAccount": "Already have an account?",
+      "signIn": "Sign in",
+      "createAccount": "Create Account",
+      "loginLink": "Login here",
+      "errors": {
+        "generic":"An unexpected error occurred. Please try again."
+      },
+      "placeholders": {
+        "email": "you@std.iyte.edu.tr",
+        "password": "Enter your password",
+        "name": "Your name",
+        "surname": "Your surname",
+        "phone": "0555 555 55 55"
+      },
+      "complete": {
+        "verifyTitle": "Verify Your Email",
+        "verifyDesc": "We've sent a verification email to your IYTE email address.",
+        "resendSuccess": "Verification email resent successfully!",
+        "resendBtn": "Resend Verification Email",
+        "sending": "Sending..."
+      }
     }
+  },
+  "oauth": {
+    "buttonLabel": "Continue with {provider}",
+    "invalidParams": "Invalid parameters during OAuth verification.",
+    "loginSuccess": "Successfully logged in!",
+    "tokenStorageError": "An error occurred while storing session. Please log in again.",
+    "missingTokens": "Token information is missing",
+    "registrationSuccess": "Registration successful! Welcome.",
+    "registrationError": "An error occurred during registration. Please try again.",
+    "missingUserInfo": "User information is missing",
+    "sessionError": "Session Error: {msg}",
+    "authError": "Authentication Error: {code}",
+    "unexpectedStatus": "An unexpected situation occurred.",
+    "processing": {
+      "title": "Authenticating",
+      "description": "Please wait, your information is being processed..."
+    }
+  },
+  "forgotPassword": {
+    "email": "Email",
+    "forgotPasswordTitle": "Forgot Password",
+    "sendResetLink": "Send Reset Link",
+    "backToLogin": "Back to login",
+    "checkEmailTitle": "Check Your Email",
+    "checkEmailDesc": "If an account exists with that email, we've sent password reset instructions.",
+    "emailSentTitle": "Email Sent",
+    "emailSentDesc": "Password reset instructions have been sent to your email.",
+    "errors": {
+      "invalidEmail": "Invalid email address",
+      "generic": "An error occurred. Please try again."
+    },
+    "placeholders": {
+        "email": "you@std.iyte.edu.tr"
+    }
+  },
+  "projects": {
+    "title": "Projects",
+    "create": "New Project",
+    "search": "Search projects...",
+    "filter": "Filter",
+    "status": {
+      "DRAFT": "Draft",
+      "OPEN": "Open",
+      "IN_PROGRESS": "In Progress",
+      "COMPLETED": "Completed",
+      "CANCELLED": "Cancelled"
+    },
+    "card": {
+      "applicationCount": "{count, plural, =0 {No Applications} one {# Application} other {# Applications}}"
+    },
+    "details": {
+      "apply": "Apply",
+      "applications": "Applications",
+      "owner": "Project Owner",
+      "team": "Team",
+      "requirements": "Requirements"
+    }
+  },
+  "profile": {
+    "title": "My Profile",
+    "myProjects": "My Projects",
+    "myApplications": "My Applications",
+    "settings": "Settings",
+    "about": "About",
+    "contact": "Contact Information",
+    "social": "Social Links",
+    "language": "Language Preference",
+    "edit": {
+    "name": "First Name",
+      "surname": "Last Name",
+      "about": "About",
+      "phone": "Phone",
+      "linkedin": "LinkedIn URL",
+      "github": "GitHub URL",
+      "save": "Save",
+      "saving": "Saving...",
+      "placeholders": {
+        "about": "Write a short description about yourself...",
+        "phone": "+90XXXXXXXXXX",
+        "linkedin": "https://linkedin.com/in/your-username",
+        "github": "https://github.com/your-username"
+      },
+      "errors": {
+        "nameMin": "Name must be at least 2 characters",
+        "surnameMin": "Surname must be at least 2 characters",
+        "descriptionMax": "Description can be at most 500 characters",
+        "phoneInvalid": "Please enter a valid phone number",
+        "urlInvalid": "Please enter a valid URL",
+        "updateError": "An error occurred while updating profile"
+      }
+    },
+    "upload": {
+      "alt": "Profile photo",
+      "default": "Default profile",
+      "label": "Upload profile photo",
+      "select": "Select profile photo",
+      "errors": {
+        "type": "Please select a valid image file",
+        "size": "File size must be smaller than 5MB",
+        "generic": "An error occurred during upload"
+      }
+    }
+  },
+  "errors": {
+    "required": "This field is required",
+    "invalidEmail": "Invalid email address",
+    "passwordMismatch": "Passwords do not match",
+    "minLength": "Must be at least {min} characters",
+    "maxLength": "Must be at most {max} characters",
+    "notFound": "Page not found",
+    "serverError": "A server error occurred"
+  }
 }

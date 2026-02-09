@@ -1,14 +1,16 @@
 // app/register/page.tsx
 'use client';
+
+import Link from 'next/link';
 import { useForm } from 'react-hook-form';
-
 import { zodResolver } from '@hookform/resolvers/zod';
-
+import { useTranslations } from 'next-intl';
 import { authModel } from '@/lib/models';
 import { useRegister } from '@/lib/hooks/authHooks';
 import { RegisterForm } from '@/lib/models/Auth';
 
 export default function RegisterPage() {
+    const t = useTranslations("auth.register");
     const { mutate: registerUser, isPending, error } = useRegister();
 
     const {
@@ -17,7 +19,7 @@ export default function RegisterPage() {
         formState: { errors },
     } = useForm<RegisterForm>({
         resolver: zodResolver(authModel.RegisterFormSchema),
-    });
+    }); 
 
     const onSubmit = (data: RegisterForm) => {
         // We don't send `passwordConfirm` to the API
@@ -39,57 +41,111 @@ export default function RegisterPage() {
     return (
         <main className="form-container">
             <div className="form-wrapper">
-                <h2>Create Account</h2>
+                <h2>{t("createAccount")}</h2>
                 <form onSubmit={handleSubmit(onSubmit)} noValidate>
-                    {error && <p className="form-error">{error.message}</p>}
+                    {error && (
+                        <div className="form-error mb-4" role="alert">
+                             <strong>Error: </strong>
+                             {error.message || t('errors.generic')}
+                        </div>
+                    )}
 
-                    <div className="form-group">
-                        <label htmlFor="name">Name</label>
-                        <input id="name" {...register('name')} />
-                        {errors.name && <p className="form-error">{errors.name.message}</p>}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="form-group">
+                            <label htmlFor="name" className="form-label">{t('name')}</label>
+                            <input
+                                id="name"
+                                type="text"
+                                {...register('name')}
+                                className={`form-input ${errors.name ? 'form-input-error' : ''}`}
+                                placeholder={t('placeholders.name')}
+                            />
+                            {errors.name && <p className="form-error">{errors.name.message}</p>}
+                        </div>
+
+                        <div className="form-group">
+                            <label htmlFor="surname" className="form-label">{t('surname')}</label>
+                            <input
+                                id="surname"
+                                type="text"
+                                {...register('surname')}
+                                className={`form-input ${errors.surname ? 'form-input-error' : ''}`}
+                                placeholder={t('placeholders.surname')}
+                            />
+                            {errors.surname && <p className="form-error">{errors.surname.message}</p>}
+                        </div>
                     </div>
 
-                    <div className="form-group">
-                        <label htmlFor="surname">Surname</label>
-                        <input id="surname" {...register('surname')} />
-                        {errors.surname && <p className="form-error">{errors.surname.message}</p>}
-                    </div>
-
-                    <div className="form-group">
-                        <label htmlFor="email">Email</label>
-                        <input id="email" type="email" {...register('email')} />
+                    <div className="form-group mt-3">
+                        <label htmlFor="email" className="form-label">{t('email')}</label>
+                        <input
+                            id="email"
+                            type="email"
+                            {...register('email')}
+                            className={`form-input ${errors.email ? 'form-input-error' : ''}`}
+                            placeholder={t('placeholders.email')}
+                        />
                         {errors.email && <p className="form-error">{errors.email.message}</p>}
                     </div>
 
-                    <div className="form-group">
-                        <label htmlFor="phone_number">Phone Number</label>
-                        <input id="phone_number" type="tel" {...register('phone_number')} />
+                    <div className="form-group mt-3">
+                        <label htmlFor="phone_number" className="form-label">{t('phone')}</label>
+                        <input
+                            id="phone_number"
+                            type="tel"
+                            {...register('phone_number')}
+                            className={`form-input ${errors.phone_number ? 'form-input-error' : ''}`}
+                            placeholder={t('placeholders.phone')}
+                        />
                         {errors.phone_number && <p className="form-error">{errors.phone_number.message}</p>}
                     </div>
 
-                    <div className="form-group">
-                        <label htmlFor="birth_date">Birthdate</label>
-                        <input id="birth_date" type="date" {...register('birth_date')} />
+                    <div className="form-group mt-3">
+                        <label htmlFor="birth_date" className="form-label">{t('birthdate')}</label>
+                        <input
+                            id="birth_date"
+                            type="date"
+                            {...register('birth_date')}
+                            className={`form-input ${errors.birth_date ? 'form-input-error' : ''}`}
+                        />
                         {errors.birth_date && <p className="form-error">{errors.birth_date.message}</p>}
                     </div>
 
-                    <div className="form-group">
-                        <label htmlFor="password">Password</label>
-                        <input id="password" type="password" {...register('password')} />
+                    <div className="form-group mt-3">
+                        <label htmlFor="password" className="form-label">{t('password')}</label>
+                        <input
+                            id="password"
+                            type="password"
+                            {...register('password')}
+                            className={`form-input ${errors.password ? 'form-input-error' : ''}`}
+                            placeholder={t('placeholders.password')}
+                        />
                         {errors.password && <p className="form-error">{errors.password.message}</p>}
                     </div>
 
-                    <div className="form-group">
-                        <label htmlFor="passwordConfirm">Confirm Password</label>
-                        <input id="passwordConfirm" type="password" {...register('passwordConfirm')} />
+                    <div className="form-group mt-3">
+                        <label htmlFor="passwordConfirm" className="form-label">{t('confirmPassword')}</label>
+                        <input
+                            id="passwordConfirm"
+                            type="password"
+                            {...register('passwordConfirm')}
+                            className={`form-input ${errors.passwordConfirm ? 'form-input-error' : ''}`}
+                            placeholder={t('placeholders.password')}
+                        />
                         {errors.passwordConfirm && <p className="form-error">{errors.passwordConfirm.message}</p>}
                     </div>
 
-                    <button type="submit" disabled={isPending}>
-                        {isPending ? 'Creating Account...' : 'Register'}
+                    <button type="submit" className="form-button mt-6" disabled={isPending}>
+                        {isPending ? t('creatingAccount') : t('submit')}
                     </button>
                 </form>
-                <p>Already have an account? <a href="/login">Login here</a>.</p>
+
+                <p className="text-center text-gray-600 dark:text-gray-400 mt-4">
+                    {t('hasAccount')}{' '}
+                    <Link href="/login" className="text-orange-600 hover:text-orange-700 dark:text-orange-400">
+                        {t('loginLink')}
+                    </Link>
+                </p>
             </div>
         </main>
     );

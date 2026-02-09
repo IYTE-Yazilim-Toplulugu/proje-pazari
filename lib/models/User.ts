@@ -13,7 +13,7 @@ export const MUserSchema = z.object({
     email: z.email(),
     role: z.string(),
     is_verified: z.boolean().optional(),
-    language: z.string(),
+    language: z.enum(['tr', 'en']).optional().default('tr'),
     email_verification_code_expires: z.iso.datetime().nullable().optional(),
     phone_verification_code_expires: z.iso.datetime().nullable().optional(),
     sessions: z.any().nullable().optional(),

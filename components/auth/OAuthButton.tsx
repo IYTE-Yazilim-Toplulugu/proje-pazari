@@ -1,5 +1,8 @@
+'use client';
+
 import Image from "next/image";
 import Button from "../shared/Button";
+import { useTranslations } from "next-intl";
 
 interface OAuthButtonProps {
   provider: "google" | "microsoft" | "meta";
@@ -33,6 +36,7 @@ export default function OAuthButton({
   onClick,
   disabled,
 }: OAuthButtonProps) {
+  const t = useTranslations("oauth");
   const config = PROVIDER_CONFIG[provider];
 
   return (
@@ -46,7 +50,7 @@ export default function OAuthButton({
                 ${config.bgColor} ${config.textColor}`}
     >
       <Image src={config.logo} alt={config.name} width={20} height={20} />
-      <span className="font-medium">Continue with {config.name}</span>
+      <span className="font-medium">{t('buttonLabel', { provider: config.name })}</span>
     </Button>
   );
 }

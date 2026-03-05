@@ -5,6 +5,8 @@ import Providers from "./providers";
 import Header from "@/components/shared/Header";
 import {NextIntlClientProvider} from 'next-intl';
 import {getLocale, getMessages} from 'next-intl/server';
+import StructuredData from '@/components/seo/StructuredData';
+import { OrganizationSchema } from '@/components/seo/StructuredData';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -83,12 +85,25 @@ export default async function RootLayout({
     const locale = await getLocale();
     const messages = await getMessages();
 
+    const organizationsSchema: OrganizationSchema = {
+      '@context': 'https://schema.org',
+      '@type': 'Organization',
+      name: 'IYTE Yazılım Topluluğu',
+      url: 'https://projepazari.iyte.edu.tr',
+      logo: 'https://projepazari.iyte.edu.tr/favicon-96x96.png',
+      description: 'İzmir Yüksek Teknoloji Enstitüsü öğrencileri için proje işbirliği platformu',
+      sameAs: [
+        'https://github.com/IYTE-Yazilim-Toplulugu',
+      ],
+    };
+
     return (
         <html lang={locale}>
             <body
                 className={`${geistSans.variable} ${geistMono.variable} antialiased`}
                 suppressHydrationWarning
             >
+                <StructuredData data={organizationsSchema} />
                 <NextIntlClientProvider messages={messages} locale={locale}>
                     <Providers>
                         <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-900">

@@ -23,7 +23,7 @@ const RegisterRequestBaseSchema = z.object({
     birth_date: z.string().optional(),
 });
 
-const registerRefinements = <T extends typeof RegisterRequestBaseSchema>(schema: T) =>
+const withPasswordOrOAuthRefinements = <T extends z.ZodObject<{ password: z.ZodOptional<z.ZodString>; oauth_code: z.ZodOptional<z.ZodString> } & z.ZodRawShape>>(schema: T) =>
     schema
         .refine(data => data.password != null || data.oauth_code != null, {
             message: "Either 'password' or 'oauth_code' must be provided.",
@@ -34,10 +34,10 @@ const registerRefinements = <T extends typeof RegisterRequestBaseSchema>(schema:
             path: ["oauth_code"],
         });
 
-export const RegisterRequestSchema = registerRefinements(RegisterRequestBaseSchema);
+export const RegisterRequestSchema = withPasswordOrOAuthRefinements(RegisterRequestBaseSchema);
 
 // OAuth registration doesn't have phone_number from provider
-export const OAuthRegisterRequestSchema = registerRefinements(RegisterRequestBaseSchema.omit({ phone_number: true }));
+export const OAuthRegisterRequestSchema = withPasswordOrOAuthRefinements(RegisterRequestBaseSchema.omit({ phone_number: true }));
 
 export const RefreshTokenRequestSchema = z.object({
     token: z.string(),

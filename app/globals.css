@@ -78,7 +78,10 @@ body {
 }
 
 .form-group input {
-  @apply form-input;
+  @apply w-full px-3 py-2 border border-(--color-border) rounded-md
+         text-(--color-text-primary) bg-(--color-background-elevated)
+         focus:outline-none focus:ring-2 focus:ring-(--color-primary)
+         focus:border-(--color-primary);
 }
 
 .form-button {
@@ -90,7 +93,11 @@ body {
 }
 
 .form-wrapper form button[type="submit"] {
-  @apply form-button mt-2;
+  @apply w-full py-2 px-4 rounded-md font-semibold text-white mt-2
+         bg-(--color-btn-primary) hover:bg-(--color-btn-primary-hover)
+         focus:outline-none focus:ring-2 focus:ring-(--color-primary) focus:ring-offset-2
+         disabled:opacity-50 disabled:cursor-not-allowed
+         transition-colors duration-200;
 }
 
 .form-error {

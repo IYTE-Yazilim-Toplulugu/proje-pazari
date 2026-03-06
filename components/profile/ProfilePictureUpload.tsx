@@ -1,14 +1,17 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import Image from 'next/image';
+import { useState } from "react";
+import Image from "next/image";
 
 interface ProfilePictureUploadProps {
   currentUrl?: string;
   onUpload: (file: File) => Promise<void>;
 }
 
-export default function ProfilePictureUpload({ currentUrl, onUpload }: ProfilePictureUploadProps) {
+export default function ProfilePictureUpload({
+  currentUrl,
+  onUpload,
+}: ProfilePictureUploadProps) {
   const [uploading, setUploading] = useState(false);
   const [preview, setPreview] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -20,13 +23,14 @@ export default function ProfilePictureUpload({ currentUrl, onUpload }: ProfilePi
     setError(null);
 
     // Validate file type and size
-    if (!file.type.startsWith('image/')) {
-      setError('Lütfen bir resim dosyası seçin');
+    if (!file.type.startsWith("image/")) {
+      setError("Lütfen bir resim dosyası seçin");
       return;
     }
 
-    if (file.size > 5 * 1024 * 1024) { // 5MB
-      setError('Dosya boyutu 5MB\'dan küçük olmalıdır');
+    if (file.size > 5 * 1024 * 1024) {
+      // 5MB
+      setError("Dosya boyutu 5MB'dan küçük olmalıdır");
       return;
     }
 
@@ -42,8 +46,12 @@ export default function ProfilePictureUpload({ currentUrl, onUpload }: ProfilePi
     try {
       await onUpload(file);
     } catch (err) {
-      console.error('Upload error:', err);
-      setError(err instanceof Error ? err.message : 'Yükleme sırasında bir hata oluştu');
+      console.error("Upload error:", err);
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Yükleme sırasında bir hata oluştu",
+      );
       setPreview(null);
     } finally {
       setUploading(false);
@@ -66,17 +74,19 @@ export default function ProfilePictureUpload({ currentUrl, onUpload }: ProfilePi
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center text-4xl text-gray-400">
-              <span role="img" aria-label="Varsayılan profil">👤</span>
+              <span role="img" aria-label="Varsayılan profil">
+                👤
+              </span>
             </div>
           )}
         </div>
 
         <label
-          className="absolute bottom-0 right-0 bg-blue-600 hover:bg-blue-700 text-white
+          className="absolute bottom-0 right-0 bg-primary hover:bg-primary-dark text-white
                         rounded-full p-2 cursor-pointer transition-colors"
           aria-label="Profil fotoğrafı yükle"
         >
-          <span aria-hidden="true">{uploading ? '⏳' : '📷'}</span>
+          <span aria-hidden="true">{uploading ? "⏳" : "📷"}</span>
           <input
             type="file"
             accept="image/*"

@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { useSession } from '@/lib/hooks/authHooks';
-import { useQuery } from '@tanstack/react-query';
-import { useRouter } from 'next/navigation';
-import Image from 'next/image';
-import ProfileEditForm from '@/components/profile/ProfileEditForm';
-import ProfilePictureUpload from '@/components/profile/ProfilePictureUpload';
-import { user as userApi } from '@/lib/api';
+import { useState, useEffect } from "react";
+import { useSession } from "@/lib/hooks/authHooks";
+import { useQuery } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
+import ProfileEditForm from "@/components/profile/ProfileEditForm";
+import ProfilePictureUpload from "@/components/profile/ProfilePictureUpload";
+import { user as userApi } from "@/lib/api";
 
 export default function ProfilePage() {
   const { data: authContext, isLoading: isAuthLoading } = useSession();
@@ -15,7 +15,7 @@ export default function ProfilePage() {
   const [isEditing, setIsEditing] = useState(false);
 
   const { data: user, isLoading: isUserLoading } = useQuery({
-    queryKey: ['currentUser'],
+    queryKey: ["currentUser"],
     queryFn: userApi.getCurrentUser,
     enabled: authContext?.isAuthenticated === true,
   });
@@ -24,7 +24,7 @@ export default function ProfilePage() {
 
   useEffect(() => {
     if (!isAuthLoading && !authContext?.isAuthenticated) {
-      router.push('/login');
+      router.push("/login");
     }
   }, [isAuthLoading, authContext, router]);
 
@@ -56,7 +56,7 @@ export default function ProfilePage() {
                   currentUrl={user.profilePictureUrl ?? undefined}
                   onUpload={async (file) => {
                     // TODO: Implement profile picture upload API call
-                    console.log('Uploading file:', file.name);
+                    console.log("Uploading file:", file.name);
                   }}
                 />
               ) : (
@@ -70,7 +70,7 @@ export default function ProfilePage() {
                       className="rounded-full"
                     />
                   ) : (
-                    <div className="w-32 h-32 bg-blue-500 rounded-full flex items-center justify-center text-white font-semibold text-4xl">
+                    <div className="w-32 h-32 bg-primary rounded-full flex items-center justify-center text-white font-semibold text-4xl">
                       {user.name.charAt(0)}
                     </div>
                   )}
@@ -83,7 +83,7 @@ export default function ProfilePage() {
                 </h1>
                 <p className="text-gray-600 dark:text-gray-400">{user.email}</p>
                 <div className="flex gap-2 mt-2">
-                  <span className="px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 rounded-full text-sm">
+                  <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm">
                     {user.role}
                   </span>
                   {user.is_verified && (
@@ -97,9 +97,9 @@ export default function ProfilePage() {
 
             <button
               onClick={() => setIsEditing(!isEditing)}
-              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg"
+              className="px-4 py-2 bg-primary hover:bg-primary-dark text-white rounded-lg transition-colors"
             >
-              {isEditing ? 'İptal' : 'Düzenle'}
+              {isEditing ? "İptal" : "Düzenle"}
             </button>
           </div>
 
@@ -126,13 +126,21 @@ export default function ProfilePage() {
                 </h2>
                 <div className="space-y-2">
                   <div className="flex items-center gap-2">
-                    <span className="text-gray-600 dark:text-gray-400">Email:</span>
-                    <span className="text-gray-900 dark:text-white">{user.email}</span>
+                    <span className="text-gray-600 dark:text-gray-400">
+                      Email:
+                    </span>
+                    <span className="text-gray-900 dark:text-white">
+                      {user.email}
+                    </span>
                   </div>
                   {user.phone && (
                     <div className="flex items-center gap-2">
-                      <span className="text-gray-600 dark:text-gray-400">Telefon:</span>
-                      <span className="text-gray-900 dark:text-white">{user.phone}</span>
+                      <span className="text-gray-600 dark:text-gray-400">
+                        Telefon:
+                      </span>
+                      <span className="text-gray-900 dark:text-white">
+                        {user.phone}
+                      </span>
                     </div>
                   )}
                 </div>

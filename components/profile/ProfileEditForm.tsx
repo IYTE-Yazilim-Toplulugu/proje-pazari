@@ -1,20 +1,35 @@
-'use client';
+"use client";
 
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-import { useState } from 'react';
-import { useQueryClient } from '@tanstack/react-query';
-import { user as userApi } from '@/lib/api';
-import type { userModel } from '@/lib/models';
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import { user as userApi } from "@/lib/api";
+import type { userModel } from "@/lib/models";
 
 const ProfileEditSchema = z.object({
-  name: z.string().min(2, 'İsim en az 2 karakter olmalı'),
-  surname: z.string().min(2, 'Soyisim en az 2 karakter olmalı'),
-  description: z.string().max(500, 'Açıklama en fazla 500 karakter olabilir').optional(),
-  phone: z.string().regex(/^\+?[\d\s\-()]{10,20}$/, 'Geçerli bir telefon numarası girin').optional().or(z.literal('')),
-  linkedinUrl: z.string().url('Geçerli bir LinkedIn URL\'si girin').or(z.literal('')).optional(),
-  githubUrl: z.string().url('Geçerli bir GitHub URL\'si girin').or(z.literal('')).optional(),
+  name: z.string().min(2, "İsim en az 2 karakter olmalı"),
+  surname: z.string().min(2, "Soyisim en az 2 karakter olmalı"),
+  description: z
+    .string()
+    .max(500, "Açıklama en fazla 500 karakter olabilir")
+    .optional(),
+  phone: z
+    .string()
+    .regex(/^\+?[\d\s\-()]{10,20}$/, "Geçerli bir telefon numarası girin")
+    .optional()
+    .or(z.literal("")),
+  linkedinUrl: z
+    .string()
+    .url("Geçerli bir LinkedIn URL'si girin")
+    .or(z.literal(""))
+    .optional(),
+  githubUrl: z
+    .string()
+    .url("Geçerli bir GitHub URL'si girin")
+    .or(z.literal(""))
+    .optional(),
 });
 
 type ProfileEditFormData = z.infer<typeof ProfileEditSchema>;
@@ -24,20 +39,27 @@ interface ProfileEditFormProps {
   onSave: () => void;
 }
 
-export default function ProfileEditForm({ user, onSave }: ProfileEditFormProps) {
+export default function ProfileEditForm({
+  user,
+  onSave,
+}: ProfileEditFormProps) {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const queryClient = useQueryClient();
 
-  const { register, handleSubmit, formState: { errors } } = useForm<ProfileEditFormData>({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<ProfileEditFormData>({
     resolver: zodResolver(ProfileEditSchema),
     defaultValues: {
       name: user.name,
       surname: user.surname,
-      description: user.description || '',
-      phone: user.phone || '',
-      linkedinUrl: user.linkedinUrl || '',
-      githubUrl: user.githubUrl || '',
+      description: user.description || "",
+      phone: user.phone || "",
+      linkedinUrl: user.linkedinUrl || "",
+      githubUrl: user.githubUrl || "",
     },
   });
 
@@ -46,11 +68,15 @@ export default function ProfileEditForm({ user, onSave }: ProfileEditFormProps) 
     setError(null);
     try {
       await userApi.updateUser(data);
-      queryClient.invalidateQueries({ queryKey: ['session'] });
+      queryClient.invalidateQueries({ queryKey: ["session"] });
       onSave();
     } catch (err) {
-      console.error('Error updating profile:', err);
-      setError(err instanceof Error ? err.message : 'Profil güncellenirken bir hata oluştu');
+      console.error("Error updating profile:", err);
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Profil güncellenirken bir hata oluştu",
+      );
     } finally {
       setSaving(false);
     }
@@ -69,7 +95,7 @@ export default function ProfileEditForm({ user, onSave }: ProfileEditFormProps) 
             İsim *
           </label>
           <input
-            {...register('name')}
+            {...register("name")}
             className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg
                      bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
           />
@@ -83,12 +109,14 @@ export default function ProfileEditForm({ user, onSave }: ProfileEditFormProps) 
             Soyisim *
           </label>
           <input
-            {...register('surname')}
+            {...register("surname")}
             className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg
                      bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
           />
           {errors.surname && (
-            <p className="text-sm text-red-600 mt-1">{errors.surname.message}</p>
+            <p className="text-sm text-red-600 mt-1">
+              {errors.surname.message}
+            </p>
           )}
         </div>
       </div>
@@ -98,14 +126,16 @@ export default function ProfileEditForm({ user, onSave }: ProfileEditFormProps) 
           Hakkımda
         </label>
         <textarea
-          {...register('description')}
+          {...register("description")}
           rows={4}
           className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg
                    bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
           placeholder="Kendiniz hakkında kısa bir açıklama yazın..."
         />
         {errors.description && (
-          <p className="text-sm text-red-600 mt-1">{errors.description.message}</p>
+          <p className="text-sm text-red-600 mt-1">
+            {errors.description.message}
+          </p>
         )}
       </div>
 
@@ -114,7 +144,7 @@ export default function ProfileEditForm({ user, onSave }: ProfileEditFormProps) 
           Telefon
         </label>
         <input
-          {...register('phone')}
+          {...register("phone")}
           type="tel"
           className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg
                    bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
@@ -130,14 +160,16 @@ export default function ProfileEditForm({ user, onSave }: ProfileEditFormProps) 
           LinkedIn URL
         </label>
         <input
-          {...register('linkedinUrl')}
+          {...register("linkedinUrl")}
           type="url"
           className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg
                    bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
           placeholder="https://linkedin.com/in/kullanici-adiniz"
         />
         {errors.linkedinUrl && (
-          <p className="text-sm text-red-600 mt-1">{errors.linkedinUrl.message}</p>
+          <p className="text-sm text-red-600 mt-1">
+            {errors.linkedinUrl.message}
+          </p>
         )}
       </div>
 
@@ -146,24 +178,26 @@ export default function ProfileEditForm({ user, onSave }: ProfileEditFormProps) 
           GitHub URL
         </label>
         <input
-          {...register('githubUrl')}
+          {...register("githubUrl")}
           type="url"
           className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg
                    bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
           placeholder="https://github.com/kullanici-adiniz"
         />
         {errors.githubUrl && (
-          <p className="text-sm text-red-600 mt-1">{errors.githubUrl.message}</p>
+          <p className="text-sm text-red-600 mt-1">
+            {errors.githubUrl.message}
+          </p>
         )}
       </div>
 
       <button
         type="submit"
         disabled={saving}
-        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold 
+        className="w-full bg-primary hover:bg-primary-dark text-white font-semibold 
                  py-3 px-4 rounded-lg transition-colors disabled:opacity-50"
       >
-        {saving ? 'Kaydediliyor...' : 'Kaydet'}
+        {saving ? "Kaydediliyor..." : "Kaydet"}
       </button>
     </form>
   );

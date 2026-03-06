@@ -51,15 +51,15 @@ body {
 
 /* ── Form Utility Classes ──────────────────────────────────────── */
 .form-container {
-  @apply min-h-screen flex items-center justify-center bg-(--color-background);
+  @apply min-h-screen flex items-center justify-center bg-background;
 }
 
 .form-wrapper {
-  @apply bg-(--color-background-elevated) shadow-md rounded-lg p-8 w-full max-w-md;
+  @apply bg-background-elevated shadow-md rounded-lg p-8 w-full max-w-md;
 }
 
 .form-wrapper h2 {
-  @apply text-2xl font-bold text-(--color-text-primary) mb-6 text-center;
+  @apply text-2xl font-bold text-text-primary mb-6 text-center;
 }
 
 .form-group {
@@ -67,47 +67,47 @@ body {
 }
 
 .form-group label {
-  @apply block text-sm font-medium text-(--color-text-primary) mb-1;
+  @apply block text-sm font-medium text-text-primary mb-1;
 }
 
 .form-input {
-  @apply w-full px-3 py-2 border border-(--color-border) rounded-md
-         text-(--color-text-primary) bg-(--color-background-elevated)
-         focus:outline-none focus:ring-2 focus:ring-(--color-primary)
-         focus:border-(--color-primary);
+  @apply w-full px-3 py-2 border border-border rounded-md
+         text-text-primary bg-background-elevated
+         focus:outline-none focus:ring-2 focus:ring-primary
+         focus:border-primary;
 }
 
 .form-group input {
-  @apply w-full px-3 py-2 border border-(--color-border) rounded-md
-         text-(--color-text-primary) bg-(--color-background-elevated)
-         focus:outline-none focus:ring-2 focus:ring-(--color-primary)
-         focus:border-(--color-primary);
+  @apply w-full px-3 py-2 border border-border rounded-md
+         text-text-primary bg-background-elevated
+         focus:outline-none focus:ring-2 focus:ring-primary
+         focus:border-primary;
 }
 
 .form-button {
   @apply w-full py-2 px-4 rounded-md font-semibold text-white
-         bg-(--color-btn-primary) hover:bg-(--color-btn-primary-hover)
-         focus:outline-none focus:ring-2 focus:ring-(--color-primary) focus:ring-offset-2
+         bg-btn-primary hover:bg-btn-primary-hover
+         focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2
          disabled:opacity-50 disabled:cursor-not-allowed
          transition-colors duration-200;
 }
 
 .form-wrapper form button[type="submit"] {
   @apply w-full py-2 px-4 rounded-md font-semibold text-white mt-2
-         bg-(--color-btn-primary) hover:bg-(--color-btn-primary-hover)
-         focus:outline-none focus:ring-2 focus:ring-(--color-primary) focus:ring-offset-2
+         bg-btn-primary hover:bg-btn-primary-hover
+         focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2
          disabled:opacity-50 disabled:cursor-not-allowed
          transition-colors duration-200;
 }
 
 .form-error {
-  @apply text-(--color-error) text-sm mt-1;
+  @apply text-error text-sm mt-1;
 }
 
 .form-wrapper > p {
-  @apply mt-4 text-center text-sm text-(--color-text-secondary);
+  @apply mt-4 text-center text-sm text-text-secondary;
 }
 
 .form-wrapper > p a {
-  @apply text-(--color-primary) hover:text-(--color-primary-dark) font-medium;
+  @apply text-primary hover:text-primary-dark font-medium;
 }

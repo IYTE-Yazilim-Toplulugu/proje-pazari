@@ -1,26 +1,106 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* ── IYTE Brand Color Tokens ────────────────────────────────────── */
+@theme {
+  /* Primary (IYTE Red) */
+  --color-primary: #e30613;
+  --color-primary-dark: #b3040f;
+  --color-primary-light: #ff3b47;
+  --color-primary-fg: #ffffff;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  /* Background */
+  --color-background: #f5f5f5;
+  --color-background-elevated: #ffffff;
+
+  /* Navigation */
+  --color-nav-bg: #ffffff;
+  --color-nav-active: #e30613;
+  --color-nav-inactive: #6b7280;
+
+  /* Buttons */
+  --color-btn-primary: #e30613;
+  --color-btn-primary-hover: #b3040f;
+  --color-btn-secondary: #f5f5f5;
+  --color-btn-secondary-hover: #e0e0e0;
+
+  /* Text */
+  --color-text-primary: #2d3748;
+  --color-text-secondary: #6b7280;
+
+  /* Utility */
+  --color-border: #e2e8f0;
+  --color-error: #e53e3e;
+  --color-error-dark: #c53030;
+  --color-success: #38a169;
+
+  /* Fonts */
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+:root {
+  --background: var(--color-background);
+  --foreground: var(--color-text-primary);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background: var(--color-background);
+  color: var(--color-text-primary);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* ── Form Utility Classes ──────────────────────────────────────── */
+.form-container {
+  @apply min-h-screen flex items-center justify-center bg-(--color-background);
+}
+
+.form-wrapper {
+  @apply bg-(--color-background-elevated) shadow-md rounded-lg p-8 w-full max-w-md;
+}
+
+.form-wrapper h2 {
+  @apply text-2xl font-bold text-(--color-text-primary) mb-6 text-center;
+}
+
+.form-group {
+  @apply mb-4;
+}
+
+.form-group label {
+  @apply block text-sm font-medium text-(--color-text-primary) mb-1;
+}
+
+.form-input {
+  @apply w-full px-3 py-2 border border-(--color-border) rounded-md
+         text-(--color-text-primary) bg-(--color-background-elevated)
+         focus:outline-none focus:ring-2 focus:ring-(--color-primary)
+         focus:border-(--color-primary);
+}
+
+.form-group input {
+  @apply form-input;
+}
+
+.form-button {
+  @apply w-full py-2 px-4 rounded-md font-semibold text-white
+         bg-(--color-btn-primary) hover:bg-(--color-btn-primary-hover)
+         focus:outline-none focus:ring-2 focus:ring-(--color-primary) focus:ring-offset-2
+         disabled:opacity-50 disabled:cursor-not-allowed
+         transition-colors duration-200;
+}
+
+.form-wrapper form button[type="submit"] {
+  @apply form-button mt-2;
+}
+
+.form-error {
+  @apply text-(--color-error) text-sm mt-1;
+}
+
+.form-wrapper > p {
+  @apply mt-4 text-center text-sm text-(--color-text-secondary);
+}
+
+.form-wrapper > p a {
+  @apply text-(--color-primary) hover:text-(--color-primary-dark) font-medium;
 }

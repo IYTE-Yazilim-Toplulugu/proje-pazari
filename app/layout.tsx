@@ -3,14 +3,16 @@ import { Geist, Geist_Mono, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import Providers from "./providers";
 import Header from "@/components/shared/Header";
-import {NextIntlClientProvider} from 'next-intl';
-import {getLocale, getMessages} from 'next-intl/server';
+import { NextIntlClientProvider } from 'next-intl';
+import { getLocale, getMessages } from 'next-intl/server';
 import StructuredData from '@/components/seo/StructuredData';
 import { OrganizationSchema } from '@/components/seo/StructuredData';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { GeistSans } from 'geist/font/sans';
 import { GeistMono } from 'geist/font/mono';
+
+export { reportWebVitals } from '@/lib/monitoring/performance';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

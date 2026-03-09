@@ -5,16 +5,28 @@ type Props = {
   params: { project_id: string };
 };
 
+export async function generateStaticParams() {
+  const projects = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/projects?size=100`)
+    .then(res => res.json())
+    .then(data => data.data.projects || []);
+
+  return projects.map((project: any) => ({
+    project_id: project.id,
+  }));
+}
+
+export const revalidate = 3600; // Revalidate every hour
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/projects/${params.project_id}`, {
       next: { revalidate: 3600 }
     });
-    
+
     if (!res.ok) throw new Error('Proje bulunamadı');
-    
+
     const responseData = await res.json();
-    const project = responseData.data || responseData; 
+    const project = responseData.data || responseData;
 
     return {
       title: project.title,

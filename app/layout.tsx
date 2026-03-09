@@ -9,6 +9,8 @@ import StructuredData from '@/components/seo/StructuredData';
 import { OrganizationSchema } from '@/components/seo/StructuredData';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
+import { GeistSans } from 'geist/font/sans';
+import { GeistMono } from 'geist/font/mono';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,7 +29,7 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://projepazari.iyte.edu.tr'),
-  
+
   title: {
     default: 'IYTE Proje Pazarı',
     template: '%s | IYTE Proje Pazarı',
@@ -80,45 +82,45 @@ export const viewport: Viewport = {
 };
 
 export default async function RootLayout({
-    children,
+  children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-    const locale = await getLocale();
-    const messages = await getMessages();
+  const locale = await getLocale();
+  const messages = await getMessages();
 
-    const organizationsSchema: OrganizationSchema = {
-      '@context': 'https://schema.org',
-      '@type': 'Organization',
-      name: 'IYTE Yazılım Topluluğu',
-      url: 'https://projepazari.iyte.edu.tr',
-      logo: 'https://projepazari.iyte.edu.tr/favicon-96x96.png',
-      description: 'İzmir Yüksek Teknoloji Enstitüsü öğrencileri için proje işbirliği platformu',
-      sameAs: [
-        'https://github.com/IYTE-Yazilim-Toplulugu',
-      ],
-    };
+  const organizationsSchema: OrganizationSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: 'IYTE Yazılım Topluluğu',
+    url: 'https://projepazari.iyte.edu.tr',
+    logo: 'https://projepazari.iyte.edu.tr/favicon-96x96.png',
+    description: 'İzmir Yüksek Teknoloji Enstitüsü öğrencileri için proje işbirliği platformu',
+    sameAs: [
+      'https://github.com/IYTE-Yazilim-Toplulugu',
+    ],
+  };
 
-    return (
-        <html lang={locale}>
-            <body
-                className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-                suppressHydrationWarning
-            >
-                <StructuredData data={organizationsSchema} />
-                <NextIntlClientProvider messages={messages} locale={locale}>
-                    <Providers>
-                        <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-900">
-                            <Header />
-                            <main className="flex-grow">
-                                {children}
-                            </main>
-                        </div>
-                    </Providers>
-                </NextIntlClientProvider>
-                <Analytics />
-                <SpeedInsights />
-            </body>
-        </html>
-    );
+  return (
+    <html lang={locale} className={`${GeistSans.variable} ${GeistMono.variable}`}>
+      <body
+        className="antialiased"
+        suppressHydrationWarning
+      >
+        <StructuredData data={organizationsSchema} />
+        <NextIntlClientProvider messages={messages} locale={locale}>
+          <Providers>
+            <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-900">
+              <Header />
+              <main className="flex-grow">
+                {children}
+              </main>
+            </div>
+          </Providers>
+        </NextIntlClientProvider>
+        <Analytics />
+        <SpeedInsights />
+      </body>
+    </html>
+  );
 }

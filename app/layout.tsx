@@ -31,6 +31,9 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://projepazari.iyte.edu.tr'),
+  alternates: {
+    canonical: '/',
+  },
 
   title: {
     default: 'IYTE Proje Pazarı',

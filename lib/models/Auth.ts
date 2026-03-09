@@ -13,7 +13,7 @@ export const LogoutRequestSchema = z.object({
     agent: z.string().optional(),
 });
 
-export const RegisterRequestSchema = z.object({
+const RegisterRequestBaseSchema = z.object({
     name: z.string(),
     surname: z.string(),
     password: z.string().optional(),
@@ -21,16 +21,23 @@ export const RegisterRequestSchema = z.object({
     email: z.email(),
     phone_number: z.string().regex(/^\+\d+$/, "Phone number must start with a country code (e.g., +90) and contain no spaces."),
     birth_date: z.string().optional(),
-}).refine(data => data.password != null || data.oauth_code != null, {
-    message: "Either 'password' or 'oauth_code' must be provided.",
-    path: ["password"],
-}).refine(data => !(data.password != null && data.oauth_code != null), {
-    message: "Cannot provide both 'password' and 'oauth_code'.",
-    path: ["oauth_code"],
 });
 
+const withPasswordOrOAuthRefinements = <T extends z.ZodObject<{ password: z.ZodOptional<z.ZodString>; oauth_code: z.ZodOptional<z.ZodString> } & z.ZodRawShape>>(schema: T) =>
+    schema
+        .refine(data => data.password != null || data.oauth_code != null, {
+            message: "Either 'password' or 'oauth_code' must be provided.",
+            path: ["password"],
+        })
+        .refine(data => !(data.password != null && data.oauth_code != null), {
+            message: "Cannot provide both 'password' and 'oauth_code'.",
+            path: ["oauth_code"],
+        });
+
+export const RegisterRequestSchema = withPasswordOrOAuthRefinements(RegisterRequestBaseSchema);
+
 // OAuth registration doesn't have phone_number from provider
-export const OAuthRegisterRequestSchema = RegisterRequestSchema.omit({ phone_number: true });
+export const OAuthRegisterRequestSchema = withPasswordOrOAuthRefinements(RegisterRequestBaseSchema.omit({ phone_number: true }));
 
 export const RefreshTokenRequestSchema = z.object({
     token: z.string(),

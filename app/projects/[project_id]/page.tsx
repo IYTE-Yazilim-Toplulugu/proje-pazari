@@ -6,13 +6,26 @@ type Props = {
 };
 
 export async function generateStaticParams() {
-  const projects = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/projects?size=100`)
-    .then(res => res.json())
-    .then(data => data.data.projects || []);
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/projects?size=100`);
+    
+    if (!res.ok) {
+      console.warn("API'ye ulaşıldı ama projeler çekilemedi.");
+      return []; 
+    }
 
-  return projects.map((project: any) => ({
-    project_id: project.id,
-  }));
+    const data = await res.json();
+    const projects = data.data?.projects || data.data || [];
+
+    return projects.map((project: any) => ({
+      project_id: String(project.id),
+    }));
+    
+  } catch (error) {
+    // API tamamen kapalıysa build'in çökmesini engeller
+    console.error("Build sırasında API'ye bağlanılamadı. Statik sayfalar atlanıyor.");
+    return []; 
+  }
 }
 
 export const revalidate = 3600; // Revalidate every hour

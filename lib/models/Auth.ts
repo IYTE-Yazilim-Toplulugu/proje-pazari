@@ -13,31 +13,31 @@ export const LogoutRequestSchema = z.object({
     agent: z.string().optional(),
 });
 
-const RegisterRequestBaseSchema = z.object({
+const createRegisterRequestBaseSchema = (t?: (key: string) => string) => z.object({
     name: z.string(),
     surname: z.string(),
     password: z.string().optional(),
     oauth_code: z.string().optional(),
-    email: z.email(),
-    phone_number: z.string().regex(/^\+\d+$/, "Phone number must start with a country code (e.g., +90) and contain no spaces."),
+    email: z.string().email(t ? t('errors.invalidEmail') : undefined),
+    phone_number: z.string().regex(/^\+\d+$/, t ? t('errors.phoneInvalid') : "Phone number must start with a country code (e.g., +90) and contain no spaces."),
     birth_date: z.string().optional(),
 });
 
-const withPasswordOrOAuthRefinements = <T extends z.ZodObject<{ password: z.ZodOptional<z.ZodString>; oauth_code: z.ZodOptional<z.ZodString> } & z.ZodRawShape>>(schema: T) =>
+const createWithPasswordOrOAuthRefinements = <T extends z.ZodObject<{ password: z.ZodOptional<z.ZodString>; oauth_code: z.ZodOptional<z.ZodString> } & z.ZodRawShape>>(schema: T, t?: (key: string) => string) =>
     schema
         .refine(data => data.password != null || data.oauth_code != null, {
-            message: "Either 'password' or 'oauth_code' must be provided.",
+            message: t ? t('errors.passwordOrOauthRequired') : "Either 'password' or 'oauth_code' must be provided.",
             path: ["password"],
         })
         .refine(data => !(data.password != null && data.oauth_code != null), {
-            message: "Cannot provide both 'password' and 'oauth_code'.",
+            message: t ? t('errors.passwordAndOauthConflict') : "Cannot provide both 'password' and 'oauth_code'.",
             path: ["oauth_code"],
         });
 
-export const RegisterRequestSchema = withPasswordOrOAuthRefinements(RegisterRequestBaseSchema);
+export const RegisterRequestSchema = createWithPasswordOrOAuthRefinements(createRegisterRequestBaseSchema());
 
 // OAuth registration doesn't have phone_number from provider
-export const OAuthRegisterRequestSchema = withPasswordOrOAuthRefinements(RegisterRequestBaseSchema.omit({ phone_number: true }));
+export const OAuthRegisterRequestSchema = createWithPasswordOrOAuthRefinements(createRegisterRequestBaseSchema().omit({ phone_number: true }));
 
 export const RefreshTokenRequestSchema = z.object({
     token: z.string(),
@@ -107,14 +107,29 @@ export const RegisterCompleteQuerySchema = z.object({
 
 
 /**
-* This schema is for form validation ONLY, not for the API call
+* This schema is for form validation ONLY, not for the API call.
+* Use createRegisterFormSchema(t) for translated error messages.
 */
 export const RegisterFormSchema = RegisterRequestSchema.safeExtend({
     passwordConfirm: z.string(),
 }).refine((data) => data.password === data.passwordConfirm, {
     message: "Passwords do not match",
-    path: ["passwordConfirm"], // Set the error on the confirmation field
+    path: ["passwordConfirm"],
 });
+
+/**
+ * Factory function that creates a RegisterFormSchema with translated error messages.
+ * @param t - Translation function from useTranslations('auth.register')
+ */
+export const createRegisterFormSchema = (t: (key: string) => string) => {
+    const base = createRegisterRequestBaseSchema(t);
+    return createWithPasswordOrOAuthRefinements(base, t)
+        .safeExtend({ passwordConfirm: z.string() })
+        .refine((data) => data.password === data.passwordConfirm, {
+            message: t('errors.passwordMismatch'),
+            path: ["passwordConfirm"],
+        });
+};
 
 
 // --- Type Exports ---

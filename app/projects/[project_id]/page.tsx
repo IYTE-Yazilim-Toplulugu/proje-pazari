@@ -1,10 +1,10 @@
-"use client";
+import { getTranslations } from 'next-intl/server';
 
-
-export default function ProjectPage() {
-
+export default async function ProjectDetailPage() {
+    const t = await getTranslations('projects');
     return (
-        <div className=""></div>
-
-    )
+        <div className="">
+            <h1>{t('title')}</h1>
+        </div>
+    );
 }

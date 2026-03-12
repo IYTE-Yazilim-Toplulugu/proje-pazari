@@ -1,17 +1,19 @@
 'use client';
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 
 import { useAuth } from '@/lib/contexts/AuthContext';
 import { PermissionSchema } from '@/lib/models/Auth';
 import { useFeatures, useChangeFeature } from '@/lib/hooks/adminHooks';
 
 // A simple component for the toggle switch
-const FeatureToggle = ({ featureKey, isEnabled, onToggle, isChanging }: {
+const FeatureToggle = ({ featureKey, isEnabled, onToggle, isChanging, t }: {
     featureKey: string;
     isEnabled: boolean;
     onToggle: (key: string, enabled: boolean) => void;
     isChanging: boolean;
+    t: (key: string) => string;
 }) => (
     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.5rem', borderBottom: '1px solid #eee' }}>
         <span>{featureKey}</span>
@@ -27,7 +29,7 @@ const FeatureToggle = ({ featureKey, isEnabled, onToggle, isChanging }: {
                 borderRadius: '4px',
             }}
         >
-            {isChanging ? 'Updating...' : (isEnabled ? 'Enabled' : 'Disabled')}
+            {isChanging ? t('updating') : (isEnabled ? t('enabled') : t('disabled'))}
         </button>
     </div>
 );
@@ -35,6 +37,7 @@ const FeatureToggle = ({ featureKey, isEnabled, onToggle, isChanging }: {
 export default function AdminPage() {
     const { hasPermission, isLoading: isAuthLoading } = useAuth();
     const router = useRouter();
+    const t = useTranslations('admin');
 
     // 1. Protection Logic: Check for permission on component mount
     useEffect(() => {
@@ -54,7 +57,7 @@ export default function AdminPage() {
         return (
             <>
                 <main style={{ padding: '2rem' }}>
-                    <p>Verifying access...</p>
+                    <p>{t('notAuthorized')}</p>
                 </main>
             </>
         );
@@ -64,10 +67,10 @@ export default function AdminPage() {
     return (
         <>
             <main style={{ maxWidth: '800px', margin: '2rem auto', padding: '0 1rem' }}>
-                <h1>Admin Panel - Feature Flags</h1>
+                <h1>{t('featureFlags')}</h1>
 
-                {isFeaturesLoading && <p>Loading feature flags...</p>}
-                {error && <p style={{ color: 'red' }}>Error fetching features: {error.message}</p>}
+                {isFeaturesLoading && <p>{t('updating')}</p>}
+                {error && <p style={{ color: 'red' }}>{error.message}</p>}
 
                 {features && (
                     <div style={{ border: '1px solid #ddd', borderRadius: '8px' }}>
@@ -80,6 +83,7 @@ export default function AdminPage() {
                                     changeFeature({ key: featureKey, enabled: newEnabledState });
                                 }}
                                 isChanging={isChangingFeature}
+                                t={t}
                             />
                         ))}
                     </div>

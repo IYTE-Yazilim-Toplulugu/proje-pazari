@@ -2,7 +2,8 @@
   "HomePage": {
     "title": "Proje Pazarı'na Hoş Geldiniz",
     "subtitle": "Öğrenciler ve Akademisyenler için Proje Buluşma Noktası",
-    "cta": "Projeleri Keşfet"
+    "cta": "Projeleri Keşfet",
+    "openProjectsTitle": "Açık Projeler"
   },
   "common": {
     "loading": "Yükleniyor...",
@@ -64,7 +65,12 @@
       "createAccount": "Hesap Oluştur",
       "loginLink": "Buradan giriş yapın",
       "errors": {
-        "generic": "Beklenmedik bir hata oluştu. Lütfen tekrar deneyin."
+        "generic": "Beklenmedik bir hata oluştu. Lütfen tekrar deneyin.",
+        "invalidEmail": "Lütfen geçerli bir e-posta adresi girin",
+        "phoneInvalid": "Telefon numarası ülke kodu ile başlamalıdır (örn. +90) ve boşluk içermemelidir.",
+        "passwordOrOauthRequired": "Şifre veya OAuth kodu sağlanmalıdır.",
+        "passwordAndOauthConflict": "Şifre ve OAuth kodu birlikte sağlanamaz.",
+        "passwordMismatch": "Şifreler eşleşmiyor"
       },
       "placeholders": {
         "email": "siz@std.iyte.edu.tr",
@@ -80,6 +86,18 @@
         "resendBtn": "Doğrulama E-postasını Tekrar Gönder",
         "sending": "Gönderiliyor..."
       }
+    },
+    "forgotPassword": {
+      "title": "Şifremi Unuttum",
+      "emailLabel": "E-posta Adresi",
+      "submitBtn": "Sıfırlama Bağlantısı Gönder",
+      "successMessage": "Sıfırlama bağlantısı için e-postanızı kontrol edin."
+    },
+    "resetPassword": {
+      "title": "Şifre Sıfırla",
+      "newPassword": "Yeni Şifre",
+      "confirmPassword": "Şifre Tekrar",
+      "submitBtn": "Şifreyi Sıfırla"
     }
   },
   "oauth": {
@@ -97,7 +115,10 @@
       "processing": {
           "title": "Kimlik Doğrulaması Yapılıyor",
           "description": "Lütfen bekleyin, bilgileriniz işleniyor..."
-      }
+      },
+      "completing": "Giriş tamamlanıyor...",
+      "success": "Giriş başarılı! Yönlendiriliyor...",
+      "failed": "Giriş başarısız. Lütfen tekrar deneyin."
   },
   "forgotPassword": {
     "email": "E-posta",
@@ -118,9 +139,18 @@
   },
   "projects": {
     "title": "Projeler",
+    "pageTitle": "Proje Pazarı",
     "create": "Yeni Proje",
     "search": "Proje ara...",
     "filter": "Filtrele",
+    "searchPlaceholder": "Proje ara...",
+    "filterByStatus": "Duruma göre filtrele",
+    "allStatuses": "Tüm Durumlar",
+    "noProjectsFound": "Proje bulunamadı.",
+    "loadingError": "Projeler yüklenemedi.",
+    "prevPage": "Önceki",
+    "nextPage": "Sonraki",
+    "page": "Sayfa {current} / {total}",
     "status": {
       "DRAFT": "Taslak",
       "OPEN": "Açık",
@@ -183,6 +213,20 @@
         "generic": "Yükleme sırasında bir hata oluştu"
       }
     }
+  },
+  "admin": {
+    "featureFlags": "Özellik Anahtarları",
+    "enabled": "Etkin",
+    "disabled": "Devre Dışı",
+    "updating": "Güncelleniyor...",
+    "notAuthorized": "Bu sayfayı görüntüleme yetkiniz yok."
+  },
+  "apiStatus": {
+    "title": "API Durumu",
+    "online": "Çevrimiçi",
+    "offline": "Çevrimdışı",
+    "totalQueries": "Toplam Sorgular",
+    "failedQueries": "Başarısız Sorgular"
   },
   "errors": {
     "required": "Bu alan zorunludur",

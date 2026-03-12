@@ -2,7 +2,8 @@
   "HomePage": {
     "title": "Welcome to Project Market",
     "subtitle": "The Project Meeting Point for Students and Academicians",
-    "cta": "Explore Projects"
+    "cta": "Explore Projects",
+    "openProjectsTitle": "Open Projects"
   },
   "common": {
     "loading": "Loading...",
@@ -64,7 +65,12 @@
       "createAccount": "Create Account",
       "loginLink": "Login here",
       "errors": {
-        "generic":"An unexpected error occurred. Please try again."
+        "generic": "An unexpected error occurred. Please try again.",
+        "invalidEmail": "Please enter a valid email address",
+        "phoneInvalid": "Phone number must start with a country code (e.g., +90) and contain no spaces.",
+        "passwordOrOauthRequired": "Either password or OAuth code must be provided.",
+        "passwordAndOauthConflict": "Cannot provide both password and OAuth code.",
+        "passwordMismatch": "Passwords do not match"
       },
       "placeholders": {
         "email": "you@std.iyte.edu.tr",
@@ -80,6 +86,18 @@
         "resendBtn": "Resend Verification Email",
         "sending": "Sending..."
       }
+    },
+    "forgotPassword": {
+      "title": "Forgot Password",
+      "emailLabel": "Email Address",
+      "submitBtn": "Send Reset Link",
+      "successMessage": "Check your email for a reset link."
+    },
+    "resetPassword": {
+      "title": "Reset Password",
+      "newPassword": "New Password",
+      "confirmPassword": "Confirm Password",
+      "submitBtn": "Reset Password"
     }
   },
   "oauth": {
@@ -97,7 +115,10 @@
     "processing": {
       "title": "Authenticating",
       "description": "Please wait, your information is being processed..."
-    }
+    },
+    "completing": "Completing sign-in...",
+    "success": "Sign-in successful! Redirecting...",
+    "failed": "Sign-in failed. Please try again."
   },
   "forgotPassword": {
     "email": "Email",
@@ -118,9 +139,18 @@
   },
   "projects": {
     "title": "Projects",
+    "pageTitle": "Project Market",
     "create": "New Project",
     "search": "Search projects...",
     "filter": "Filter",
+    "searchPlaceholder": "Search projects...",
+    "filterByStatus": "Filter by status",
+    "allStatuses": "All Statuses",
+    "noProjectsFound": "No projects found.",
+    "loadingError": "Failed to load projects.",
+    "prevPage": "Previous",
+    "nextPage": "Next",
+    "page": "Page {current} of {total}",
     "status": {
       "DRAFT": "Draft",
       "OPEN": "Open",
@@ -183,6 +213,20 @@
         "generic": "An error occurred during upload"
       }
     }
+  },
+  "admin": {
+    "featureFlags": "Feature Flags",
+    "enabled": "Enabled",
+    "disabled": "Disabled",
+    "updating": "Updating...",
+    "notAuthorized": "You are not authorized to view this page."
+  },
+  "apiStatus": {
+    "title": "API Status",
+    "online": "Online",
+    "offline": "Offline",
+    "totalQueries": "Total Queries",
+    "failedQueries": "Failed Queries"
   },
   "errors": {
     "required": "This field is required",

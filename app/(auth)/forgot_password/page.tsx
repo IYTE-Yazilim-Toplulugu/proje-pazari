@@ -37,7 +37,7 @@ export default function ForgotPasswordPage() {
       setSubmitted(true);
       success(t('emailSentTitle'), t('emailSentDesc'));
     } catch (error) {
-      showError('Error', t('errors.generic'));
+      showError(t('forgotPasswordTitle'), t('errors.generic'));
     }
   };
 

@@ -5,9 +5,8 @@ import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslations } from 'next-intl';
-import { authModel } from '@/lib/models';
 import { useRegister } from '@/lib/hooks/authHooks';
-import { RegisterForm } from '@/lib/models/Auth';
+import { createRegisterFormSchema, RegisterForm } from '@/lib/models/Auth';
 
 export default function RegisterPage() {
     const t = useTranslations("auth.register");
@@ -18,7 +17,7 @@ export default function RegisterPage() {
         handleSubmit,
         formState: { errors },
     } = useForm<RegisterForm>({
-        resolver: zodResolver(authModel.RegisterFormSchema),
+        resolver: zodResolver(createRegisterFormSchema(t)),
     }); 
 
     const onSubmit = (data: RegisterForm) => {
@@ -45,7 +44,7 @@ export default function RegisterPage() {
                 <form onSubmit={handleSubmit(onSubmit)} noValidate>
                     {error && (
                         <div className="form-error mb-4" role="alert">
-                             <strong>Error: </strong>
+                             <strong>{t('errors.generic')}: </strong>
                              {error.message || t('errors.generic')}
                         </div>
                     )}

@@ -1,22 +1,21 @@
 'use client';
 
+import { toast } from "sonner";
+
 export function useToast() {
-  const error = (title: string, description?: string) => {
-    // TODO: Implement with a toast library (react-hot-toast, sonner, etc.)
-    console.error(`${title}${description ? `: ${description}` : ''}`);
+  return {
+    success: (message: string, description?: string) => {
+      toast.success(message, { description });
+    },
+    error: (message: string, description?: string) => {
+      toast.error(message, { description });
+    },
+    info: (message: string, description?: string) => {
+      toast.info(message, { description });
+    },
+    warning: (message: string, description?: string) => {
+      toast.warning(message, { description });
+    },
+    toast,
   };
-
-  const success = (title: string, description?: string) => {
-    console.log(`✓ ${title}${description ? `: ${description}` : ''}`);
-  };
-
-  const info = (title: string, description?: string) => {
-    console.info(`ℹ ${title}${description ? `: ${description}` : ''}`);
-  };
-
-  const warning = (title: string, description?: string) => {
-    console.warn(`⚠ ${title}${description ? `: ${description}` : ''}`);
-  };
-
-  return { error, success, info, warning };
 }

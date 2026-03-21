@@ -1,7 +1,7 @@
 'use client';
 
 import Image from "next/image";
-import Button from "../shared/Button";
+import { Button } from "@/components/ui/button";
 import { useTranslations } from "next-intl";
 
 interface OAuthButtonProps {
@@ -41,11 +41,10 @@ export default function OAuthButton({
 
   return (
     <Button
-      variant="custom"
-      fullWidth
+      variant="outline"
       onClick={onClick}
       disabled={disabled}
-      className={`flex items-center justify-center gap-3 px-4 py-2 
+      className={`w-full flex items-center justify-center gap-3 px-4 py-2
                 border border-gray-300 dark:border-gray-600
                 ${config.bgColor} ${config.textColor}`}
     >

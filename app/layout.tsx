@@ -3,6 +3,7 @@ import { Geist, Geist_Mono, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import Providers from "./providers";
 import Header from "@/components/shared/Header";
+import Footer from "@/components/shared/Footer";
 import {NextIntlClientProvider} from 'next-intl';
 import {getLocale, getMessages} from 'next-intl/server';
 
@@ -96,6 +97,7 @@ export default async function RootLayout({
                             <main className="flex-grow">
                                 {children}
                             </main>
+                            <Footer />
                         </div>
                     </Providers>
                 </NextIntlClientProvider>

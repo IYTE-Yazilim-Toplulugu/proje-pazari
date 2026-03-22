@@ -10,6 +10,7 @@ import { createRegisterFormSchema, RegisterForm } from '@/lib/models/Auth';
 
 export default function RegisterPage() {
     const t = useTranslations("auth.register");
+    const tCommon = useTranslations("common");
     const { mutate: registerUser, isPending, error } = useRegister();
 
     const {
@@ -44,7 +45,7 @@ export default function RegisterPage() {
                 <form onSubmit={handleSubmit(onSubmit)} noValidate>
                     {error && (
                         <div className="form-error mb-4" role="alert">
-                             <strong>{t('errors.generic')}: </strong>
+                             <strong>{tCommon('error')}: </strong>
                              {error.message || t('errors.generic')}
                         </div>
                     )}

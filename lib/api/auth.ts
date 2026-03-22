@@ -5,53 +5,53 @@ import { apiModel, authModel } from '../models';
 
 // --- API Calls ---
 
-/** [POST] /auth - Performs login action. */
+/** [POST] /api/v1/auth/login - Performs login action. */
 export const login = (payload: authModel.LoginRequest) =>
-    mutator('/auth/login', 'post', apiModel.TokenResponseSchema, { arg: payload });
+    mutator('/api/v1/auth/login', 'post', apiModel.TokenResponseSchema, { arg: payload });
 
-/** [POST] /auth/logout - Deletes the specified session. */
+/** [POST] /api/v1/auth/logout - Deletes the specified session. */
 export const logout = (payload: authModel.LogoutRequest) =>
-    mutator('/auth/logout', 'post', apiModel.BasicResponseSchema, { arg: payload });
+    mutator('/api/v1/auth/logout', 'post', apiModel.BasicResponseSchema, { arg: payload });
 
-/** [POST] /auth/register - Registers a new user. */
+/** [POST] /api/v1/auth/register - Registers a new user. */
 export const register = (payload: authModel.RegisterRequest | authModel.OAuthRegisterRequest) =>
-    mutator('/auth/register', 'post', apiModel.BasicResponseSchema, { arg: payload });
+    mutator('/api/v1/auth/register', 'post', apiModel.BasicResponseSchema, { arg: payload });
 
-/** [POST] /auth/refresh - Refreshes the user session. */
+/** [POST] /api/v1/auth/refresh - Refreshes the user session. */
 export const refreshToken = (payload: authModel.RefreshTokenRequest) =>
-    mutator('/auth/refresh', 'post', apiModel.TokenResponseSchema, { arg: payload });
+    mutator('/api/v1/auth/refresh', 'post', apiModel.TokenResponseSchema, { arg: payload });
 
-/** [POST] /auth/forgot-password - Sends password reset email. */
+/** [POST] /api/v1/auth/forgot-password - Sends password reset email. */
 export async function forgotPassword(email: string): Promise<apiModel.BasicResponse> {
-    return mutator('/auth/forgot-password', 'post', apiModel.BasicResponseSchema, {
+    return mutator('/api/v1/auth/forgot-password', 'post', apiModel.BasicResponseSchema, {
         arg: { email },
     });
 }
 
-/** [POST] /auth/reset-password - Resets user password with token. */
+/** [POST] /api/v1/auth/reset-password - Resets user password with token. */
 export async function resetPassword(
     token: string,
     password: string
 ): Promise<apiModel.BasicResponse> {
-    return mutator('/auth/reset-password', 'post', apiModel.BasicResponseSchema, {
+    return mutator('/api/v1/auth/reset-password', 'post', apiModel.BasicResponseSchema, {
         arg: { token, password },
     });
 }
 
-/** [POST] /auth/resend-verification - Resends verification email. */
+/** [POST] /api/v1/auth/resend-verification - Resends verification email. */
 export async function resendVerificationEmail(
     email: string
 ): Promise<apiModel.BasicResponse> {
-    return mutator('/auth/resend-verification', 'post', apiModel.BasicResponseSchema, {
+    return mutator('/api/v1/auth/resend-verification', 'post', apiModel.BasicResponseSchema, {
         arg: { email },
     });
 }
 
 /**
- * [GET] /auth/status - Returns if the user is authenticated.
+ * [GET] /api/v1/auth/status - Returns if the user is authenticated.
  * **BROKEN FOR NOW BECAUSE OF FURKAN's ASS IS HUGE**
  * */
-export const getStatus = () => fetcher('/auth/status', z.boolean());
+export const getStatus = () => fetcher('/api/v1/auth/status', z.boolean());
 
 
 // --- OAuth Redirect Helpers ---

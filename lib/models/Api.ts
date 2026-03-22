@@ -5,14 +5,16 @@ import { z } from 'zod';
  */
 export const ResponseCodeSchema = z.enum({
     Success: 0,
-    InternalError: 1,
-    InvalidRequest: 2,
-    Unauthenticated: 3,
-    Unauthorized: 4,
-    NotFound: 5,
-    Exists: 6,
-    Forbidden: 7,
-    ServiceSpecified: 8,
+    NoContent: 1,
+    Created: 2,
+    Accepted: 3,
+    BadRequest: 4,
+    Unauthorized: 5,
+    Forbidden: 6,
+    NotFound: 7,
+    Conflict: 8,
+    ValidationError: 9,
+    InternalServerError: 10,
 });
 
 /**

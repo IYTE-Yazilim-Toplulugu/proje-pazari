@@ -61,12 +61,13 @@ pnpm install
 
 ### 3. Set Up Environment Variables
 
-Create a `.env.local` file in the root directory:
+Copy the example env file and fill in your values:
 
-```env
-NEXT_PUBLIC_API_BASE_URL=http://localhost:8080
-NEXT_PUBLIC_SITE_URL=http://localhost:3000
+```bash
+cp .env.example .env
 ```
+
+The `.env` file is gitignored and will never be committed. See the [Environment Variables](#environment-variables) section for details.
 
 ### 4. Run the Development Server
 
@@ -217,15 +218,20 @@ pnpm clean        # Clean build artifacts
 
 ## 🔐 Environment Variables
 
-Create `.env.local` for local development:
+Copy `.env.example` to `.env` to get started:
 
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `NEXT_PUBLIC_API_BASE_URL` | Backend API URL | `http://localhost:8080` |
-| `NEXT_PUBLIC_SITE_URL` | Frontend base URL | `http://localhost:3000` |
-| `NEXT_PUBLIC_GA_ID` | Google Analytics ID | - |
+```bash
+cp .env.example .env
+```
 
-**Note**: Variables prefixed with `NEXT_PUBLIC_` are exposed to the browser.
+| Variable | Description | Required |
+|----------|-------------|----------|
+| `NEXT_PUBLIC_API_BASE_URL` | URL of the Spring Boot backend, no trailing slash (e.g. `http://localhost:8080`) | ✅ Yes |
+| `NODE_ENV` | `development` or `production` | ✅ Yes |
+| `NEXT_PUBLIC_SITE_URL` | Frontend base URL (e.g. `http://localhost:3000`) | No |
+| `NEXT_PUBLIC_GA_ID` | Google Analytics ID | No |
+
+**Note**: `.env` is gitignored — never commit it. Variables prefixed with `NEXT_PUBLIC_` are exposed to the browser.
 
 ## 🎨 Coding Standards
 

@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { getProjects, getProject, searchProjects, type GetProjectsParams } from '@/lib/api';
+import { getProjects, getProject, searchProjects, applyToProject, getProjectApplications, withdrawApplication, type GetProjectsParams } from '@/lib/api';
 
 export const PROJECT_KEYS = {
   all: ['projects'] as const,
@@ -32,5 +32,33 @@ export function useSearchProjects(keyword: string, params?: GetProjectsParams) {
     queryKey: PROJECT_KEYS.search(keyword, params),
     queryFn: () => searchProjects(keyword, params),
     enabled: keyword.length > 0,
+  });
+}
+
+export function useProjectApplications(projectId: string) {
+  return useQuery({
+    queryKey: [...PROJECT_KEYS.detail(projectId), 'applications'],
+    queryFn: () => getProjectApplications(projectId),
+    enabled: !!projectId,
+  });
+}
+
+export function useApplyToProject() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (projectId: string) => applyToProject(projectId),
+    onSuccess: (_data, projectId) => {
+      queryClient.invalidateQueries({ queryKey: PROJECT_KEYS.detail(projectId) });
+    },
+  });
+}
+
+export function useWithdrawApplication() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (applicationId: string) => withdrawApplication(applicationId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: PROJECT_KEYS.all });
+    },
   });
 }

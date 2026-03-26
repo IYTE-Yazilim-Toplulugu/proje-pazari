@@ -3,17 +3,16 @@ import { z } from 'zod';
 /**
  * Defines all possible success and error codes returned by the API.
  */
-export const ResponseCodeSchema = z.enum({
-    Success: 0,
-    InternalError: 1,
-    InvalidRequest: 2,
-    Unauthenticated: 3,
-    Unauthorized: 4,
-    NotFound: 5,
-    Exists: 6,
-    Forbidden: 7,
-    ServiceSpecified: 8,
-});
+const ResponseCode = {
+    SUCCESS: 0,
+    BAD_REQUEST: 4,
+    UNAUTHORIZED: 5,
+    NOT_FOUND: 7,
+    VALIDATION_ERROR: 9,
+    INTERNAL_SERVER_ERROR: 10,
+} as const;
+
+export const ResponseCodeSchema = z.nativeEnum(ResponseCode);
 
 /**
  * The base for all API responses.
@@ -44,14 +43,18 @@ export const PagedDataResponseSchema = <T extends z.ZodTypeAny>(T: T) =>
     });
 
 /**
- * The response schema for authentication endpoints.
+ * The response schema for authentication endpoints (login + refresh).
+ * Matches backend's RefreshTokenResult shape.
  */
-export const TokenResponseSchema = BasicResponseSchema.extend({
-    token: z.string().optional(),
-    refresh_token: z.string().optional(),
-    expires: z.iso.datetime().optional(),
-    user_verified: z.boolean().optional(),
-});
+export const TokenResponseSchema = DataResponseSchema(
+    z.object({
+        userId: z.string().optional(),
+        email: z.string().optional(),
+        role: z.string().optional(),
+        accessToken: z.string().optional(),
+        refreshToken: z.string().optional(),
+    }),
+);
 
 
 // --- Type Exports ---

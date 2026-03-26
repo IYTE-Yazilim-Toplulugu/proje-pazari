@@ -71,11 +71,11 @@ export default function AdminPage() {
 
                 {features && (
                     <div style={{ border: '1px solid #ddd', borderRadius: '8px' }}>
-                        {Object.entries(features).map(([key, isEnabled]) => (
+                        {features.map((flag) => (
                             <FeatureToggle
-                                key={key}
-                                featureKey={key}
-                                isEnabled={isEnabled}
+                                key={flag.flagKey}
+                                featureKey={flag.flagKey ?? ''}
+                                isEnabled={flag.enabled ?? false}
                                 onToggle={(featureKey, newEnabledState) => {
                                     changeFeature({ key: featureKey, enabled: newEnabledState });
                                 }}

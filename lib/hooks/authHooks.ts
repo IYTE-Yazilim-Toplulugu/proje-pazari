@@ -95,17 +95,10 @@ export const useLogout = () => {
 export const useRegister = () => {
     const router = useRouter();
     return useMutation({
-        mutationFn: (payload: authModel.RegisterRequest | authModel.OAuthRegisterRequest) => auth.register(payload),
-        onSuccess: (_data, variables) => {
-            // If registered with password, show message to check email
-            if ('password' in variables && variables.password) {
-                alert('Registration successful! Please check your email to verify your account.');
-                router.push('/login');
-            } else {
-                // If registered with OAuth, proceed to login to get a token
-                alert('Registration successful! Logging you in...');
-                // Here you would typically call the login mutation
-            }
+        mutationFn: (payload: authModel.RegisterRequest) => auth.register(payload),
+        onSuccess: () => {
+            alert('Registration successful! Please check your email to verify your account.');
+            router.push('/login');
         },
     });
 };

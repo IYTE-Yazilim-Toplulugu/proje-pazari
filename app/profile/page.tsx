@@ -64,14 +64,14 @@ export default function ProfilePage() {
                   {user.profilePictureUrl ? (
                     <Image
                       src={user.profilePictureUrl}
-                      alt={user.name}
+                      alt={user.fullName ?? ''}
                       width={120}
                       height={120}
                       className="rounded-full"
                     />
                   ) : (
                     <div className="w-32 h-32 bg-blue-500 rounded-full flex items-center justify-center text-white font-semibold text-4xl">
-                      {user.name.charAt(0)}
+                      {user.firstName?.charAt(0) ?? '?'}
                     </div>
                   )}
                 </div>
@@ -79,19 +79,9 @@ export default function ProfilePage() {
 
               <div>
                 <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-                  {user.name} {user.surname}
+                  {user.fullName ?? `${user.firstName ?? ''} ${user.lastName ?? ''}`.trim()}
                 </h1>
                 <p className="text-gray-600 dark:text-gray-400">{user.email}</p>
-                <div className="flex gap-2 mt-2">
-                  <span className="px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 rounded-full text-sm">
-                    {user.role}
-                  </span>
-                  {user.is_verified && (
-                    <span className="px-3 py-1 bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 rounded-full text-sm">
-                      ✓ Doğrulanmış
-                    </span>
-                  )}
-                </div>
               </div>
             </div>
 
@@ -129,12 +119,6 @@ export default function ProfilePage() {
                     <span className="text-gray-600 dark:text-gray-400">Email:</span>
                     <span className="text-gray-900 dark:text-white">{user.email}</span>
                   </div>
-                  {user.phone && (
-                    <div className="flex items-center gap-2">
-                      <span className="text-gray-600 dark:text-gray-400">Telefon:</span>
-                      <span className="text-gray-900 dark:text-white">{user.phone}</span>
-                    </div>
-                  )}
                 </div>
               </div>
 

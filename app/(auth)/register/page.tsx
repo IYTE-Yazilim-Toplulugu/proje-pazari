@@ -22,19 +22,7 @@ export default function RegisterPage() {
     }); 
 
     const onSubmit = (data: RegisterForm) => {
-        // We don't send `passwordConfirm` to the API
         const { passwordConfirm, ...apiData } = data;
-
-        // Format birth_date to UTC datetime string if it exists
-        if (apiData.birth_date) {
-            // Convert date string (YYYY-MM-DD) to datetime string (YYYY-MM-DDTHH:MM:SSZ)
-            const birthDate = new Date(apiData.birth_date);
-            // Set time to midnight UTC
-            birthDate.setUTCHours(0, 0, 0, 0);
-            // Format as ISO string in UTC
-            apiData.birth_date = birthDate.toISOString();
-        }
-
         registerUser(apiData);
     };
 
@@ -52,27 +40,27 @@ export default function RegisterPage() {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="form-group">
-                            <label htmlFor="name" className="form-label">{t('name')}</label>
+                            <label htmlFor="firstName" className="form-label">{t('name')}</label>
                             <input
-                                id="name"
+                                id="firstName"
                                 type="text"
-                                {...register('name')}
-                                className={`form-input ${errors.name ? 'form-input-error' : ''}`}
+                                {...register('firstName')}
+                                className={`form-input ${errors.firstName ? 'form-input-error' : ''}`}
                                 placeholder={t('placeholders.name')}
                             />
-                            {errors.name && <p className="form-error">{errors.name.message}</p>}
+                            {errors.firstName && <p className="form-error">{errors.firstName.message}</p>}
                         </div>
 
                         <div className="form-group">
-                            <label htmlFor="surname" className="form-label">{t('surname')}</label>
+                            <label htmlFor="lastName" className="form-label">{t('surname')}</label>
                             <input
-                                id="surname"
+                                id="lastName"
                                 type="text"
-                                {...register('surname')}
-                                className={`form-input ${errors.surname ? 'form-input-error' : ''}`}
+                                {...register('lastName')}
+                                className={`form-input ${errors.lastName ? 'form-input-error' : ''}`}
                                 placeholder={t('placeholders.surname')}
                             />
-                            {errors.surname && <p className="form-error">{errors.surname.message}</p>}
+                            {errors.lastName && <p className="form-error">{errors.lastName.message}</p>}
                         </div>
                     </div>
 
@@ -86,29 +74,6 @@ export default function RegisterPage() {
                             placeholder={t('placeholders.email')}
                         />
                         {errors.email && <p className="form-error">{errors.email.message}</p>}
-                    </div>
-
-                    <div className="form-group mt-3">
-                        <label htmlFor="phone_number" className="form-label">{t('phone')}</label>
-                        <input
-                            id="phone_number"
-                            type="tel"
-                            {...register('phone_number')}
-                            className={`form-input ${errors.phone_number ? 'form-input-error' : ''}`}
-                            placeholder={t('placeholders.phone')}
-                        />
-                        {errors.phone_number && <p className="form-error">{errors.phone_number.message}</p>}
-                    </div>
-
-                    <div className="form-group mt-3">
-                        <label htmlFor="birth_date" className="form-label">{t('birthdate')}</label>
-                        <input
-                            id="birth_date"
-                            type="date"
-                            {...register('birth_date')}
-                            className={`form-input ${errors.birth_date ? 'form-input-error' : ''}`}
-                        />
-                        {errors.birth_date && <p className="form-error">{errors.birth_date.message}</p>}
                     </div>
 
                     <div className="form-group mt-3">

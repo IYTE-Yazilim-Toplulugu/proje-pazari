@@ -1,18 +1,20 @@
 import { z } from 'zod';
 
-// --- Zod Schemas for Type Safety ---
-export const FeatureListSchema = z.record(z.string(), z.boolean());
+export const FeatureFlagSchema = z.object({
+    id: z.string().optional(),
+    flagKey: z.string().optional(),
+    enabled: z.boolean().optional(),
+    description: z.string().optional(),
+    createdAt: z.string().optional(),
+    updatedAt: z.string().optional(),
+});
 
 export const ChangeFeaturePayloadSchema = z.object({
     key: z.string(),
-    enabled: z.boolean(),
-})
-
-export const SuccessResponseSchema = z.object({
-    success: z.boolean(),
-    message: z.string().optional(),
+    enabled: z.boolean().optional(),
+    description: z.string().optional(),
 });
 
-// --- Type Definitions ---
-export type FeatureList = z.infer<typeof FeatureListSchema>;
+// --- Type Exports ---
+export type FeatureFlag = z.infer<typeof FeatureFlagSchema>;
 export type ChangeFeaturePayload = z.infer<typeof ChangeFeaturePayloadSchema>;

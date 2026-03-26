@@ -10,33 +10,41 @@ export const ProjectStatusEnum = z.enum([
 
 export type ProjectStatus = z.infer<typeof ProjectStatusEnum>;
 
-export const MProjectOwner = z.object({
-  id: z.string(),
-  name: z.string(),
-  email: z.string().email(),
-  profilePictureUrl: z.string().nullable(),
-});
-
 export const MProject = z.object({
-  id: z.string(),
-  title: z.string(),
-  description: z.string(),
-  summary: z.string(),
-  status: ProjectStatusEnum,
-  owner: MProjectOwner,
-  applicationsCount: z.number().default(0),
-  tags: z.array(z.string()).default([]),
-  createdAt: z.string().datetime(),
-  updatedAt: z.string().datetime(),
+  id: z.string().optional(),
+  ownerName: z.string().optional(),
+  ownerEmail: z.string().optional(),
+  title: z.string().optional(),
+  description: z.string().optional(),
+  summary: z.string().optional(),
+  applicationCount: z.number().optional(),
+  status: ProjectStatusEnum.optional(),
+  maxTeamSize: z.number().optional(),
+  requiredSkills: z.array(z.string()).optional(),
+  category: z.string().optional(),
+  deadline: z.string().optional(),
+  createdAt: z.string().optional(),
 });
 
 export type Project = z.infer<typeof MProject>;
 
 export const MProjectListResponse = z.object({
-  projects: z.array(MProject),
-  currentPage: z.number(),
-  totalPages: z.number(),
-  totalElements: z.number(),
+  projects: z.array(MProject).optional(),
+  currentPage: z.number().optional(),
+  totalPages: z.number().optional(),
+  totalElements: z.number().optional(),
 });
 
 export type ProjectListResponse = z.infer<typeof MProjectListResponse>;
+
+export const MApplicationSchema = z.object({
+  applicationId: z.string().optional(),
+  projectId: z.string().optional(),
+  projectTitle: z.string().optional(),
+  applicantId: z.string().optional(),
+  applicantName: z.string().optional(),
+  status: z.enum(['PENDING', 'APPROVED', 'REJECTED', 'WITHDRAWN']).optional(),
+  createdAt: z.string().optional(),
+});
+
+export type Application = z.infer<typeof MApplicationSchema>;

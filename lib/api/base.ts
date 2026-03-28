@@ -133,25 +133,22 @@ async function http(endpoint: string, options: RequestInit, signal?: AbortSignal
 
         try {
             // 3. Call the refresh endpoint
-            const refreshResponse = await refreshToken({
-                token: currentToken,
-                refresh_token: currentRefreshToken,
-            });
+            const refreshResponse = await refreshToken(currentRefreshToken);
 
-            if (refreshResponse.token && refreshResponse.refresh_token) {
-                // 4. Store the new tokens using js-cookie for client-side access
-                Cookies.set('authToken', refreshResponse.token, {
+            if (refreshResponse.accessToken && refreshResponse.refreshToken) {
+                // 4. Store the new tokens
+                Cookies.set('authToken', refreshResponse.accessToken, {
                     path: '/',
-                    maxAge: 60 * 60 * 24 * 30, // 30 days
+                    maxAge: 60 * 60 * 24 * 30,
                 });
-                Cookies.set('refreshToken', refreshResponse.refresh_token, {
+                Cookies.set('refreshToken', refreshResponse.refreshToken, {
                     path: '/',
-                    maxAge: 60 * 60 * 24 * 30, // 30 days
+                    maxAge: 60 * 60 * 24 * 30,
                 });
 
                 console.log('Token refreshed successfully. Retrying original request...');
                 // 5. Retry the original request with the new token
-                response = await makeRequest(refreshResponse.token);
+                response = await makeRequest(refreshResponse.accessToken);
             }
         } catch (error) {
             console.error('Failed to refresh token. Logging out.', error);

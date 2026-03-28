@@ -34,7 +34,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
          */
         const hasPermission = (permission: Permission): boolean => {
             // The "Administrator" permission grants all other permissions.
-            if (sessionUser.permissions.includes('Administrator')) {
+            if (sessionUser.permissions.includes('AdminPanel')) {
                 return true;
             }
             return sessionUser.permissions.includes(permission);

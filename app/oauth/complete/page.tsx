@@ -28,12 +28,12 @@ function OAuthCompleteContent() {
 
         const queryParams = {
             status: searchParams.get('status'),
-            name: searchParams.get('name'),
-            surname: searchParams.get('surname'),
+            firstName: searchParams.get('firstName') ?? searchParams.get('name'),
+            lastName: searchParams.get('lastName') ?? searchParams.get('surname'),
             email: searchParams.get('email'),
             vcode: searchParams.get('vcode'),
-            token: searchParams.get('token'),
-            rtoken: searchParams.get('rtoken'),
+            accessToken: searchParams.get('accessToken') ?? searchParams.get('token'),
+            refreshToken: searchParams.get('refreshToken') ?? searchParams.get('rtoken'),
             msg: searchParams.get('msg'),
             code: searchParams.get('code'),
             provider: searchParams.get('provider'),
@@ -52,7 +52,7 @@ function OAuthCompleteContent() {
         }
 
         hasProcessed.current = true;
-        const { status, name, surname, email, vcode, token, rtoken, msg, code } = result.data;
+        const { status, firstName, lastName, email, vcode, accessToken, refreshToken, msg, code } = result.data;
 
         // Handle OAuth status inside useEffect to avoid dependency issues
         const handleOAuthStatus = () => {
@@ -60,14 +60,14 @@ function OAuthCompleteContent() {
                 case GStatusSchema.enum.SuccessfulJwtTokenProvided:
                     console.log('OAuth login başarılı, tokenlar kaydediliyor...');
 
-                    if (token && rtoken) {
+                    if (accessToken && refreshToken) {
                         try {
                             if (typeof window === 'undefined' || !window.localStorage) {
                                 throw new Error('localStorage is not available in this environment.');
                             }
 
-                            window.localStorage.setItem('access_token', token);
-                            window.localStorage.setItem('refresh_token', rtoken);
+                            window.localStorage.setItem('access_token', accessToken);
+                            window.localStorage.setItem('refresh_token', refreshToken);
 
                             success(t('loginSuccess'));
                             router.push('/dashboard');
@@ -86,14 +86,13 @@ function OAuthCompleteContent() {
                 case GStatusSchema.enum.SuccessfulUserNeedsRegister:
                     console.log('Yeni kullanıcı, kayıt işlemi başlıyor...');
 
-                    if (name && surname && email && vcode) {
+                    if (firstName && lastName && email && vcode) {
                         registerUser(
                             {
-                                name,
-                                surname,
+                                firstName,
+                                lastName,
                                 email,
                                 oauth_code: vcode,
-                                phone_number: '',
                             },
                             {
                                 onSuccess: () => {

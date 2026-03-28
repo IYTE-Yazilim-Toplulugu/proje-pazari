@@ -1,9 +1,7 @@
-import { z } from 'zod';
-
-import { fetcher, mutator } from './base';
 import { apiModel, authModel } from '../models';
+import { mutator } from './base';
 
-// --- API Calls ---
+const apiBaseUrl = () => process.env.NEXT_PUBLIC_API_BASE_URL || '';
 
 /** [POST] /api/v1/auth/login - Performs login action. */
 export const login = (payload: authModel.LoginRequest) =>
@@ -26,7 +24,10 @@ export async function forgotPassword(email: string): Promise<apiModel.BasicRespo
     return mutator('/api/v1/auth/forgot-password', 'post', apiModel.BasicResponseSchema, {
         arg: { email },
     });
-}
+    const json = await response.json();
+    const parsed = apiModel.RefreshResponseSchema.parse(json);
+    return parsed.data!;
+};
 
 /** [POST] /api/v1/auth/reset-password - Resets user password with token. */
 export async function resetPassword(
@@ -53,18 +54,15 @@ export async function resendVerificationEmail(
  * */
 export const getStatus = () => fetcher('/api/v1/auth/status', z.boolean());
 
+/** [POST] /api/v1/auth/resend-verification - Resends verification email. */
+export const resendVerificationEmail = (email: string) =>
+    mutator('/api/v1/auth/resend-verification', 'post', apiModel.BasicResponseSchema, { arg: { email } });
 
 // --- OAuth Redirect Helpers ---
 
 type OAuthService = 'google' | 'meta' | 'microsoft';
 
-/**
- * Returns the redirect URL for the specified OAuth service.
- * This URL should be used in an `<a>` tag or `window.location.href`.
- * @param serviceId The OAuth service to redirect to.
- */
 export const getOAuthRedirectUrl = (serviceId: OAuthService): string => {
-    // Make sure to use your actual base URL
     const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3000';
     return `${baseUrl}/auth/oauth/${serviceId}/redirect`;
 };

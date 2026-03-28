@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
 import type { Project } from '@/lib/models';
 import { useTranslations } from 'next-intl';
 
@@ -21,16 +20,16 @@ export default function ProjectCard({ project }: ProjectCardProps) {
   };
 
   return (
-    <Link href={`/projects/${project.id}`}>
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-xl transition-shadow p-6 h-full border border-gray-200 dark:border-gray-700">
+    <Link href={`/projects/${project.id}`} aria-label={`${project.title} ${t('details.viewProject')}`}>
+      <article className="bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-xl transition-shadow p-6 h-full border border-gray-200 dark:border-gray-700 focus-within:ring-2 focus-within:ring-[var(--color-primary)]">
         {/* Header */}
         <div className="flex items-start justify-between mb-4">
           <h3 className="text-xl font-semibold text-gray-900 dark:text-white line-clamp-2">
             {project.title}
           </h3>
-          <span className={`px-2 py-1 text-xs font-medium text-white rounded-full ${statusColors[project.status]}`}>
-            {t('status.${project.status}')}
-          </span>
+            <span className={`px-2 py-1 text-xs font-medium text-white rounded-full ${statusColors[project.status]}`}>
+              {t(`status.${project.status}`)}
+            </span>
         </div>
 
         {/* Summary */}
@@ -38,20 +37,20 @@ export default function ProjectCard({ project }: ProjectCardProps) {
           {project.summary}
         </p>
 
-        {/* Tags */}
-        {project.tags && project.tags.length > 0 && (
+        {/* Skills */}
+        {project.requiredSkills && project.requiredSkills.length > 0 && (
           <div className="flex flex-wrap gap-2 mb-4">
-            {project.tags.slice(0, 3).map((tag) => (
+            {project.requiredSkills.slice(0, 3).map((skill) => (
               <span
                 key={tag}
                 className="px-2 py-1 text-xs rounded-full bg-[color-mix(in_oklab,var(--color-primary)_16%,white)] text-[var(--color-primary-dark)]"
               >
-                {tag}
+                {skill}
               </span>
             ))}
-            {project.tags.length > 3 && (
+            {project.requiredSkills.length > 3 && (
               <span className="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs rounded-full">
-                +{project.tags.length - 3}
+                +{project.requiredSkills.length - 3}
               </span>
             )}
           </div>
@@ -74,15 +73,15 @@ export default function ProjectCard({ project }: ProjectCardProps) {
               </div>
             )}
             <span className="text-sm text-gray-700 dark:text-gray-300">
-              {project.owner.name}
+              {project.ownerName}
             </span>
           </div>
           
           <div className="text-sm text-gray-500 dark:text-gray-400">
-            {t('card.applicationCount', { count: project.applicationsCount })}
+            {t('card.applicationCount', { count: project.applicationCount })}
           </div>
         </div>
-      </div>
+      </article>
     </Link>
   );
 }

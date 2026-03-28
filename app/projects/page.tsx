@@ -73,7 +73,7 @@ export default function ProjectsPage() {
           onChange={(e) => setSearchQuery(e.target.value)}
           className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg
                    bg-white dark:bg-gray-800 text-gray-900 dark:text-white
-                   focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                   focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent"
         />
         
         <select
@@ -81,7 +81,7 @@ export default function ProjectsPage() {
           onChange={(e) => setStatusFilter(e.target.value as ProjectStatus | '')}
           className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg
                    bg-white dark:bg-gray-800 text-gray-900 dark:text-white
-                   focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                   focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent"
         >
           <option value="">Tüm Durumlar</option>
           <option value="OPEN">Açık</option>
@@ -104,7 +104,7 @@ export default function ProjectsPage() {
             <button
               onClick={() => setCurrentPage(p => Math.max(0, p - 1))}
               disabled={currentPage === 0}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-blue-700"
+              className="px-4 py-2 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed text-[var(--color-text-inverse)] bg-[var(--color-btn-primary)] hover:bg-[var(--color-btn-primary-hover)]"
             >
               Önceki
             </button>
@@ -116,7 +116,7 @@ export default function ProjectsPage() {
             <button
               onClick={() => setCurrentPage(p => Math.min(data.totalPages - 1, p + 1))}
               disabled={currentPage >= data.totalPages - 1}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-blue-700"
+              className="px-4 py-2 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed text-[var(--color-text-inverse)] bg-[var(--color-btn-primary)] hover:bg-[var(--color-btn-primary-hover)]"
             >
               Sonraki
             </button>

@@ -11,7 +11,7 @@ export default function Header() {
   const { data: session } = useSession();
 
   return (
-    <header className="w-full border-b bg-white dark:bg-gray-900 shadow-sm py-4">
+    <header className="w-full border-b shadow-sm py-4 bg-[var(--color-nav-bg)] border-[var(--color-border)]">
       <div className="container mx-auto px-4 flex items-center justify-between">
 
         <Link href="/" className="flex items-center gap-2 group">
@@ -21,23 +21,23 @@ export default function Header() {
             width={32} 
             height={32} 
           />
-          <span className="text-xl font-bold text-gray-900 dark:text-white group-hover:text-blue-600 transition-colors">
+          <span className="text-xl font-bold text-[var(--color-text-primary)] group-hover:text-[var(--color-nav-active)] transition-colors">
               {t('projectMarket')}
           </span>
         </Link>
 
         <nav className="hidden md:flex items-center gap-6">
-          <Link href="/" className="hover:text-blue-600 transition-colors">
+          <Link href="/" className="text-[var(--color-nav-inactive)] hover:text-[var(--color-nav-active)] transition-colors">
             {t('home')}
           </Link>
           
-          <Link href="/projects" className="hover:text-blue-600 transition-colors">
+          <Link href="/projects" className="text-[var(--color-nav-inactive)] hover:text-[var(--color-nav-active)] transition-colors">
             {t('projects')}
           </Link>
 
           {session ? (
             <>
-              <Link href="/profile" className="hover:text-blue-600 transition-colors">
+              <Link href="/profile" className="text-[var(--color-nav-inactive)] hover:text-[var(--color-nav-active)] transition-colors">
                 {t('profile')}
               </Link>
               <button className="text-red-500 hover:text-red-700 transition-colors">
@@ -46,12 +46,12 @@ export default function Header() {
             </>
           ) : (
             <div className="flex items-center gap-4">
-              <Link href="/login" className="text-gray-600 dark:text-gray-300 hover:text-blue-600 transition-colors">
+              <Link href="/login" className="text-[var(--color-nav-inactive)] hover:text-[var(--color-nav-active)] transition-colors">
                 {t('login')}
               </Link>
               <Link 
                 href="/register" 
-                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                className="px-4 py-2 rounded-md transition-colors bg-[var(--color-btn-primary)] text-[var(--color-text-inverse)] hover:bg-[var(--color-btn-primary-hover)]"
               >
                 {t('register')}
               </Link>

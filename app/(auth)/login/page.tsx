@@ -80,11 +80,11 @@ export default function LoginPage() {
           mt-3 mb-4"
           >
             <label className="flex items-center">
-              <input
-                type="checkbox"
-                {...register("rememberMe")}
-                className="mr-2 rounded border-gray-300 text-orange-600 focus:ring-orange-500"
-              />
+                <input
+                  type="checkbox"
+                  {...register("rememberMe")}
+                  className="mr-2 rounded border-gray-300 text-[var(--color-primary)] focus:ring-[var(--color-primary)]"
+                />
               <span className="text-sm text-gray-700 dark:text-gray-300">
                 {t("rememberMe")}
               </span>
@@ -92,7 +92,7 @@ export default function LoginPage() {
 
             <Link
               href="/forgot_password"
-              className="text-sm text-orange-600 hover:text-orange-700 dark:text-orange-400"
+              className="text-sm text-[var(--color-primary)] hover:text-[var(--color-primary-dark)]"
             >
               {t("forgotPassword")}
             </Link>
@@ -106,7 +106,7 @@ export default function LoginPage() {
           {t("noAccount")}{" "}
           <Link
             href="/register"
-            className="text-orange-600 hover:text-orange-700 dark:text-orange-400"
+            className="text-[var(--color-primary)] hover:text-[var(--color-primary-dark)]"
           >
             {t("registerLink")}
           </Link>

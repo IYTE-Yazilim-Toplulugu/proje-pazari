@@ -3,7 +3,7 @@
 import { ButtonHTMLAttributes, forwardRef } from 'react';
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-    variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'custom';
+    variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger' | 'custom';
     size?: 'sm' | 'md' | 'lg';
     fullWidth?: boolean;
 }
@@ -21,10 +21,11 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         const baseStyles = 'inline-flex items-center justify-center font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed';
 
         const variantStyles = {
-            primary: 'bg-orange-600 text-white hover:bg-orange-700 dark:bg-orange-500 dark:hover:bg-orange-600',
-            secondary: 'bg-gray-600 text-white hover:bg-gray-700 dark:bg-gray-500 dark:hover:bg-gray-600',
-            outline: 'border border-gray-300 dark:border-gray-600 bg-transparent hover:bg-gray-50 dark:hover:bg-gray-800',
+            primary: 'bg-[var(--color-btn-primary)] text-[var(--color-text-inverse)] hover:bg-[var(--color-btn-primary-hover)]',
+            secondary: 'bg-[var(--color-btn-secondary)] text-[var(--color-text-primary)] hover:bg-[var(--color-btn-secondary-hover)]',
+            outline: 'border border-[var(--color-border)] bg-transparent hover:bg-[var(--color-background-secondary)]',
             ghost: 'bg-transparent hover:bg-gray-100 dark:hover:bg-gray-800',
+            danger: 'bg-[var(--color-btn-danger)] text-[var(--color-text-inverse)] hover:brightness-95',
             custom: '', // Allow fully custom styling via className
         };
 

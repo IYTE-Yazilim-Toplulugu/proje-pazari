@@ -171,8 +171,7 @@ export default function ProfileEditForm({ user, onSave }: ProfileEditFormProps) 
       <button
         type="submit"
         disabled={saving}
-        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold 
-                 py-3 px-4 rounded-lg transition-colors disabled:opacity-50"
+        className="w-full text-[var(--color-text-inverse)] font-semibold py-3 px-4 rounded-lg transition-colors disabled:opacity-50 bg-[var(--color-btn-primary)] hover:bg-[var(--color-btn-primary-hover)]"
       >
         {saving ? t("saving") : t("save")}
       </button>

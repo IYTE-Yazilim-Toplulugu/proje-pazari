@@ -143,7 +143,7 @@ export default function RegisterPage() {
 
                 <p className="text-center text-gray-600 dark:text-gray-400 mt-4">
                     {t('hasAccount')}{' '}
-                    <Link href="/login" className="text-orange-600 hover:text-orange-700 dark:text-orange-400">
+                    <Link href="/login" className="text-[var(--color-primary)] hover:text-[var(--color-primary-dark)]">
                         {t('loginLink')}
                     </Link>
                 </p>

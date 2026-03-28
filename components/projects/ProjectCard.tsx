@@ -15,7 +15,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
   const statusColors = {
     DRAFT: 'bg-gray-500',
     OPEN: 'bg-green-500',
-    IN_PROGRESS: 'bg-blue-500',
+    IN_PROGRESS: 'bg-[var(--color-primary)]',
     COMPLETED: 'bg-purple-500',
     CANCELLED: 'bg-red-500',
   };
@@ -44,7 +44,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
             {project.tags.slice(0, 3).map((tag) => (
               <span
                 key={tag}
-                className="px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 text-xs rounded-full"
+                className="px-2 py-1 text-xs rounded-full bg-[color-mix(in_oklab,var(--color-primary)_16%,white)] text-[var(--color-primary-dark)]"
               >
                 {tag}
               </span>
@@ -69,7 +69,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
                 className="rounded-full"
               />
             ) : (
-              <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-semibold">
+              <div className="w-8 h-8 rounded-full flex items-center justify-center font-semibold bg-[var(--color-primary)] text-[var(--color-text-inverse)]">
                 {project.owner.name.charAt(0)}
               </div>
             )}

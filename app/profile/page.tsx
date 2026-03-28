@@ -70,7 +70,7 @@ export default function ProfilePage() {
                       className="rounded-full"
                     />
                   ) : (
-                    <div className="w-32 h-32 bg-blue-500 rounded-full flex items-center justify-center text-white font-semibold text-4xl">
+                    <div className="w-32 h-32 rounded-full flex items-center justify-center font-semibold text-4xl bg-[var(--color-primary)] text-[var(--color-text-inverse)]">
                       {user.name.charAt(0)}
                     </div>
                   )}
@@ -83,7 +83,7 @@ export default function ProfilePage() {
                 </h1>
                 <p className="text-gray-600 dark:text-gray-400">{user.email}</p>
                 <div className="flex gap-2 mt-2">
-                  <span className="px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 rounded-full text-sm">
+                  <span className="px-3 py-1 rounded-full text-sm bg-[color-mix(in_oklab,var(--color-primary)_16%,white)] text-[var(--color-primary-dark)]">
                     {user.role}
                   </span>
                   {user.is_verified && (
@@ -97,7 +97,7 @@ export default function ProfilePage() {
 
             <button
               onClick={() => setIsEditing(!isEditing)}
-              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg"
+              className="px-4 py-2 rounded-lg text-[var(--color-text-inverse)] bg-[var(--color-btn-primary)] hover:bg-[var(--color-btn-primary-hover)]"
             >
               {isEditing ? 'İptal' : 'Düzenle'}
             </button>

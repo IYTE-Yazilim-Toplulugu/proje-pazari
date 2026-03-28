@@ -74,8 +74,8 @@ export default function ProfilePictureUpload({ currentUrl, onUpload }: ProfilePi
         </div>
 
         <label
-          className="absolute bottom-0 right-0 bg-blue-600 hover:bg-blue-700 text-white
-                        rounded-full p-2 cursor-pointer transition-colors"
+          className="absolute bottom-0 right-0 bg-[var(--color-btn-primary)] hover:bg-[var(--color-btn-primary-hover)] text-white
+                         rounded-full p-2 cursor-pointer transition-colors"
           aria-label={t("label")}
         >
           <span aria-hidden="true">{uploading ? '⏳' : '📷'}</span>

@@ -1,21 +1,9 @@
-import Image from 'next/image';
+import Loading from '@/components/shared/Loading';
 
-export default function SplashScreen() {
+export default function LoadingPage() {
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-background">
-      <div className="text-center">
-        <Image
-          src="/logo/iyte-logo.svg"
-          alt="IYTE Logo"
-          width={120}
-          height={120}
-          className="mx-auto mb-6 animate-pulse"
-        />
-        <h1 className="text-2xl font-bold mb-2">Proje Pazarı</h1>
-        <div className="w-48 h-1 bg-gray-200 rounded-full mx-auto overflow-hidden">
-          <div className="h-full rounded-full animate-progress bg-[var(--color-btn-primary)]" />
-        </div>
-      </div>
+    <div className="container mx-auto px-4 py-16">
+      <Loading />
     </div>
   );
 }

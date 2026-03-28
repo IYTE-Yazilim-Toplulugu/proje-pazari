@@ -43,6 +43,7 @@
         "password": "Enter your password"
       },
       "errors": {
+        "title": "Error",
         "generic": "An unexpected error occurred. Please try again.",
         "emailRequired": "Email is required",
         "emailInvalid": "Please enter a valid email address",
@@ -72,6 +73,14 @@
         "passwordOrOauthRequired": "Either password or OAuth code must be provided.",
         "passwordAndOauthConflict": "Cannot provide both password and OAuth code.",
         "passwordMismatch": "Passwords do not match"
+      },
+      "passwordStrength": {
+        "label": "Password Strength",
+        "veryWeak": "Very Weak",
+        "weak": "Weak",
+        "medium": "Medium",
+        "strong": "Strong",
+        "veryStrong": "Very Strong"
       },
       "placeholders": {
         "email": "you@std.iyte.edu.tr",
@@ -168,7 +177,8 @@
       "owner": "Project Owner",
       "team": "Team",
       "requirements": "Requirements",
-      "teamMembers": "Team Members"
+      "teamMembers": "Team Members",
+      "viewProject": "view project details"
     },
     "applicationForm": {
       "messageLabel": "Why do you want to join this project?",

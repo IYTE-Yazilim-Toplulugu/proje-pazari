@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import ProfileEditForm from '@/components/profile/ProfileEditForm';
 import ProfilePictureUpload from '@/components/profile/ProfilePictureUpload';
+import EmptyState from '@/components/shared/EmptyState';
 import { user as userApi } from '@/lib/api';
 
 export default function ProfilePage() {
@@ -175,10 +176,10 @@ export default function ProfilePage() {
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
             Projelerim
           </h2>
-          {/* TODO: List user's projects */}
-          <p className="text-gray-600 dark:text-gray-400">
-            Henüz proje bulunmuyor.
-          </p>
+          <EmptyState
+            title="Henüz proje bulunmuyor"
+            description="İlk projenizi oluşturduğunuzda burada listelenecek."
+          />
         </div>
 
         {/* User's Applications */}
@@ -186,10 +187,10 @@ export default function ProfilePage() {
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
             Başvurularım
           </h2>
-          {/* TODO: List user's applications */}
-          <p className="text-gray-600 dark:text-gray-400">
-            Henüz başvuru bulunmuyor.
-          </p>
+          <EmptyState
+            title="Henüz başvuru bulunmuyor"
+            description="Projelere başvurduğunuzda durumlarını burada takip edebilirsiniz."
+          />
         </div>
       </div>
     </div>

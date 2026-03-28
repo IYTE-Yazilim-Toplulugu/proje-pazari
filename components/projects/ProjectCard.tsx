@@ -21,16 +21,16 @@ export default function ProjectCard({ project }: ProjectCardProps) {
   };
 
   return (
-    <Link href={`/projects/${project.id}`}>
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-xl transition-shadow p-6 h-full border border-gray-200 dark:border-gray-700">
+    <Link href={`/projects/${project.id}`} aria-label={`${project.title} ${t('details.viewProject')}`}>
+      <article className="bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-xl transition-shadow p-6 h-full border border-gray-200 dark:border-gray-700 focus-within:ring-2 focus-within:ring-[var(--color-primary)]">
         {/* Header */}
         <div className="flex items-start justify-between mb-4">
           <h3 className="text-xl font-semibold text-gray-900 dark:text-white line-clamp-2">
             {project.title}
           </h3>
-          <span className={`px-2 py-1 text-xs font-medium text-white rounded-full ${statusColors[project.status]}`}>
-            {t('status.${project.status}')}
-          </span>
+            <span className={`px-2 py-1 text-xs font-medium text-white rounded-full ${statusColors[project.status]}`}>
+              {t(`status.${project.status}`)}
+            </span>
         </div>
 
         {/* Summary */}
@@ -82,7 +82,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
             {t('card.applicationCount', { count: project.applicationsCount })}
           </div>
         </div>
-      </div>
+      </article>
     </Link>
   );
 }

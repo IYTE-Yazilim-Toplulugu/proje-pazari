@@ -7,6 +7,7 @@ import { useTranslations } from "next-intl";
 import { authModel } from "@/lib/models";
 import { useLogin } from "@/lib/hooks/authHooks";
 import { LoginRequest } from "@/lib/models/Auth";
+import LoginErrorCard from "@/components/auth/LoginErrorCard";
 
 export default function LoginPage() {
   const t = useTranslations("auth.login");
@@ -29,13 +30,7 @@ export default function LoginPage() {
       <div className="form-wrapper">
         <h2 className="form-title">{t("title")}</h2>
         <form onSubmit={handleSubmit(onSubmit)} noValidate>
-          {/* Display general API errors */}
-          {error && (
-            <div className="form-error" role="alert">
-              <strong>Error: </strong>
-              {error.message || t("errors.generic")}
-            </div>
-          )}
+          {error ? <LoginErrorCard message={error.message || t("errors.generic")} /> : null}
 
           <div className="form-group">
             <label htmlFor="identity" className="form-label">
@@ -60,16 +55,16 @@ export default function LoginPage() {
             <label htmlFor="password" className="form-label">
               {t("password")}
             </label>
-            <input
-              id="password"
-              type="password"
-              {...register("password")}
+              <input
+                id="password"
+                type="password"
+                {...register("password")}
               className={`form-input ${
                 errors.password ? "form-input-error" : ""
               }`}
               placeholder={t("placeholders.password")}
-              aria-invalid={errors.password ? "true" : "false"}
-            />
+                aria-invalid={errors.password ? "true" : "false"}
+              />
             {errors.password && (
               <p className="form-error">{errors.password.message}</p>
             )}

@@ -2,11 +2,12 @@
 'use client';
 
 import Link from 'next/link';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslations } from 'next-intl';
 import { useRegister } from '@/lib/hooks/authHooks';
 import { createRegisterFormSchema, RegisterForm } from '@/lib/models/Auth';
+import PasswordStrengthIndicator from '@/components/auth/PasswordStrengthIndicator';
 
 export default function RegisterPage() {
     const t = useTranslations("auth.register");
@@ -16,10 +17,12 @@ export default function RegisterPage() {
     const {
         register,
         handleSubmit,
+        control,
         formState: { errors },
     } = useForm<RegisterForm>({
         resolver: zodResolver(createRegisterFormSchema(t)),
-    }); 
+    });
+    const passwordValue = useWatch({ control, name: 'password' });
 
     const onSubmit = (data: RegisterForm) => {
         // We don't send `passwordConfirm` to the API
@@ -121,6 +124,7 @@ export default function RegisterPage() {
                             className={`form-input ${errors.password ? 'form-input-error' : ''}`}
                             placeholder={t('placeholders.password')}
                         />
+                        <PasswordStrengthIndicator password={passwordValue} />
                         {errors.password && <p className="form-error">{errors.password.message}</p>}
                     </div>
 

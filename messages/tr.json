@@ -43,6 +43,7 @@
         "password": "Şifrenizi girin"
       },
       "errors": {
+        "title": "Hata",
         "generic": "Beklenmedik bir hata oluştu. Lütfen tekrar deneyin.",
         "emailRequired": "E-posta adresi zorunludur",
         "emailInvalid": "Geçerli bir e-posta adresi girin",
@@ -72,6 +73,14 @@
         "passwordOrOauthRequired": "Şifre veya OAuth kodu sağlanmalıdır.",
         "passwordAndOauthConflict": "Şifre ve OAuth kodu birlikte sağlanamaz.",
         "passwordMismatch": "Şifreler eşleşmiyor"
+      },
+      "passwordStrength": {
+        "label": "Şifre Gücü",
+        "veryWeak": "Çok Zayıf",
+        "weak": "Zayıf",
+        "medium": "Orta",
+        "strong": "Güçlü",
+        "veryStrong": "Çok Güçlü"
       },
       "placeholders": {
         "email": "siz@std.iyte.edu.tr",
@@ -168,7 +177,8 @@
       "owner": "Proje Sahibi",
       "team": "Ekip",
       "requirements": "Gereksinimler",
-      "teamMembers": "Ekip Üyeleri"
+      "teamMembers": "Ekip Üyeleri",
+      "viewProject": "detaylarını görüntüle"
     },
     "applicationForm": {
       "messageLabel": "Neden bu projeye katılmak istiyorsunuz?",

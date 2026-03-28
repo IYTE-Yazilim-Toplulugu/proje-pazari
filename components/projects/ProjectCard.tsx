@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
 import type { Project } from '@/lib/models';
 import { useTranslations } from 'next-intl';
 
@@ -38,20 +37,20 @@ export default function ProjectCard({ project }: ProjectCardProps) {
           {project.summary}
         </p>
 
-        {/* Tags */}
-        {project.tags && project.tags.length > 0 && (
+        {/* Skills */}
+        {project.requiredSkills && project.requiredSkills.length > 0 && (
           <div className="flex flex-wrap gap-2 mb-4">
-            {project.tags.slice(0, 3).map((tag) => (
+            {project.requiredSkills.slice(0, 3).map((skill) => (
               <span
                 key={tag}
                 className="px-2 py-1 text-xs rounded-full bg-[color-mix(in_oklab,var(--color-primary)_16%,white)] text-[var(--color-primary-dark)]"
               >
-                {tag}
+                {skill}
               </span>
             ))}
-            {project.tags.length > 3 && (
+            {project.requiredSkills.length > 3 && (
               <span className="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs rounded-full">
-                +{project.tags.length - 3}
+                +{project.requiredSkills.length - 3}
               </span>
             )}
           </div>
@@ -74,12 +73,12 @@ export default function ProjectCard({ project }: ProjectCardProps) {
               </div>
             )}
             <span className="text-sm text-gray-700 dark:text-gray-300">
-              {project.owner.name}
+              {project.ownerName}
             </span>
           </div>
           
           <div className="text-sm text-gray-500 dark:text-gray-400">
-            {t('card.applicationCount', { count: project.applicationsCount })}
+            {t('card.applicationCount', { count: project.applicationCount })}
           </div>
         </div>
       </article>

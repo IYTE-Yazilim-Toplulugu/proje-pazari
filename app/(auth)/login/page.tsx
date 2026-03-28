@@ -33,21 +33,21 @@ export default function LoginPage() {
           {error ? <LoginErrorCard message={error.message || t("errors.generic")} /> : null}
 
           <div className="form-group">
-            <label htmlFor="identity" className="form-label">
+            <label htmlFor="email" className="form-label">
               {t("email")}
             </label>
             <input
-              id="identity"
+              id="email"
               type="email"
-              {...register("identity")}
+              {...register("email")}
               className={`form-input ${
-                errors.identity ? "form-input-error" : ""
+                errors.email ? "form-input-error" : ""
               }`}
               placeholder={t("placeholders.email")}
-              aria-invalid={errors.identity ? "true" : "false"}
+              aria-invalid={errors.email ? "true" : "false"}
             />
-            {errors.identity && (
-              <p className="form-error">{errors.identity.message}</p>
+            {errors.email && (
+              <p className="form-error">{errors.email.message}</p>
             )}
           </div>
 

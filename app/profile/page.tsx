@@ -44,6 +44,9 @@ export default function ProfilePage() {
     return null;
   }
 
+  const displayName = (user.fullName ?? `${user.firstName ?? ''} ${user.lastName ?? ''}`.trim()) || user.email;
+  const avatarInitial = (user.firstName ?? user.email).charAt(0).toUpperCase();
+
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="max-w-4xl mx-auto">
@@ -56,7 +59,6 @@ export default function ProfilePage() {
                 <ProfilePictureUpload
                   currentUrl={user.profilePictureUrl ?? undefined}
                   onUpload={async (file) => {
-                    // TODO: Implement profile picture upload API call
                     console.log('Uploading file:', file.name);
                   }}
                 />
@@ -65,7 +67,7 @@ export default function ProfilePage() {
                   {user.profilePictureUrl ? (
                     <Image
                       src={user.profilePictureUrl}
-                      alt={user.name}
+                      alt={displayName}
                       width={120}
                       height={120}
                       className="rounded-full"
@@ -80,18 +82,13 @@ export default function ProfilePage() {
 
               <div>
                 <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-                  {user.name} {user.surname}
+                  {displayName}
                 </h1>
                 <p className="text-gray-600 dark:text-gray-400">{user.email}</p>
                 <div className="flex gap-2 mt-2">
                   <span className="px-3 py-1 rounded-full text-sm bg-[color-mix(in_oklab,var(--color-primary)_16%,white)] text-[var(--color-primary-dark)]">
                     {user.role}
                   </span>
-                  {user.is_verified && (
-                    <span className="px-3 py-1 bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 rounded-full text-sm">
-                      ✓ Doğrulanmış
-                    </span>
-                  )}
                 </div>
               </div>
             </div>
@@ -130,12 +127,6 @@ export default function ProfilePage() {
                     <span className="text-gray-600 dark:text-gray-400">Email:</span>
                     <span className="text-gray-900 dark:text-white">{user.email}</span>
                   </div>
-                  {user.phone && (
-                    <div className="flex items-center gap-2">
-                      <span className="text-gray-600 dark:text-gray-400">Telefon:</span>
-                      <span className="text-gray-900 dark:text-white">{user.phone}</span>
-                    </div>
-                  )}
                 </div>
               </div>
 

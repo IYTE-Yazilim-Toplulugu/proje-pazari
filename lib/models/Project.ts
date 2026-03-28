@@ -10,24 +10,22 @@ export const ProjectStatusEnum = z.enum([
 
 export type ProjectStatus = z.infer<typeof ProjectStatusEnum>;
 
-export const MProjectOwner = z.object({
-  id: z.string(),
-  name: z.string(),
-  email: z.string().email(),
-  profilePictureUrl: z.string().nullable(),
-});
-
+/** Mirrors backend ProjectDetailDto */
 export const MProject = z.object({
   id: z.string(),
+  ownerId: z.string(),
+  ownerName: z.string(),
+  ownerEmail: z.string(),
   title: z.string(),
   description: z.string(),
-  summary: z.string(),
+  summary: z.string().nullable().optional(),
+  applicationCount: z.number().default(0),
   status: ProjectStatusEnum,
-  owner: MProjectOwner,
-  applicationsCount: z.number().default(0),
-  tags: z.array(z.string()).default([]),
-  createdAt: z.string().datetime(),
-  updatedAt: z.string().datetime(),
+  maxTeamSize: z.number().nullable().optional(),
+  requiredSkills: z.array(z.string()).default([]),
+  category: z.string().nullable().optional(),
+  deadline: z.string().nullable().optional(),
+  createdAt: z.string(),
 });
 
 export type Project = z.infer<typeof MProject>;

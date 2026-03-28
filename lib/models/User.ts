@@ -1,29 +1,20 @@
 import { z } from 'zod';
 
-
-/**
- * Represents a user profile.
- */
+/** Mirrors backend UserProfileDTO */
 export const MUserSchema = z.object({
-    id: z.number(),
-    name: z.string(),
-    surname: z.string(),
-    password: z.string().optional(),
-    o_auth: z.boolean(),
-    email: z.email(),
-    role: z.string(),
-    is_verified: z.boolean().optional(),
-    language: z.enum(['tr', 'en']).optional().default('tr'),
-    email_verification_code_expires: z.iso.datetime().nullable().optional(),
-    phone_verification_code_expires: z.iso.datetime().nullable().optional(),
-    sessions: z.any().nullable().optional(),
-    // Profile fields
+    id: z.string(),
+    email: z.string().email(),
+    firstName: z.string().nullable().optional(),
+    lastName: z.string().nullable().optional(),
+    fullName: z.string().nullable().optional(),
     description: z.string().nullable().optional(),
-    phone: z.string().nullable().optional(),
     profilePictureUrl: z.string().nullable().optional(),
     linkedinUrl: z.string().nullable().optional(),
     githubUrl: z.string().nullable().optional(),
+    joinedAt: z.string().nullable().optional(),
+    projectsCreated: z.number().optional(),
+    applicationsSubmitted: z.number().optional(),
+    role: z.string(),
 });
 
-// --- Type Exports ---
 export type MUser = z.infer<typeof MUserSchema>;

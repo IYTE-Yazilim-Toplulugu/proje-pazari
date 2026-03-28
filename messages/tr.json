@@ -167,7 +167,34 @@
       "applications": "Başvurular",
       "owner": "Proje Sahibi",
       "team": "Ekip",
-      "requirements": "Gereksinimler"
+      "requirements": "Gereksinimler",
+      "teamMembers": "Ekip Üyeleri"
+    },
+    "applicationForm": {
+      "messageLabel": "Neden bu projeye katılmak istiyorsunuz?",
+      "messagePlaceholder": "Projeye katkılarınızı ve deneyiminizi açıklayın...",
+      "counter": "{count} / 500 karakter",
+      "submit": "Başvuruyu Gönder",
+      "submitting": "Gönderiliyor...",
+      "successTitle": "Başvuru gönderildi",
+      "successDescription": "Başvurunuz proje sahibine iletildi.",
+      "currentStatus": "Başvuru durumunuz: {status}",
+      "withdraw": "Başvuruyu Geri Çek",
+      "withdrawSuccessTitle": "Başvuru geri çekildi",
+      "withdrawSuccessDescription": "Başvurunuz başarıyla geri çekildi.",
+      "errors": {
+        "messageMin": "Mesaj en az 50 karakter olmalıdır.",
+        "messageMax": "Mesaj en fazla 500 karakter olabilir."
+      }
+    },
+    "applications": {
+      "empty": "Henüz başvuru yok.",
+      "noMessage": "Mesaj belirtilmedi.",
+      "approve": "Onayla",
+      "reject": "Reddet",
+      "approvedTitle": "Başvuru onaylandı",
+      "rejectedTitle": "Başvuru reddedildi",
+      "updateDescription": "Başvuru durumu güncellendi."
     }
   },
   "profile": {

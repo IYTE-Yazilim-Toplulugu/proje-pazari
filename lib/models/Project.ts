@@ -32,6 +32,34 @@ export const MProject = z.object({
 
 export type Project = z.infer<typeof MProject>;
 
+export const ProjectApplicationStatusEnum = z.enum([
+  'PENDING',
+  'APPROVED',
+  'REJECTED',
+  'WITHDRAWN',
+]);
+
+export type ProjectApplicationStatus = z.infer<typeof ProjectApplicationStatusEnum>;
+
+export const MProjectApplication = z.object({
+  id: z.string(),
+  user: MProjectOwner,
+  status: ProjectApplicationStatusEnum,
+  message: z.string().nullable(),
+  appliedAt: z.string().datetime(),
+});
+
+export type ProjectApplication = z.infer<typeof MProjectApplication>;
+
+export const MProjectDetail = MProject.extend({
+  requirements: z.string().nullable().optional(),
+  maxApplicants: z.number().nullable().optional(),
+  teamMembers: z.array(MProjectOwner).default([]),
+  applications: z.array(MProjectApplication).optional(),
+});
+
+export type ProjectDetail = z.infer<typeof MProjectDetail>;
+
 export const MProjectListResponse = z.object({
   projects: z.array(MProject),
   currentPage: z.number(),

@@ -167,7 +167,34 @@
       "applications": "Applications",
       "owner": "Project Owner",
       "team": "Team",
-      "requirements": "Requirements"
+      "requirements": "Requirements",
+      "teamMembers": "Team Members"
+    },
+    "applicationForm": {
+      "messageLabel": "Why do you want to join this project?",
+      "messagePlaceholder": "Explain your contribution and experience...",
+      "counter": "{count} / 500 characters",
+      "submit": "Submit Application",
+      "submitting": "Submitting...",
+      "successTitle": "Application submitted",
+      "successDescription": "Your application has been sent to the project owner.",
+      "currentStatus": "Your application status: {status}",
+      "withdraw": "Withdraw Application",
+      "withdrawSuccessTitle": "Application withdrawn",
+      "withdrawSuccessDescription": "Your application was withdrawn successfully.",
+      "errors": {
+        "messageMin": "Message must be at least 50 characters.",
+        "messageMax": "Message can be at most 500 characters."
+      }
+    },
+    "applications": {
+      "empty": "No applications yet.",
+      "noMessage": "No message provided.",
+      "approve": "Approve",
+      "reject": "Reject",
+      "approvedTitle": "Application approved",
+      "rejectedTitle": "Application rejected",
+      "updateDescription": "Application status was updated."
     }
   },
   "profile": {

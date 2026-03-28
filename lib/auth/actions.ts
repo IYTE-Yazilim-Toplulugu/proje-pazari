@@ -9,28 +9,26 @@ const REFRESH_TOKEN_KEY = 'refreshToken';
 
 export async function loginAction(data: authModel.LoginRequest) {
     try {
-        // 1. The Server Action calls your external API
         const response = await auth.login(data);
 
-        // 2. On success, set the cookie from the server
-        if (response.token && response.refresh_token) {
-            (await cookies()).set(AUTH_TOKEN_KEY, response.token, {
-                // secure: process.env.NODE_ENV === 'production',
-                maxAge: 60 * 60 * 24 * 30, // 30 days
+        if (response.accessToken && response.refreshToken) {
+            (await cookies()).set(AUTH_TOKEN_KEY, response.accessToken, {
+                maxAge: 60 * 60 * 24 * 30,
                 path: '/',
                 httpOnly: false,
             });
-            (await cookies()).set(REFRESH_TOKEN_KEY, response.refresh_token, {
-                // secure: process.env.NODE_ENV === 'production',
-                maxAge: 60 * 60 * 24 * 30, // 30 days
+            (await cookies()).set(REFRESH_TOKEN_KEY, response.refreshToken, {
+                maxAge: 60 * 60 * 24 * 30,
                 path: '/',
-                httpOnly: true, // Refresh token should be httpOnly for security
+                httpOnly: true,
             });
         }
         return { success: true };
-    } catch (error: any) {
-        // Return the error message if the API call fails
-        return { success: false, error: error.message };
+    } catch (error: unknown) {
+        return {
+            success: false,
+            error: error instanceof Error ? error.message : 'Unknown error',
+        };
     }
 }
 

@@ -37,7 +37,7 @@ export default function LanguageSwitcher() {
           disabled={isPending || locale === loc}
           className={`px-3 py-1 rounded transition-colors ${
             locale === loc 
-              ? 'bg-blue-600 text-white' 
+              ? 'bg-primary text-white'
               : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
           } disabled:opacity-50`}
         >

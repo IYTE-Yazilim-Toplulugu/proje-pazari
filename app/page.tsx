@@ -22,7 +22,7 @@ export default function HomePage() {
         </p>
         <Link 
           href="/projects" 
-          className="inline-block mt-8 px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors"
+          className="inline-block mt-8 px-8 py-3 bg-primary hover:bg-primary-dark text-white font-semibold rounded-lg transition-colors"
         >
           {t('cta')}
         </Link>

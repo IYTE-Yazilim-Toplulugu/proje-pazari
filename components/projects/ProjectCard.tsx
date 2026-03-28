@@ -44,7 +44,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
             {project.tags.slice(0, 3).map((tag) => (
               <span
                 key={tag}
-                className="px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 text-xs rounded-full"
+                className="px-2 py-1 bg-red-50 dark:bg-red-900/20 text-primary dark:text-primary-light text-xs rounded-full"
               >
                 {tag}
               </span>

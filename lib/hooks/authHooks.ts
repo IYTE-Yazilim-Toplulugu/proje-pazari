@@ -9,6 +9,7 @@ import { userModel, apiModel, authModel } from "../models";
 import { auth, user } from '../api';
 import { ApiError } from '../api/base';
 
+
 // The query key for the main user session from our previous discussion
 const SESSION_QUERY_KEY = ['session'];
 
@@ -89,26 +90,14 @@ export const useLogout = () => {
 export const useRegister = () => {
     const router = useRouter();
     return useMutation({
-        mutationFn: (payload: authModel.RegisterRequest) => auth.register(payload),
+        mutationFn: (payload: authModel.RegisterRequest | authModel.OAuthRegisterRequest) => auth.register(payload),
         onSuccess: (_data, variables) => {
-            // If registered with password, show message to check email
-            if (variables.password) {
+            if ('password' in variables && variables.password) {
                 alert('Registration successful! Please check your email to verify your account.');
                 router.push('/login');
             } else {
-                // If registered with OAuth, proceed to login to get a token
                 alert('Registration successful! Logging you in...');
-                // Here you would typically call the login mutation
             }
         },
-    });
-};
-
-/** Hook to get a lightweight boolean status of authentication. */
-export const useAuthStatus = () => {
-    return useQuery({
-        queryKey: ['authStatus'],
-        queryFn: auth.getStatus,
-        staleTime: 5 * 60 * 1000, // 5 minutes
     });
 };

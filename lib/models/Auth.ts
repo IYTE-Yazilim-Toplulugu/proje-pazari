@@ -5,7 +5,7 @@ export * from './_Execution';
 // --- API Endpoint Schemas ---
 
 export const LoginRequestSchema = z.object({
-    identity: z.string().max(45),
+    email: z.string().email().max(100),
     password: z.string().max(70),
 });
 
@@ -40,8 +40,7 @@ export const RegisterRequestSchema = createWithPasswordOrOAuthRefinements(create
 export const OAuthRegisterRequestSchema = createWithPasswordOrOAuthRefinements(createRegisterRequestBaseSchema().omit({ phone_number: true }));
 
 export const RefreshTokenRequestSchema = z.object({
-    token: z.string(),
-    refresh_token: z.string(),
+    refreshToken: z.string(),
 });
 
 // --- Status Enums ---
@@ -79,13 +78,12 @@ export const OAuthCompleteQuerySchema = z.object({
     // Fields for SessionGenerationError
     msg: z.string().optional(),
     // Fields for SuccessfulUserNeedsRegister
-    name: z.string().optional(),
-    surname: z.string().optional(),
+    firstName: z.string().optional(),
+    lastName: z.string().optional(),
     email: z.email().optional(),
-    vcode: z.string().optional(), // This is the oauth_code for the register endpoint
-    // Fields for SuccessfulJwtTokenProvided
-    token: z.string().optional(),
-    rtoken: z.string().optional(), // refresh token
+    vcode: z.string().optional(),
+    accessToken: z.string().optional(),
+    refreshToken: z.string().optional(),
 });
 
 /**

@@ -8,26 +8,25 @@ export function useApiError() {
     const handleError = (error: unknown) => {
         if (error instanceof ApiError) {
             switch (error.code) {
-                case ResponseCodeSchema.enum.Unauthenticated:
+                case ResponseCodeSchema.enum.Unauthorized:
                     showError('Oturum süreniz doldu', 'Lütfen tekrar giriş yapın');
                     //Redirect to login
                     window.location.href = '/login';
                     break;
-                case ResponseCodeSchema.enum.Unauthorized:
                 case ResponseCodeSchema.enum.Forbidden:
                     showError('Yetkisiz erişim', 'Bu işlem için yetkiniz bulunmuyor');
                     break;
                 case ResponseCodeSchema.enum.NotFound:
                     showError('Bulunamadı', 'İstenen kaynak bulunamadı');
                     break;
-                case ResponseCodeSchema.enum.InvalidRequest:
+                case ResponseCodeSchema.enum.BadRequest:
+                case ResponseCodeSchema.enum.ValidationError:
                     showError('Geçersiz veri', error.message);
                     break;
-                case ResponseCodeSchema.enum.InternalError:
-                case ResponseCodeSchema.enum.ServiceSpecified:
+                case ResponseCodeSchema.enum.InternalServerError:
                     showError('Sunucu hatası', 'Bir hata oluştu, lütfen daha sonra tekrar deneyin');
                     break;
-                case ResponseCodeSchema.enum.Exists:
+                case ResponseCodeSchema.enum.Conflict:
                     showError('Kayıt zaten mevcut', error.message);
                     break;
                 default:

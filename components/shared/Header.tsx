@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
-import { User } from "lucide-react";
 import LanguageSwitcher from "@/components/shared/LanguageSwitcher";
 import Button from "@/components/shared/Button";
 import { useLogout, useSession } from "@/lib/hooks/authHooks";
@@ -67,8 +66,8 @@ export default function Header() {
                 onClick={() => setMenuOpen((open) => !open)}
                 className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-[var(--color-background-secondary)] transition-colors hover:bg-[color-mix(in_oklab,var(--color-primary)_12%,white)]"
               >
-                <span className="inline-flex h-8 w-8 items-center justify-center rounded-full">
-                    <User className="h-4 w-4" />
+                <span className="inline-flex h-8 w-8 items-center justify-center rounded-full text-sm font-semibold text-[var(--color-text-primary)]">
+                  U
                 </span>
               </button>
               {menuOpen ? (

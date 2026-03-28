@@ -44,7 +44,7 @@ export default function ProfilePage() {
     return null;
   }
 
-  const displayName = user.fullName ?? `${user.firstName ?? ''} ${user.lastName ?? ''}`.trim() || user.email;
+  const displayName = (user.fullName ?? `${user.firstName ?? ''} ${user.lastName ?? ''}`.trim()) || user.email;
   const avatarInitial = (user.firstName ?? user.email).charAt(0).toUpperCase();
 
   return (

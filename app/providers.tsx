@@ -3,9 +3,15 @@
 import { QueryClient, QueryClientProvider, QueryCache } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { AuthProvider } from '@/lib/contexts/AuthContext';
+import { useUserLanguage } from '@/lib/hooks/authHooks';
 import { useState } from 'react';
 import { useToast } from '@/lib/hooks/useToast';
 import ApiStatus from '@/components/shared/ApiStatus';
+
+function AuthLanguageSync() {
+    useUserLanguage();
+    return null;
+}
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   const { error: showError } = useToast();
@@ -40,6 +46,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
     <QueryClientProvider client={queryClient}>
       <ApiStatus />
       <AuthProvider>
+        <AuthLanguageSync />
         {children}
       </AuthProvider>
       <ReactQueryDevtools initialIsOpen={false} />

@@ -1,27 +1,25 @@
 "use client";
-import Link from "next/link";
 
+import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-
+import { useTranslations } from "next-intl";
 import { authModel } from "@/lib/models";
 import { useLogin } from "@/lib/hooks/authHooks";
 import { LoginRequest } from "@/lib/models/Auth";
 
 export default function LoginPage() {
-  // 1. Get the login mutation function and its state
+  const t = useTranslations("auth.login");
   const { mutate: login, isPending, error } = useLogin();
 
-  // 2. Set up the form with Zod for validation
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<LoginRequest>({
+  } = useForm<LoginRequest & { rememberMe?: boolean }>({
     resolver: zodResolver(authModel.LoginRequestSchema),
   });
 
-  // 3. This function is called on successful form validation
   const onSubmit = (data: LoginRequest) => {
     login(data);
   };
@@ -29,18 +27,26 @@ export default function LoginPage() {
   return (
     <main className="form-container">
       <div className="form-wrapper">
-        <h2>Login</h2>
+        <h2 className="form-title">{t("title")}</h2>
         <form onSubmit={handleSubmit(onSubmit)} noValidate>
           {/* Display general API errors */}
-          {error && <p className="form-error">{error.message}</p>}
+          {error && (
+            <div className="form-error" role="alert">
+              <strong>Error: </strong>
+              {error.message || t("errors.generic")}
+            </div>
+          )}
 
           <div className="form-group">
-            <label htmlFor="identity">Email</label>
+            <label htmlFor="identity" className="form-label">
+              {t("email")}
+            </label>
             <input
               id="identity"
               type="email"
-              className="form-input"
               {...register("identity")}
+              className={`form-input ${errors.identity ? "form-input-error" : ""}`}
+              placeholder={t("placeholders.email")}
               aria-invalid={errors.identity ? "true" : "false"}
             />
             {errors.identity && (
@@ -48,13 +54,16 @@ export default function LoginPage() {
             )}
           </div>
 
-          <div className="form-group">
-            <label htmlFor="password">Password</label>
+          <div className="form-group mt-3">
+            <label htmlFor="password" className="form-label">
+              {t("password")}
+            </label>
             <input
               id="password"
               type="password"
-              className="form-input"
               {...register("password")}
+              className={`form-input ${errors.password ? "form-input-error" : ""}`}
+              placeholder={t("placeholders.password")}
               aria-invalid={errors.password ? "true" : "false"}
             />
             {errors.password && (
@@ -62,13 +71,35 @@ export default function LoginPage() {
             )}
           </div>
 
+          <div className="flex items-center justify-between mt-3 mb-4">
+            <label className="flex items-center">
+              <input
+                type="checkbox"
+                {...register("rememberMe")}
+                className="mr-2 rounded border-gray-300 text-primary focus:ring-primary"
+              />
+              <span className="text-sm text-gray-700 dark:text-gray-300">
+                {t("rememberMe")}
+              </span>
+            </label>
+
+            <Link
+              href="/forgot_password"
+              className="text-sm text-primary hover:text-primary-dark"
+            >
+              {t("forgotPassword")}
+            </Link>
+          </div>
+
           <button type="submit" className="form-button" disabled={isPending}>
-            {isPending ? "Logging in..." : "Login"}
+            {isPending ? t("submitting") : t("submit")}
           </button>
         </form>
-        <p>
-          Don&apos;t have an account?{" "}
-          <Link href="/register">Register here</Link>.
+        <p className="text-center text-gray-600 dark:text-gray-400 mt-4">
+          {t("noAccount")}{" "}
+          <Link href="/register" className="text-primary hover:text-primary-dark">
+            {t("registerLink")}
+          </Link>
         </p>
       </div>
     </main>

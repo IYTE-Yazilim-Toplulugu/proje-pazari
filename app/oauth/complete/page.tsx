@@ -1,75 +1,172 @@
 'use client';
-import { useEffect, useState, Suspense } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
 
+import { Suspense, useEffect, useState, useRef } from 'react';
+import { useRouter } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { authModel } from '@/lib/models';
 import { useRegister } from '@/lib/hooks/authHooks';
 import { GStatusSchema } from '@/lib/models/Auth';
+import { useTranslations } from 'next-intl';
+import { useToast } from '@/lib/hooks/useToast';
 
 function OAuthCompleteContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const { mutate: registerUser } = useRegister();
-    const [processed, setProcessed] = useState(false);
+    const [isProcessing, setIsProcessing] = useState(true);
+    const hasProcessed = useRef(false);
+    const t = useTranslations('oauth');
+    const { success, error: showError } = useToast();
 
     useEffect(() => {
-        if (processed) return;
+        // Prevent duplicate execution
+        if (hasProcessed.current) return;
+        hasProcessed.current = true;
 
-        // Convert searchParams to an object for parsing
-        const queryObject: Record<string, string> = {};
-        searchParams.forEach((value, key) => {
-            queryObject[key] = value;
-        });
+        const queryParams = {
+            status: searchParams.get('status'),
+            name: searchParams.get('name'),
+            surname: searchParams.get('surname'),
+            email: searchParams.get('email'),
+            vcode: searchParams.get('vcode'),
+            token: searchParams.get('token'),
+            rtoken: searchParams.get('rtoken'),
+            msg: searchParams.get('msg'),
+            code: searchParams.get('code'),
+            provider: searchParams.get('provider'),
+        };
 
-        const result = authModel.OAuthCompleteQuerySchema.safeParse(queryObject);
+        console.log('OAuth callback parameters:', queryParams);
+
+        const result = authModel.OAuthCompleteQuerySchema.safeParse(queryParams);
 
         if (!result.success) {
-            // Handle invalid query parameters
             console.error('Invalid OAuth callback params:', result.error);
-            alert('An unexpected error occurred during OAuth.');
+            showError(t('invalidParams'));
             router.push('/login');
+            setIsProcessing(false);
             return;
         }
 
-        setProcessed(true);
+        hasProcessed.current = true;
         const { status, name, surname, email, vcode, token, rtoken, msg, code } = result.data;
 
-        switch (status) {
-            case GStatusSchema.enum.SuccessfulJwtTokenProvided:
-                // User is already registered and logged in.
-                console.log('OAuth login successful, storing tokens...', token, rtoken);
-                // Store token and rtoken here, invalidate session, redirect.
-                alert('Successfully logged in!');
-                router.push('/dashboard');
-                break;
+        // Handle OAuth status inside useEffect to avoid dependency issues
+        const handleOAuthStatus = () => {
+            switch (status) {
+                case GStatusSchema.enum.SuccessfulJwtTokenProvided:
+                    console.log('OAuth login başarılı, tokenlar kaydediliyor...');
 
-            case GStatusSchema.enum.SuccessfulUserNeedsRegister:
-                // User is new. We have their info. Redirect to a final registration step.
-                // Or, you can automatically register them here.
-                alert('Please complete your registration.');
-                // @ts-expect-error I handled like to
-                registerUser({ name, surname, email, oauth_code: vcode, phone_number: '' /* Prompt for phone */ });
-                break;
+                    if (token && rtoken) {
+                        try {
+                            if (typeof window === 'undefined' || !window.localStorage) {
+                                throw new Error('localStorage is not available in this environment.');
+                            }
 
-            case GStatusSchema.enum.SessionGenerationError:
-                alert(`Session Error: ${msg}`);
-                router.push('/login');
-                break;
+                            window.localStorage.setItem('access_token', token);
+                            window.localStorage.setItem('refresh_token', rtoken);
 
-            case GStatusSchema.enum.AuthenticationError:
-                alert(`Authentication Error, code: ${code}`);
-                router.push('/login');
-                break;
-        }
+                            success(t('loginSuccess'));
+                            router.push('/dashboard');
+                        } catch (error) {
+                            console.error('Tokenlar localStorage içine kaydedilirken bir hata oluştu:', error);
+                            showError(t('tokenStorageError'));
+                            router.push('/login');
+                        }
+                    } else {
+                        showError(t('missingTokens'));
+                        router.push('/login');
+                    }
+                    setIsProcessing(false);
+                    break;
 
-    }, [searchParams, registerUser, router, processed]);
+                case GStatusSchema.enum.SuccessfulUserNeedsRegister:
+                    console.log('Yeni kullanıcı, kayıt işlemi başlıyor...');
 
-    return <div>Processing your authentication...</div>;
+                    if (name && surname && email && vcode) {
+                        registerUser(
+                            {
+                                name,
+                                surname,
+                                email,
+                                oauth_code: vcode,
+                                phone_number: '',
+                            },
+                            {
+                                onSuccess: () => {
+                                    console.log('Kayıt Başarılı');
+                                    success(t('registrationSuccess'));
+                                    router.push('/dashboard');
+                                    setIsProcessing(false);
+                                },
+                                onError: (error) => {
+                                    console.error('Kayıt başarısız:', error);
+                                    showError(t('registrationError'));
+                                    router.push('/register');
+                                    setIsProcessing(false);
+                                },
+                            }
+                        );
+                    } else {
+                        showError(t('missingUserInfo'));
+                        router.push('/register');
+                        setIsProcessing(false);
+                    }
+                    break;
+
+                case GStatusSchema.enum.SessionGenerationError:
+                    console.error('Session error:', msg);
+                    showError(t('sessionError', { msg: msg || t('common.unknownError') }));
+                    router.push('/login');
+                    setIsProcessing(false);
+                    break;
+
+                case GStatusSchema.enum.AuthenticationError:
+                    console.error('Authentication error:', code);
+                    showError(t('authError', { code: code || t('common.unknownError') }));
+                    router.push('/login');
+                    setIsProcessing(false);
+                    break;
+
+                default:
+                    console.error('Unknown status:', status);
+                    showError(t('unexpectedStatus'));
+                    router.push('/login');
+                    setIsProcessing(false);
+            }
+        };
+
+        handleOAuthStatus();
+    }, [searchParams, registerUser, router, t, success, showError]);
+
+    if (isProcessing) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-gray-50">
+                <div className="text-center">
+                    <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-blue-600 mx-auto mb-4"></div>
+                    <h2 className="text-xl font-semibold text-gray-800 mb-2">
+                        {t('processing.title')}
+                    </h2>
+                    <p className="text-gray-600">
+                        {t('processing.description')}
+                    </p>
+                </div>
+            </div>
+        );
+    }
+
+    return null;
 }
 
 export default function OAuthCompletePage() {
     return (
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={
+            <div className="min-h-screen flex items-center justify-center bg-gray-50">
+                <div className="text-center">
+                    <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-blue-600 mx-auto mb-4"></div>
+                </div>
+            </div>
+        }>
             <OAuthCompleteContent />
         </Suspense>
     );

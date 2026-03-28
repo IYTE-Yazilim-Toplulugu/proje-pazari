@@ -23,8 +23,8 @@ export const updateUser = (payload: Partial<userModel.MUser>) =>
     mutator('/user/update', 'patch', apiModel.BasicResponseSchema, { arg: payload });
 
 /** [POST] /user/update/language - Updates the user's language. */
-export const updateUserLanguage = (language: string) =>
-    mutator(`/user/update/language?language=${language}`, 'post', apiModel.BasicResponseSchema, { arg: {} });
+export const updateUserLanguage = (language: 'tr' | 'en') =>
+    mutator(`/user/update/language`, 'patch', apiModel.BasicResponseSchema, { arg: { language } });
 
 /** [DELETE] /user/delete - Deletes the user. */
 export const deleteUser = (id?: number) =>

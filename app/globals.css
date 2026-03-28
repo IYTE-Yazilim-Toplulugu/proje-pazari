@@ -32,15 +32,25 @@
   --color-error: #e53e3e;
   --color-error-dark: #c53030;
   --color-success: #38a169;
+  --color-skeleton: #e0e0e0;
 
   /* Fonts */
   --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-mono: var(--font-jetbrains-mono);
 }
 
 :root {
   --background: var(--color-background);
   --foreground: var(--color-text-primary);
+}
+
+@keyframes progress {
+  0% { width: 0; }
+  100% { width: 100%; }
+}
+
+.animate-progress {
+  animation: progress 1.5s ease-in-out infinite;
 }
 
 body {
@@ -58,6 +68,10 @@ body {
   @apply bg-background-elevated shadow-md rounded-lg p-8 w-full max-w-md;
 }
 
+.form-title {
+  @apply text-2xl font-bold text-center text-text-primary mb-6;
+}
+
 .form-wrapper h2 {
   @apply text-2xl font-bold text-text-primary mb-6 text-center;
 }
@@ -67,6 +81,10 @@ body {
 }
 
 .form-group label {
+  @apply block text-sm font-medium text-text-primary mb-1;
+}
+
+.form-label {
   @apply block text-sm font-medium text-text-primary mb-1;
 }
 
@@ -82,6 +100,10 @@ body {
          text-text-primary bg-background-elevated
          focus:outline-none focus:ring-2 focus:ring-primary
          focus:border-primary;
+}
+
+.form-input-error {
+  @apply border-error focus:ring-error;
 }
 
 .form-button {
@@ -100,6 +122,11 @@ body {
          transition-colors duration-200;
 }
 
+.form-button-secondary {
+  @apply w-full bg-btn-secondary hover:bg-btn-secondary-hover
+         text-text-primary font-semibold py-2 px-4 rounded-md transition-colors;
+}
+
 .form-error {
   @apply text-error text-sm mt-1;
 }
@@ -110,4 +137,18 @@ body {
 
 .form-wrapper > p a {
   @apply text-primary hover:text-primary-dark font-medium;
+}
+
+.form-divider {
+  @apply flex items-center my-6;
+}
+
+.form-divider::before,
+.form-divider::after {
+  @apply flex-1 border-t border-border;
+  content: "";
+}
+
+.form-divider-text {
+  @apply px-4 text-sm text-text-secondary;
 }

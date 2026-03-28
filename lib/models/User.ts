@@ -33,6 +33,5 @@ export const UpdateUserProfileCommandSchema = z.object({
     preferredLanguage: z.string().optional(),
 });
 
-// --- Type Exports ---
 export type MUser = z.infer<typeof MUserSchema>;
 export type UpdateUserProfileCommand = z.infer<typeof UpdateUserProfileCommandSchema>;

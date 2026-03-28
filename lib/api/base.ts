@@ -141,11 +141,11 @@ async function http(endpoint: string, options: RequestInit, signal?: AbortSignal
                 // 4. Store the new tokens using js-cookie for client-side access
                 Cookies.set('authToken', refreshResponse.data.accessToken, {
                     path: '/',
-                    maxAge: 60 * 60 * 24 * 30, // 30 days
+                    maxAge: 60 * 60 * 24 * 30,
                 });
                 Cookies.set('refreshToken', refreshResponse.data.refreshToken, {
                     path: '/',
-                    maxAge: 60 * 60 * 24 * 30, // 30 days
+                    maxAge: 60 * 60 * 24 * 30,
                 });
 
                 console.log('Token refreshed successfully. Retrying original request...');

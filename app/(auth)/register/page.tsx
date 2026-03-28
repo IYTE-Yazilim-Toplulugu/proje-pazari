@@ -2,24 +2,27 @@
 'use client';
 
 import Link from 'next/link';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslations } from 'next-intl';
-import { authModel } from '@/lib/models';
 import { useRegister } from '@/lib/hooks/authHooks';
-import { RegisterForm } from '@/lib/models/Auth';
+import { createRegisterFormSchema, RegisterForm } from '@/lib/models/Auth';
+import PasswordStrengthIndicator from '@/components/auth/PasswordStrengthIndicator';
 
 export default function RegisterPage() {
     const t = useTranslations("auth.register");
+    const tCommon = useTranslations("common");
     const { mutate: registerUser, isPending, error } = useRegister();
 
     const {
         register,
         handleSubmit,
+        control,
         formState: { errors },
     } = useForm<RegisterForm>({
-        resolver: zodResolver(authModel.RegisterFormSchema),
-    }); 
+        resolver: zodResolver(createRegisterFormSchema(t)),
+    });
+    const passwordValue = useWatch({ control, name: 'password' });
 
     const onSubmit = (data: RegisterForm) => {
         const { passwordConfirm, ...apiData } = data;
@@ -33,7 +36,7 @@ export default function RegisterPage() {
                 <form onSubmit={handleSubmit(onSubmit)} noValidate>
                     {error && (
                         <div className="form-error mb-4" role="alert">
-                             <strong>Error: </strong>
+                             <strong>{tCommon('error')}: </strong>
                              {error.message || t('errors.generic')}
                         </div>
                     )}
@@ -85,6 +88,7 @@ export default function RegisterPage() {
                             className={`form-input ${errors.password ? 'form-input-error' : ''}`}
                             placeholder={t('placeholders.password')}
                         />
+                        <PasswordStrengthIndicator password={passwordValue} />
                         {errors.password && <p className="form-error">{errors.password.message}</p>}
                     </div>
 
@@ -107,7 +111,7 @@ export default function RegisterPage() {
 
                 <p className="text-center text-gray-600 dark:text-gray-400 mt-4">
                     {t('hasAccount')}{' '}
-                    <Link href="/login" className="text-orange-600 hover:text-orange-700 dark:text-orange-400">
+                    <Link href="/login" className="text-[var(--color-primary)] hover:text-[var(--color-primary-dark)]">
                         {t('loginLink')}
                     </Link>
                 </p>

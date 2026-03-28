@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { fetcher, mutator } from './base';
 import { apiModel, authModel } from '../models';
+import { mutator } from './base';
 
 // ============================================================================
 // ÇALIŞAN ENDPOINT'LER (Prefix'leri düzeltildi)
@@ -23,7 +24,10 @@ export async function resendVerificationEmail(email: string): Promise<apiModel.B
     return mutator('/api/v1/auth/resend-verification', 'post', apiModel.BasicResponseSchema, {
         arg: { email },
     });
-}
+    const json = await response.json();
+    const parsed = apiModel.RefreshResponseSchema.parse(json);
+    return parsed.data!;
+};
 
 
 // ============================================================================
@@ -54,16 +58,14 @@ export async function resetPassword(token: string, password: string): Promise<ap
  * */
 export const getStatus = () => fetcher('/api/v1/auth/status', z.boolean());
 
+/** [POST] /api/v1/auth/resend-verification - Resends verification email. */
+export const resendVerificationEmail = (email: string) =>
+    mutator('/api/v1/auth/resend-verification', 'post', apiModel.BasicResponseSchema, { arg: { email } });
 
 // --- OAuth Redirect Helpers ---
 
 type OAuthService = 'google' | 'meta' | 'microsoft';
 
-/**
- * Returns the redirect URL for the specified OAuth service.
- * This URL should be used in an `<a>` tag or `window.location.href`.
- * @param serviceId The OAuth service to redirect to.
- */
 export const getOAuthRedirectUrl = (serviceId: OAuthService): string => {
     // Frontend ve Backend 8080 portunda birleşiyorsa base URL'i de /api/v1'e çektik
     const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8080/api/v1';

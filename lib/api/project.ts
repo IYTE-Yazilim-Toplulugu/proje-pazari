@@ -31,6 +31,13 @@ export async function getProject(id: string): Promise<Project> {
   );
 }
 
+export async function getProjectDetail(id: string): Promise<Project> {
+  return fetcher(
+    `/api/v1/projects/${id}`,
+    MProject,
+  );
+}
+
 export async function searchProjects(keyword: string, params?: GetProjectsParams): Promise<ProjectListResponse> {
   const queryParams = new URLSearchParams();
   queryParams.append('q', keyword);

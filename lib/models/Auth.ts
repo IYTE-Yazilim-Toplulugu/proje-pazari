@@ -60,13 +60,12 @@ export const OAuthCompleteQuerySchema = z.object({
     // Fields for SessionGenerationError
     msg: z.string().optional(),
     // Fields for SuccessfulUserNeedsRegister
-    name: z.string().optional(),
-    surname: z.string().optional(),
+    firstName: z.string().optional(),
+    lastName: z.string().optional(),
     email: z.email().optional(),
-    vcode: z.string().optional(), // This is the oauth_code for the register endpoint
-    // Fields for SuccessfulJwtTokenProvided
-    token: z.string().optional(),
-    rtoken: z.string().optional(), // refresh token
+    vcode: z.string().optional(),
+    accessToken: z.string().optional(),
+    refreshToken: z.string().optional(),
 });
 
 /**
@@ -88,7 +87,8 @@ export const RegisterCompleteQuerySchema = z.object({
 
 
 /**
-* This schema is for form validation ONLY, not for the API call
+* This schema is for form validation ONLY, not for the API call.
+* Use createRegisterFormSchema(t) for translated error messages.
 */
 export const RegisterFormSchema = RegisterRequestSchema.extend({
     passwordConfirm: z.string(),
@@ -96,6 +96,20 @@ export const RegisterFormSchema = RegisterRequestSchema.extend({
     message: "Passwords do not match",
     path: ["passwordConfirm"],
 });
+
+/**
+ * Factory function that creates a RegisterFormSchema with translated error messages.
+ * @param t - Translation function from useTranslations('auth.register')
+ */
+export const createRegisterFormSchema = (t: (key: string) => string) => {
+    const base = createRegisterRequestBaseSchema(t);
+    return createWithPasswordOrOAuthRefinements(base, t)
+        .safeExtend({ passwordConfirm: z.string() })
+        .refine((data) => data.password === data.passwordConfirm, {
+            message: t('errors.passwordMismatch'),
+            path: ["passwordConfirm"],
+        });
+};
 
 
 // --- Type Exports ---

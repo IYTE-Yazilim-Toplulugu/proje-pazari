@@ -28,6 +28,30 @@ export const MProject = z.object({
 
 export type Project = z.infer<typeof MProject>;
 
+export const ProjectApplicationStatusEnum = z.enum([
+  'PENDING',
+  'APPROVED',
+  'REJECTED',
+  'WITHDRAWN',
+]);
+
+export type ProjectApplicationStatus = z.infer<typeof ProjectApplicationStatusEnum>;
+
+/** Mirrors backend ApplicationDto */
+export const MProjectApplication = z.object({
+  applicationId: z.string(),
+  projectId: z.string(),
+  projectTitle: z.string().nullable().optional(),
+  applicantId: z.string(),
+  applicantName: z.string(),
+  applicantEmail: z.string(),
+  status: ProjectApplicationStatusEnum,
+  createdAt: z.string().nullable().optional(),
+});
+
+export type ProjectApplication = z.infer<typeof MProjectApplication>;
+
+/** Mirrors backend PagedProjectsResult */
 export const MProjectListResponse = z.object({
   projects: z.array(MProject).optional(),
   currentPage: z.number().optional(),

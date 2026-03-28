@@ -39,7 +39,7 @@ export default function AdminPage() {
     // 1. Protection Logic: Check for permission on component mount
     useEffect(() => {
         // Wait until auth state is loaded
-        if (!isAuthLoading && !hasPermission(PermissionSchema.enum.UseModerationPanel)) {
+        if (!isAuthLoading && !hasPermission(PermissionSchema.enum.AdminPanel)) {
             // If user does not have permission, redirect them
             router.replace('/unauthorized'); // Or your login page
         }
@@ -50,7 +50,7 @@ export default function AdminPage() {
     const { mutate: changeFeature, isPending: isChangingFeature } = useChangeFeature();
 
     // Show a loading screen while checking permissions
-    if (isAuthLoading || !hasPermission(PermissionSchema.enum.UseModerationPanel)) {
+    if (isAuthLoading || !hasPermission(PermissionSchema.enum.AdminPanel)) {
         return (
             <>
                 <main style={{ padding: '2rem' }}>

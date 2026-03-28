@@ -14,19 +14,13 @@ const ResponseCode = {
 
 export const ResponseCodeSchema = z.nativeEnum(ResponseCode);
 
-/**
- * The base for all API responses.
- */
 export const BasicResponseSchema = z.object({
     code: ResponseCodeSchema,
     codes: z.record(z.string(), z.number()).optional(),
     message: z.string().optional(),
+    timestamp: z.string().optional(),
 });
 
-/**
- * A generic response that contains a `data` payload.
- * @param T A Zod schema for the data type.
- */
 export const DataResponseSchema = <T extends z.ZodTypeAny>(T: T) =>
     BasicResponseSchema.extend({
         data: T.optional(),
@@ -56,8 +50,20 @@ export const TokenResponseSchema = DataResponseSchema(
     }),
 );
 
+export const LoginResponseSchema = DataResponseSchema(LoginResultSchema);
+
+export const RefreshResultSchema = z.object({
+    userId: z.string(),
+    email: z.string(),
+    role: z.string(),
+    accessToken: z.string(),
+    refreshToken: z.string(),
+});
+
+export const RefreshResponseSchema = DataResponseSchema(RefreshResultSchema);
 
 // --- Type Exports ---
 export type ResponseCode = z.infer<typeof ResponseCodeSchema>;
 export type BasicResponse = z.infer<typeof BasicResponseSchema>;
-export type TokenResponse = z.infer<typeof TokenResponseSchema>;
+export type LoginResult = z.infer<typeof LoginResultSchema>;
+export type RefreshResult = z.infer<typeof RefreshResultSchema>;

@@ -1,20 +1,13 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { User } from "lucide-react";
 import LanguageSwitcher from "@/components/shared/LanguageSwitcher";
-import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import Button from "@/components/shared/Button";
 import { useLogout, useSession } from "@/lib/hooks/authHooks";
 
 export default function Header() {
@@ -23,9 +16,25 @@ export default function Header() {
   const { data: session, isLoading } = useSession();
   const { mutate: logout } = useLogout();
   const router = useRouter();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   const isAuthenticated = !!session?.isAuthenticated;
   const isAdmin = !!session?.permissions?.includes("AdminPanel");
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setMenuOpen(false);
+      }
+    }
+
+    if (menuOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [menuOpen]);
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-[var(--color-border)] bg-[var(--color-nav-bg)]/95 backdrop-blur supports-[backdrop-filter]:bg-[var(--color-nav-bg)]/80">
@@ -52,30 +61,59 @@ export default function Header() {
           {isLoading ? (
             <div className="h-8 w-8 animate-pulse rounded-full bg-[var(--color-background-secondary)]" />
           ) : isAuthenticated ? (
-            <DropdownMenu>
-              <DropdownMenuTrigger className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-[var(--color-background-secondary)] transition-colors hover:bg-[color-mix(in_oklab,var(--color-primary)_12%,white)]">
-                <Avatar className="h-8 w-8">
-                  <AvatarFallback>
+            <div className="relative" ref={menuRef}>
+              <button
+                type="button"
+                onClick={() => setMenuOpen((open) => !open)}
+                className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-[var(--color-background-secondary)] transition-colors hover:bg-[color-mix(in_oklab,var(--color-primary)_12%,white)]"
+              >
+                <span className="inline-flex h-8 w-8 items-center justify-center rounded-full">
                     <User className="h-4 w-4" />
-                  </AvatarFallback>
-                </Avatar>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56">
-                <DropdownMenuItem onClick={() => router.push("/profile")}>{t("profile")}</DropdownMenuItem>
-                {isAdmin ? <DropdownMenuItem onClick={() => router.push("/admin")}>{tAdmin("featureFlags")}</DropdownMenuItem> : null}
-                <DropdownMenuSeparator />
-                <DropdownMenuItem
-                  variant="destructive"
-                  onClick={() => logout()}
-                >
-                  {t("logout")}
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+                </span>
+              </button>
+              {menuOpen ? (
+                <div className="absolute right-0 mt-2 w-56 rounded-lg border border-[var(--color-border)] bg-white p-2 shadow-lg dark:bg-gray-900">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setMenuOpen(false);
+                      router.push("/profile");
+                    }}
+                    className="block w-full rounded px-3 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-800"
+                  >
+                    {t("profile")}
+                  </button>
+                  {isAdmin ? (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setMenuOpen(false);
+                        router.push("/admin");
+                      }}
+                      className="block w-full rounded px-3 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-800"
+                    >
+                      {tAdmin("featureFlags")}
+                    </button>
+                  ) : null}
+                  <div className="my-2 border-t border-[var(--color-border)]" />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setMenuOpen(false);
+                      logout();
+                    }}
+                    className="block w-full rounded px-3 py-2 text-left text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30"
+                  >
+                    {t("logout")}
+                  </button>
+                </div>
+              ) : null}
+            </div>
           ) : (
             <div className="flex items-center gap-2">
               <Button variant="ghost" size="sm" onClick={() => router.push("/login")}>{t("login")}</Button>
               <Button
+                variant="custom"
                 size="sm"
                 onClick={() => router.push("/register")}
                 className="bg-[var(--color-btn-primary)] text-[var(--color-text-inverse)] hover:bg-[var(--color-btn-primary-hover)]"

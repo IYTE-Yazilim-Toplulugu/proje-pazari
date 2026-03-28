@@ -8,7 +8,6 @@ import type { Project } from '@/lib/models';
 
 export default function HomePage() {
   const t = useTranslations('HomePage');
-  const tProjects = useTranslations('projects');
 
   const { data, isLoading } = useProjects({ page: 0, size: 6, status: 'OPEN' });
 
@@ -32,7 +31,7 @@ export default function HomePage() {
       {!isLoading && data && data.projects.length > 0 && (
         <div className="mt-16">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
-            {tProjects('status.OPEN')} {tProjects('title')}
+            {t('openProjectsTitle')}
           </h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

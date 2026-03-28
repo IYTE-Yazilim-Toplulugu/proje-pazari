@@ -9,6 +9,8 @@ import { GStatusSchema } from '@/lib/models/Auth';
 import { useTranslations } from 'next-intl';
 import { useToast } from '@/lib/hooks/useToast';
 
+type CommonT = (key: 'unknownError') => string;
+
 function OAuthCompleteContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -16,6 +18,7 @@ function OAuthCompleteContent() {
     const [isProcessing, setIsProcessing] = useState(true);
     const hasProcessed = useRef(false);
     const t = useTranslations('oauth');
+    const tCommon = useTranslations('common') as CommonT;
     const { success, error: showError } = useToast();
 
     useEffect(() => {
@@ -116,14 +119,14 @@ function OAuthCompleteContent() {
 
                 case GStatusSchema.enum.SessionGenerationError:
                     console.error('Session error:', msg);
-                    showError(t('sessionError', { msg: msg || t('common.unknownError') }));
+                    showError(t('sessionError', { msg: msg || tCommon('unknownError') }));
                     router.push('/login');
                     setIsProcessing(false);
                     break;
 
                 case GStatusSchema.enum.AuthenticationError:
                     console.error('Authentication error:', code);
-                    showError(t('authError', { code: code || t('common.unknownError') }));
+                    showError(t('authError', { code: code || tCommon('unknownError') }));
                     router.push('/login');
                     setIsProcessing(false);
                     break;
@@ -137,7 +140,7 @@ function OAuthCompleteContent() {
         };
 
         handleOAuthStatus();
-    }, [searchParams, registerUser, router, t, success, showError]);
+    }, [searchParams, registerUser, router, t, tCommon, success, showError]);
 
     if (isProcessing) {
         return (

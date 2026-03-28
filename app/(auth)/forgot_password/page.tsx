@@ -37,7 +37,7 @@ export default function ForgotPasswordPage() {
       setSubmitted(true);
       success(t('emailSentTitle'), t('emailSentDesc'));
     } catch {
-      showError('Error', t('errors.generic'));
+      showError(t('forgotPasswordTitle'), t('errors.generic'));
     }
   };
 
@@ -56,7 +56,7 @@ export default function ForgotPasswordPage() {
           <p className="text-gray-600 dark:text-gray-400 mb-6">
             {t('checkEmailDesc')}
           </p>
-          <Link href="/login" className="font-medium text-[var(--color-primary)] hover:text-[var(--color-primary-dark)]">
+          <Link href="/login" className="text-blue-600 hover:text-blue-800 font-medium">
             {t('backToLogin')}
           </Link>
         </div>
@@ -79,7 +79,7 @@ export default function ForgotPasswordPage() {
             <input
               {...register('email')}
               type="email"
-              className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent bg-white dark:bg-gray-700 dark:text-white dark:border-gray-600 ${
+              className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 dark:text-white dark:border-gray-600 ${
                 errors.email ? 'border-red-500' : 'border-gray-300'
               }`}
               placeholder={t("placeholders.email")}
@@ -94,13 +94,13 @@ export default function ForgotPasswordPage() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full py-2 px-4 text-[var(--color-text-inverse)] font-semibold rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:ring-opacity-75 disabled:opacity-50 disabled:cursor-not-allowed transition-colors bg-[var(--color-btn-primary)] hover:bg-[var(--color-btn-primary-hover)]"
+            className="w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             {isSubmitting ? '...' : t('sendResetLink')}
           </button>
 
           <div className="text-center mt-4">
-            <Link href="/login" className="text-sm text-gray-600 dark:text-gray-400 hover:text-[var(--color-primary)]">
+            <Link href="/login" className="text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400">
               ← {t('backToLogin')}
             </Link>
           </div>

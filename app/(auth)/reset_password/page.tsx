@@ -4,25 +4,25 @@ import { Suspense } from 'react';
 import { useTranslations } from 'next-intl';
 
 function ResetPasswordContent() {
-  const t = useTranslations('common');
+  const t = useTranslations('auth.resetPassword');
 
   return (
     <main className="container mx-auto px-4 py-16 flex justify-center">
       <div className="w-full max-w-md bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md text-center">
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">
-          Reset Password
+          {t('title')}
         </h1>
-        <p className="text-gray-600 dark:text-gray-400">{t('loading')}</p>
+        <p className="text-gray-600 dark:text-gray-400">{t('submitBtn')}</p>
       </div>
     </main>
   );
 }
 
 export default function ResetPasswordPage() {
-  const t = useTranslations('common');
+  const tCommon = useTranslations('common');
 
   return (
-    <Suspense fallback={<div className="text-center py-10">{t('loading')}</div>}>
+    <Suspense fallback={<div className="text-center py-10">{tCommon('loading')}</div>}>
       <ResetPasswordContent />
     </Suspense>
   );

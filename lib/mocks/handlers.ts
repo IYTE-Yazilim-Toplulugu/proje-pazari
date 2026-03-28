@@ -1,10 +1,14 @@
 import { http, HttpResponse } from 'msw';
+import { z } from 'zod';
 
 const API_URL = 'http://localhost:3000/api/v1';
+const loginBodySchema = z.object({
+  email: z.string().email().optional(),
+});
 
 export const handlers = [
   http.post(`${API_URL}/auth/login`, async ({ request }) => {
-    const body = (await request.json()) as any;
+    const body = loginBodySchema.parse(await request.json());
 
     return HttpResponse.json({
       code: 200,

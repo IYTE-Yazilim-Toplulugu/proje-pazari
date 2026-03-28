@@ -28,9 +28,12 @@ export async function loginAction(data: authModel.LoginRequest) {
             });
         }
         return { success: true };
-    } catch (error: any) {
+    } catch (error: unknown) {
         // Return the error message if the API call fails
-        return { success: false, error: error.message };
+        return {
+            success: false,
+            error: error instanceof Error ? error.message : 'Unknown error',
+        };
     }
 }
 

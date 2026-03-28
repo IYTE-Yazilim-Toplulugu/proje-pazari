@@ -1,7 +1,8 @@
 'use client';
 
-import { useLocale, useTranslations } from 'next-intl';
+import { useLocale } from 'next-intl';
 import { locales } from '@/i18n-config';
+import type { Locale } from '@/i18n-config';
 import { setLocale } from '@/lib/actions/locale';
 import { updateUserLanguage } from '@/lib/api/user';
 import { useTransition } from 'react';
@@ -14,12 +15,12 @@ export default function LanguageSwitcher() {
   const [isPending, startTransition] = useTransition();
   const { data: user } = useSession();
 
-  const switchLocale = (newLocale: string) => {
+  const switchLocale = (newLocale: Locale) => {
     startTransition(async () => {
-      await setLocale(newLocale as any);
+      await setLocale(newLocale);
       if (user) {
           try {
-            await updateUserLanguage(newLocale as 'tr' | 'en');
+            await updateUserLanguage(newLocale);
           } catch (error) {
             console.error('Failed to save language preference:', error);
           }

@@ -199,8 +199,7 @@ export const fetcher = async <T extends z.ZodTypeAny>(
         return null as z.infer<T>;
     }
 
-    // @ts-ignore
-    return parsed.data;
+    return parsed.data as z.infer<T>;
 };
 
 /**

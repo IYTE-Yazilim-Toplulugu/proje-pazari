@@ -8,6 +8,8 @@ import { useState } from 'react';
 import { useToast } from '@/lib/hooks/useToast';
 import ApiStatus from '@/components/shared/ApiStatus';
 
+type ErrorWithCode = Error & { code?: number };
+
 function AuthLanguageSync() {
     useUserLanguage();
     return null;
@@ -23,8 +25,8 @@ export default function Providers({ children }: { children: React.ReactNode }) {
         retry: (failureCount, error) => {
           // Don't retry on 4xx errors
           if (error instanceof Error && 'code' in error) {
-            const code = (error as any).code;
-            if (code >= 400 && code < 500) return false;
+            const code = (error as ErrorWithCode).code;
+            if (typeof code === 'number' && code >= 400 && code < 500) return false;
           }
           return failureCount < 2;
         },

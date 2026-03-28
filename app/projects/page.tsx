@@ -10,21 +10,25 @@ export default function ProjectsPage() {
   const [statusFilter, setStatusFilter] = useState<ProjectStatus | ''>('');
   const [currentPage, setCurrentPage] = useState(0);
   const pageSize = 12;
+  const listParams = {
+    page: currentPage,
+    size: pageSize,
+    status: statusFilter || undefined,
+    sortBy: 'createdAt',
+    sortDirection: 'DESC' as const,
+  };
+  const searchParams = {
+    page: currentPage,
+    size: pageSize,
+    status: statusFilter || undefined,
+  };
 
-  // Use search or regular fetch based on query
-  const { data, isLoading, error } = searchQuery
-    ? useSearchProjects(searchQuery, { 
-        page: currentPage, 
-        size: pageSize,
-        status: statusFilter || undefined 
-      })
-    : useProjects({ 
-        page: currentPage, 
-        size: pageSize,
-        status: statusFilter || undefined,
-        sortBy: 'createdAt',
-        sortDirection: 'DESC'
-      });
+  const projectsQuery = useProjects(listParams);
+  const searchProjectsQuery = useSearchProjects(searchQuery, searchParams);
+
+  const isSearchMode = searchQuery.trim().length > 0;
+  const activeQuery = isSearchMode ? searchProjectsQuery : projectsQuery;
+  const { data, isLoading, error } = activeQuery;
 
   if (isLoading) {
     return (

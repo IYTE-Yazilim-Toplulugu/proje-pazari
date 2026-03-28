@@ -1,4 +1,4 @@
-import { fetcher, mutator } from './base';
+import { fetcher } from './base';
 import { MProject, MProjectListResponse } from '@/lib/models';
 import type { Project, ProjectListResponse } from '@/lib/models';
 

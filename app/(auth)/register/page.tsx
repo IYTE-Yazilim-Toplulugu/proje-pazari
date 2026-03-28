@@ -24,6 +24,7 @@ export default function RegisterPage() {
     const onSubmit = (data: RegisterForm) => {
         // We don't send `passwordConfirm` to the API
         const { passwordConfirm, ...apiData } = data;
+        void passwordConfirm;
 
         // Format birth_date to UTC datetime string if it exists
         if (apiData.birth_date) {

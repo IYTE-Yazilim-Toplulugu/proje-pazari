@@ -1,4 +1,4 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { getProjects, getProject, searchProjects, type GetProjectsParams } from '@/lib/api';
 
 export const PROJECT_KEYS = {

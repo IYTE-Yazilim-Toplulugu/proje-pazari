@@ -4,6 +4,7 @@ import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { useProjects } from '@/lib/hooks/projectHooks';
 import ProjectCard from '@/components/projects/ProjectCard';
+import type { Project } from '@/lib/models';
 
 export default function HomePage() {
   const t = useTranslations('HomePage');
@@ -35,7 +36,7 @@ export default function HomePage() {
           </h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {data.projects.map((project: any) => (
+            {data.projects.map((project: Project) => (
               <ProjectCard key={project.id} project={project} />
             ))}
           </div>

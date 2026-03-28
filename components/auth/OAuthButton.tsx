@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
 import Image from "next/image";
-import Button from "../shared/Button";
 import { useTranslations } from "next-intl";
+import { Button } from "@/components/ui/button";
 
 interface OAuthButtonProps {
   provider: "google" | "microsoft" | "meta";
@@ -31,26 +31,19 @@ const PROVIDER_CONFIG = {
   },
 };
 
-export default function OAuthButton({
-  provider,
-  onClick,
-  disabled,
-}: OAuthButtonProps) {
+export default function OAuthButton({ provider, onClick, disabled }: OAuthButtonProps) {
   const t = useTranslations("oauth");
   const config = PROVIDER_CONFIG[provider];
 
   return (
     <Button
-      variant="custom"
-      fullWidth
+      variant="outline"
       onClick={onClick}
       disabled={disabled}
-      className={`flex items-center justify-center gap-3 px-4 py-2 
-                border border-gray-300 dark:border-gray-600
-                ${config.bgColor} ${config.textColor}`}
+      className={`w-full border border-gray-300 px-4 py-2 dark:border-gray-600 ${config.bgColor} ${config.textColor}`}
     >
       <Image src={config.logo} alt={config.name} width={20} height={20} />
-      <span className="font-medium">{t('buttonLabel', { provider: config.name })}</span>
+      <span className="font-medium">{t("buttonLabel", { provider: config.name })}</span>
     </Button>
   );
 }

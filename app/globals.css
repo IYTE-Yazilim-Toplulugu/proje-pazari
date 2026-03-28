@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "tw-animate-css";
 
 @theme {
   --color-primary: #e30613;
@@ -15,6 +16,10 @@
 
   --color-card: #ffffff;
   --color-card-elevated: rgba(255, 255, 255, 0.95);
+  --color-foreground: var(--color-text-primary);
+  --color-card-foreground: var(--color-text-primary);
+  --color-popover: var(--color-card);
+  --color-popover-foreground: var(--color-text-primary);
 
   --color-success: #4caf50;
   --color-warning: #ff9500;
@@ -36,6 +41,17 @@
   --color-btn-secondary-hover: #e0e0e0;
   --color-btn-danger: #f44336;
   --color-btn-disabled: #d4d4d4;
+  --color-primary-foreground: var(--color-primary-fg);
+  --color-secondary: var(--color-background-secondary);
+  --color-secondary-foreground: var(--color-text-primary);
+  --color-muted: var(--color-background-secondary);
+  --color-muted-foreground: var(--color-text-tertiary);
+  --color-accent: color-mix(in oklab, var(--color-primary) 12%, white);
+  --color-accent-foreground: var(--color-text-primary);
+  --color-destructive: var(--color-btn-danger);
+  --color-destructive-foreground: var(--color-text-inverse);
+  --color-input: var(--color-border);
+  --color-ring: var(--color-primary-light);
 
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-jetbrains-mono);

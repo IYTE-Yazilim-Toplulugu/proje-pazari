@@ -14,6 +14,7 @@
     "delete": "Sil",
     "edit": "Düzenle",
     "back": "Geri",
+    "retry": "Tekrar Dene",
     "search": "Ara",
     "unknownError": "Bilinmeyen hata"
   },
@@ -227,6 +228,17 @@
     "offline": "Çevrimdışı",
     "totalQueries": "Toplam Sorgular",
     "failedQueries": "Başarısız Sorgular"
+  },
+  "footer": {
+    "title": "Proje Pazarı",
+    "description": "IYTE öğrencilerinin projeler üzerinde işbirliği yapabileceği platform.",
+    "pages": "Sayfalar",
+    "projects": "Projeler",
+    "legal": "Yasal",
+    "privacy": "Gizlilik Politikası",
+    "terms": "Kullanım Koşulları",
+    "contact": "İletişim",
+    "copyright": "© {year} IYTE Yazılım Topluluğu. Tüm hakları saklıdır."
   },
   "errors": {
     "required": "Bu alan zorunludur",

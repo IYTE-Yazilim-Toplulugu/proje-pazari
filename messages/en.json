@@ -14,6 +14,7 @@
     "delete": "Delete",
     "edit": "Edit",
     "back": "Back",
+    "retry": "Try Again",
     "search": "Search",
     "unknownError": "Unknown error"
   },
@@ -227,6 +228,17 @@
     "offline": "Offline",
     "totalQueries": "Total Queries",
     "failedQueries": "Failed Queries"
+  },
+  "footer": {
+    "title": "Project Market",
+    "description": "A platform where IYTE students can collaborate on projects.",
+    "pages": "Pages",
+    "projects": "Projects",
+    "legal": "Legal",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Use",
+    "contact": "Contact",
+    "copyright": "© {year} IYTE Software Community. All rights reserved."
   },
   "errors": {
     "required": "This field is required",

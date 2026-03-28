@@ -11,10 +11,9 @@ import { useTranslations } from 'next-intl';
 
 
 interface ProfileEditFormData {
-  name: string;
-  surname: string;
+  firstName: string;
+  lastName: string;
   description?: string;
-  phone?: string;
   linkedinUrl?: string;
   githubUrl?: string;
 }
@@ -31,10 +30,9 @@ export default function ProfileEditForm({ user, onSave }: ProfileEditFormProps) 
   const queryClient = useQueryClient();
 
   const ProfileEditSchema = z.object({
-    name: z.string().min(2, t("errors.nameMin")),
-    surname: z.string().min(2, t("errors.surnameMin")),
+    firstName: z.string().min(2, t("errors.nameMin")),
+    lastName: z.string().min(2, t("errors.surnameMin")),
     description: z.string().max(500, t("errors.descriptionMax")).optional(),
-    phone: z.string().regex(/^\+?[\d\s\-()]{10,20}$/, t("errors.phoneInvalid")).optional().or(z.literal('')),
     linkedinUrl: z.string().url(t("errors.urlInvalid")).or(z.literal('')).optional(),
     githubUrl: z.string().url(t("errors.urlInvalid")).or(z.literal('')).optional(),
   });
@@ -83,8 +81,8 @@ export default function ProfileEditForm({ user, onSave }: ProfileEditFormProps) 
             className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg
                      bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
           />
-          {errors.name && (
-            <p className="text-sm text-red-600 mt-1">{errors.name.message}</p>
+          {errors.firstName && (
+            <p className="text-sm text-red-600 mt-1">{errors.firstName.message}</p>
           )}
         </div>
 

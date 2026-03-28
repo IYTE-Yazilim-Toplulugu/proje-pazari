@@ -7,6 +7,8 @@ import Footer from "@/components/shared/Footer";
 import { Toaster } from "@/components/ui/sonner";
 import {NextIntlClientProvider} from 'next-intl';
 import {getLocale, getMessages} from 'next-intl/server';
+import StructuredData from "@/components/seo/StructuredData";
+import type { OrganizationSchema } from "@/components/seo/StructuredData";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,6 +27,9 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://projepazari.iyte.edu.tr'),
+  alternates: {
+    canonical: '/',
+  },
   
   title: {
     default: 'IYTE Proje Pazarı',
@@ -84,6 +89,15 @@ export default async function RootLayout({
 }>) {
     const locale = await getLocale();
     const messages = await getMessages();
+    const organizationSchema: OrganizationSchema = {
+      '@context': 'https://schema.org',
+      '@type': 'Organization',
+      name: 'IYTE Yazılım Topluluğu',
+      url: 'https://projepazari.iyte.edu.tr',
+      logo: 'https://projepazari.iyte.edu.tr/favicon-96x96.png',
+      description: 'İzmir Yüksek Teknoloji Enstitüsü öğrencileri için proje işbirliği platformu',
+      sameAs: ['https://github.com/IYTE-Yazilim-Toplulugu'],
+    };
 
     return (
         <html lang={locale}>
@@ -91,6 +105,7 @@ export default async function RootLayout({
                 className={`${geistSans.variable} ${geistMono.variable} ${jetbrainsMono.variable} antialiased`}
                 suppressHydrationWarning
             >
+                <StructuredData data={organizationSchema} />
                 <NextIntlClientProvider messages={messages} locale={locale}>
                     <Providers>
                         <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-900">

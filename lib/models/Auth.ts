@@ -34,8 +34,8 @@ const createWithPasswordOrOAuthRefinements = <T extends z.ZodObject<{ password: 
 
 export const RegisterRequestSchema = createWithPasswordOrOAuthRefinements(createRegisterRequestBaseSchema());
 
-// OAuth registration doesn't have phone_number from provider
-export const OAuthRegisterRequestSchema = createWithPasswordOrOAuthRefinements(createRegisterRequestBaseSchema().omit({ phone_number: true }));
+// OAuth registration: same shape as regular registration, just without a password requirement
+export const OAuthRegisterRequestSchema = createWithPasswordOrOAuthRefinements(createRegisterRequestBaseSchema());
 
 export const RefreshTokenRequestSchema = z.object({
     refreshToken: z.string(),

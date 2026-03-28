@@ -31,6 +31,13 @@ export async function getProject(id: string): Promise<Project> {
   );
 }
 
+export async function getProjectDetail(id: string): Promise<Project> {
+  return fetcher(
+    `/api/v1/projects/${id}`,
+    MProject,
+  );
+}
+
 export async function searchProjects(keyword: string, params?: GetProjectsParams): Promise<ProjectListResponse> {
   const queryParams = new URLSearchParams();
   queryParams.append('q', keyword);
@@ -41,5 +48,42 @@ export async function searchProjects(keyword: string, params?: GetProjectsParams
   return fetcher(
     `/api/v1/search/projects?${queryParams.toString()}`,
     MProjectListResponse,
+  );
+}
+
+export async function applyToProject(projectId: string, message: string): Promise<BasicResponse> {
+  return mutator(
+    `/api/v1/projects/${projectId}/applications`,
+    'post',
+    BasicResponseSchema,
+    { arg: { message } },
+  );
+}
+
+export async function getProjectApplications(projectId: string): Promise<ProjectApplication[]> {
+  return fetcher(
+    `/api/v1/projects/${projectId}/applications`,
+    z.array(MProjectApplication),
+  );
+}
+
+export async function withdrawApplication(applicationId: string): Promise<BasicResponse> {
+  return mutator(
+    `/api/v1/applications/${applicationId}`,
+    'delete',
+    BasicResponseSchema,
+    { arg: {} },
+  );
+}
+
+export async function updateProjectApplicationStatus(
+  applicationId: string,
+  status: 'APPROVED' | 'REJECTED',
+): Promise<BasicResponse> {
+  return mutator(
+    `/api/v1/applications/${applicationId}`,
+    'patch',
+    BasicResponseSchema,
+    { arg: { status } },
   );
 }

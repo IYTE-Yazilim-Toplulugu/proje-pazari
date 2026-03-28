@@ -2,27 +2,29 @@
 'use client';
 
 import Link from 'next/link';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslations } from 'next-intl';
-import { authModel } from '@/lib/models';
 import { useRegister } from '@/lib/hooks/authHooks';
-import { RegisterForm } from '@/lib/models/Auth';
+import { createRegisterFormSchema, RegisterForm } from '@/lib/models/Auth';
+import PasswordStrengthIndicator from '@/components/auth/PasswordStrengthIndicator';
 
 export default function RegisterPage() {
     const t = useTranslations("auth.register");
+    const tCommon = useTranslations("common");
     const { mutate: registerUser, isPending, error } = useRegister();
 
     const {
         register,
         handleSubmit,
+        control,
         formState: { errors },
     } = useForm<RegisterForm>({
-        resolver: zodResolver(authModel.RegisterFormSchema),
-    }); 
+        resolver: zodResolver(createRegisterFormSchema(t)),
+    });
+    const passwordValue = useWatch({ control, name: 'password' });
 
     const onSubmit = (data: RegisterForm) => {
-        // We don't send `passwordConfirm` to the API
         const { passwordConfirm, ...apiData } = data;
         void passwordConfirm;
 
@@ -46,34 +48,34 @@ export default function RegisterPage() {
                 <form onSubmit={handleSubmit(onSubmit)} noValidate>
                     {error && (
                         <div className="form-error mb-4" role="alert">
-                             <strong>Error: </strong>
+                             <strong>{tCommon('error')}: </strong>
                              {error.message || t('errors.generic')}
                         </div>
                     )}
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="form-group">
-                            <label htmlFor="name" className="form-label">{t('name')}</label>
+                            <label htmlFor="firstName" className="form-label">{t('name')}</label>
                             <input
-                                id="name"
+                                id="firstName"
                                 type="text"
-                                {...register('name')}
-                                className={`form-input ${errors.name ? 'form-input-error' : ''}`}
+                                {...register('firstName')}
+                                className={`form-input ${errors.firstName ? 'form-input-error' : ''}`}
                                 placeholder={t('placeholders.name')}
                             />
-                            {errors.name && <p className="form-error">{errors.name.message}</p>}
+                            {errors.firstName && <p className="form-error">{errors.firstName.message}</p>}
                         </div>
 
                         <div className="form-group">
-                            <label htmlFor="surname" className="form-label">{t('surname')}</label>
+                            <label htmlFor="lastName" className="form-label">{t('surname')}</label>
                             <input
-                                id="surname"
+                                id="lastName"
                                 type="text"
-                                {...register('surname')}
-                                className={`form-input ${errors.surname ? 'form-input-error' : ''}`}
+                                {...register('lastName')}
+                                className={`form-input ${errors.lastName ? 'form-input-error' : ''}`}
                                 placeholder={t('placeholders.surname')}
                             />
-                            {errors.surname && <p className="form-error">{errors.surname.message}</p>}
+                            {errors.lastName && <p className="form-error">{errors.lastName.message}</p>}
                         </div>
                     </div>
 
@@ -90,29 +92,6 @@ export default function RegisterPage() {
                     </div>
 
                     <div className="form-group mt-3">
-                        <label htmlFor="phone_number" className="form-label">{t('phone')}</label>
-                        <input
-                            id="phone_number"
-                            type="tel"
-                            {...register('phone_number')}
-                            className={`form-input ${errors.phone_number ? 'form-input-error' : ''}`}
-                            placeholder={t('placeholders.phone')}
-                        />
-                        {errors.phone_number && <p className="form-error">{errors.phone_number.message}</p>}
-                    </div>
-
-                    <div className="form-group mt-3">
-                        <label htmlFor="birth_date" className="form-label">{t('birthdate')}</label>
-                        <input
-                            id="birth_date"
-                            type="date"
-                            {...register('birth_date')}
-                            className={`form-input ${errors.birth_date ? 'form-input-error' : ''}`}
-                        />
-                        {errors.birth_date && <p className="form-error">{errors.birth_date.message}</p>}
-                    </div>
-
-                    <div className="form-group mt-3">
                         <label htmlFor="password" className="form-label">{t('password')}</label>
                         <input
                             id="password"
@@ -121,6 +100,7 @@ export default function RegisterPage() {
                             className={`form-input ${errors.password ? 'form-input-error' : ''}`}
                             placeholder={t('placeholders.password')}
                         />
+                        <PasswordStrengthIndicator password={passwordValue} />
                         {errors.password && <p className="form-error">{errors.password.message}</p>}
                     </div>
 
@@ -143,7 +123,7 @@ export default function RegisterPage() {
 
                 <p className="text-center text-gray-600 dark:text-gray-400 mt-4">
                     {t('hasAccount')}{' '}
-                    <Link href="/login" className="text-orange-600 hover:text-orange-700 dark:text-orange-400">
+                    <Link href="/login" className="text-[var(--color-primary)] hover:text-[var(--color-primary-dark)]">
                         {t('loginLink')}
                     </Link>
                 </p>

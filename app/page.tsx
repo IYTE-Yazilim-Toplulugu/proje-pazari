@@ -9,7 +9,7 @@ export default function HomePage() {
   const t = useTranslations('HomePage');
   const tProjects = useTranslations('projects');
 
-  const { data, isLoading } = useProjects({ page: 0, size: 6, status: 'OPEN' });
+  const { data, isLoading } = useProjects({ page: 0, size: 6 });
 
   return (
     <div className="container mx-auto px-4 py-12">
@@ -28,7 +28,7 @@ export default function HomePage() {
         </Link>
       </div>
 
-      {!isLoading && data && data.projects.length > 0 && (
+      {!isLoading && data && (data.projects?.length ?? 0) > 0 && (
         <div className="mt-16">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
             {tProjects('status.OPEN')} {tProjects('title')}

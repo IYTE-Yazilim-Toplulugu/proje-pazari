@@ -36,6 +36,16 @@ export const PagedDataResponseSchema = <T extends z.ZodTypeAny>(T: T) =>
         page: z.number().int().optional(),
     });
 
+export const LoginResultSchema = z.object({
+    userId: z.string().optional(),
+    email: z.string().optional(),
+    role: z.string().optional(),
+    accessToken: z.string().optional(),
+    refreshToken: z.string().optional(),
+});
+
+export const LoginResponseSchema = DataResponseSchema(LoginResultSchema);
+
 /**
  * The response schema for authentication endpoints (login + refresh).
  * Matches backend's RefreshTokenResult shape.

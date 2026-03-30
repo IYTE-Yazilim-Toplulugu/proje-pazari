@@ -1,7 +1,6 @@
 import { z } from 'zod';
 import { fetcher, mutator } from './base';
 import { apiModel, authModel } from '../models';
-import { mutator } from './base';
 
 // ============================================================================
 // ÇALIŞAN ENDPOINT'LER (Prefix'leri düzeltildi)
@@ -20,14 +19,8 @@ export const refreshToken = (payload: authModel.RefreshTokenRequest) =>
     mutator(`/api/v1/auth/refresh?refreshToken=${encodeURIComponent(payload.refreshToken)}`, 'post', apiModel.TokenResponseSchema, { arg: null });
 
 /** [POST] /api/v1/auth/resend-verification - Resends verification email. */
-export async function resendVerificationEmail(email: string): Promise<apiModel.BasicResponse> {
-    return mutator('/api/v1/auth/resend-verification', 'post', apiModel.BasicResponseSchema, {
-        arg: { email },
-    });
-    const json = await response.json();
-    const parsed = apiModel.RefreshResponseSchema.parse(json);
-    return parsed.data!;
-};
+export const resendVerificationEmail = (email: string) =>
+    mutator('/api/v1/auth/resend-verification', 'post', apiModel.BasicResponseSchema, { arg: { email } });
 
 
 // ============================================================================
@@ -57,10 +50,6 @@ export async function resetPassword(token: string, password: string): Promise<ap
  * **BROKEN FOR NOW BECAUSE OF FURKAN's ASS IS HUGE** (Ve Spring Boot'ta da yazılmamış!)
  * */
 export const getStatus = () => fetcher('/api/v1/auth/status', z.boolean());
-
-/** [POST] /api/v1/auth/resend-verification - Resends verification email. */
-export const resendVerificationEmail = (email: string) =>
-    mutator('/api/v1/auth/resend-verification', 'post', apiModel.BasicResponseSchema, { arg: { email } });
 
 // --- OAuth Redirect Helpers ---
 

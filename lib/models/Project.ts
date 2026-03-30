@@ -12,6 +12,7 @@ export type ProjectStatus = z.infer<typeof ProjectStatusEnum>;
 
 export const MProject = z.object({
   id: z.string().optional(),
+  ownerId: z.string().optional(),
   ownerName: z.string().optional(),
   ownerEmail: z.string().optional(),
   title: z.string().optional(),

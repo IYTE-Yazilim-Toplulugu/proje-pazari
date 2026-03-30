@@ -10,7 +10,6 @@ import { useToast } from '@/lib/hooks/useToast';
 import { useApiError } from '@/lib/hooks/useApiError';
 import { useSession } from '@/lib/hooks/authHooks';
 import {
-  useApplyToProject,
   useProjectApplications,
   useProjectDetail,
   useUpdateApplicationStatus,
@@ -32,7 +31,6 @@ export default function ProjectDetailClient({ projectId }: ProjectDetailClientPr
     data: applications = [],
     isLoading: applicationsLoading,
   } = useProjectApplications(projectId, !!session?.isAuthenticated);
-  const applyMutation = useApplyToProject(projectId);
   const withdrawMutation = useWithdrawApplication(projectId);
   const reviewMutation = useUpdateApplicationStatus(projectId);
   const [showApplicationForm, setShowApplicationForm] = useState(false);
@@ -81,14 +79,9 @@ export default function ProjectDetailClient({ projectId }: ProjectDetailClientPr
   const canApply = !!session?.isAuthenticated && !isOwner && project.status === 'OPEN';
   const myApplication = applications.find((application) => String(application.applicantId) === String(session?.userId));
 
-  const handleApply = async (message: string) => {
-    try {
-      await applyMutation.mutateAsync({ message });
-      success(t('applicationForm.successTitle'), t('applicationForm.successDescription'));
-      setShowApplicationForm(false);
-    } catch (mutationError) {
-      handleError(mutationError);
-    }
+  const handleApplySuccess = () => {
+    success(t('applicationForm.successTitle'), t('applicationForm.successDescription'));
+    setShowApplicationForm(false);
   };
 
   const handleWithdraw = async () => {
@@ -138,7 +131,7 @@ export default function ProjectDetailClient({ projectId }: ProjectDetailClientPr
 
             <div className="mb-6 flex items-center gap-3 border-b border-gray-200 pb-6 dark:border-gray-700">
               <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[var(--color-primary)] text-lg font-semibold text-[var(--color-text-inverse)]">
-                {project.ownerName.charAt(0)}
+                {project.ownerName?.charAt(0) ?? '?'}
               </div>
               <div>
                 <p className="font-medium text-gray-900 dark:text-white">{project.ownerName}</p>
@@ -184,7 +177,7 @@ export default function ProjectDetailClient({ projectId }: ProjectDetailClientPr
 
                     {showApplicationForm ? (
                       <div className="mt-4">
-                        <ApplicationForm onSubmit={handleApply} submitting={applyMutation.isPending} />
+                        <ApplicationForm projectId={projectId} onSuccess={handleApplySuccess} />
                       </div>
                     ) : null}
                   </>

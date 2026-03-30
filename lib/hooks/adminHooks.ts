@@ -39,20 +39,3 @@ export const useChangeFeature = () => {
     });
 };
 
-/**
- * Hook to clean all feature flags.
- * Also invalidates the feature list on success.
- */
-export const useCleanFeatures = () => {
-    const queryClient = useQueryClient();
-
-    return useMutation({
-        mutationFn: admin.cleanFeatures,
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: FEATURES_QUERY_KEY });
-        },
-        onError: (error) => {
-            console.error('Failed to clean features:', error);
-        },
-    });
-};

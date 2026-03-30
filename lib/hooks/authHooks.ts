@@ -27,9 +27,8 @@ export const useSession = () => {
 
             if (error instanceof ApiError) {
                 if (
-                    error.code === apiModel.ResponseCodeSchema.enum.Unauthorized ||
-                    error.code === apiModel.ResponseCodeSchema.enum.Forbidden ||
-                    error.code === apiModel.ResponseCodeSchema.enum.NotFound
+                    error.code === apiModel.ResponseCodeSchema.enum.UNAUTHORIZED ||
+                    error.code === apiModel.ResponseCodeSchema.enum.NOT_FOUND
                 ) {
                     return false; // Do not retry
                 }

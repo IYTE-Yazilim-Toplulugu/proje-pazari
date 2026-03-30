@@ -1,5 +1,14 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { getProjects, getProject, searchProjects, applyToProject, getProjectApplications, withdrawApplication, type GetProjectsParams } from '@/lib/api';
+import {
+  getProjects,
+  getProject,
+  getProjectDetail,
+  searchProjects,
+  applyToProject,
+  getProjectApplications,
+  withdrawApplication,
+  type GetProjectsParams,
+} from '@/lib/api';
 
 export const PROJECT_KEYS = {
   all: ['projects'] as const,
@@ -7,7 +16,7 @@ export const PROJECT_KEYS = {
   list: (params: GetProjectsParams) => [...PROJECT_KEYS.lists(), params] as const,
   details: () => [...PROJECT_KEYS.all, 'detail'] as const,
   detail: (id: string) => [...PROJECT_KEYS.details(), id] as const,
-  search: (keyword: string, params?: GetProjectsParams) => 
+  search: (keyword: string, params?: GetProjectsParams) =>
     [...PROJECT_KEYS.all, 'search', keyword, params] as const,
 };
 
@@ -27,6 +36,14 @@ export function useProject(id: string, enabled = true) {
   });
 }
 
+export function useProjectDetail(id: string, enabled = true) {
+  return useQuery({
+    queryKey: PROJECT_KEYS.detail(id),
+    queryFn: () => getProjectDetail(id),
+    enabled: enabled && !!id,
+  });
+}
+
 export function useSearchProjects(keyword: string, params?: GetProjectsParams) {
   return useQuery({
     queryKey: PROJECT_KEYS.search(keyword, params),
@@ -35,11 +52,11 @@ export function useSearchProjects(keyword: string, params?: GetProjectsParams) {
   });
 }
 
-export function useProjectApplications(projectId: string) {
+export function useProjectApplications(projectId: string, enabled = true) {
   return useQuery({
-    queryKey: [...PROJECT_KEYS.detail(projectId), 'applications'],
+    queryKey: [...PROJECT_KEYS.detail(projectId), 'applications'] as const,
     queryFn: () => getProjectApplications(projectId),
-    enabled: !!projectId,
+    enabled: enabled && !!projectId,
   });
 }
 
@@ -53,12 +70,14 @@ export function useApplyToProject() {
   });
 }
 
-export function useWithdrawApplication() {
+export function useWithdrawApplication(projectId: string) {
   const queryClient = useQueryClient();
+
   return useMutation({
-    mutationFn: (applicationId: string) => withdrawApplication(applicationId),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: PROJECT_KEYS.all });
+    mutationFn: ({ applicationId }: { applicationId: string }) => withdrawApplication(applicationId),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: [...PROJECT_KEYS.detail(projectId), 'applications'] });
+      await queryClient.invalidateQueries({ queryKey: PROJECT_KEYS.detail(projectId) });
     },
   });
 }

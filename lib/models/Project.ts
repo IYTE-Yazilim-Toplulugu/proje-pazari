@@ -37,20 +37,6 @@ export const ProjectApplicationStatusEnum = z.enum([
 
 export type ProjectApplicationStatus = z.infer<typeof ProjectApplicationStatusEnum>;
 
-/** Mirrors backend ApplicationDto */
-export const MProjectApplication = z.object({
-  applicationId: z.string(),
-  projectId: z.string(),
-  projectTitle: z.string().nullable().optional(),
-  applicantId: z.string(),
-  applicantName: z.string(),
-  applicantEmail: z.string(),
-  status: ProjectApplicationStatusEnum,
-  createdAt: z.string().nullable().optional(),
-});
-
-export type ProjectApplication = z.infer<typeof MProjectApplication>;
-
 /** Mirrors backend PagedProjectsResult */
 export const MProjectListResponse = z.object({
   projects: z.array(MProject).optional(),
@@ -61,14 +47,17 @@ export const MProjectListResponse = z.object({
 
 export type ProjectListResponse = z.infer<typeof MProjectListResponse>;
 
+/** Mirrors backend ApplicationDto. applicantEmail is optional — backend does not return it. */
 export const MApplicationSchema = z.object({
   applicationId: z.string().optional(),
   projectId: z.string().optional(),
   projectTitle: z.string().optional(),
   applicantId: z.string().optional(),
   applicantName: z.string().optional(),
-  status: z.enum(['PENDING', 'APPROVED', 'REJECTED', 'WITHDRAWN']).optional(),
+  applicantEmail: z.string().optional(),
+  status: ProjectApplicationStatusEnum.optional(),
   createdAt: z.string().optional(),
 });
 
 export type Application = z.infer<typeof MApplicationSchema>;
+export type ProjectApplication = Application;

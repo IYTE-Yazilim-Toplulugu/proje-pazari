@@ -35,7 +35,7 @@ export default function HomePage() {
           </h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {data.projects.map((project: any) => (
+            {data.projects?.map((project: any) => (
               <ProjectCard key={project.id} project={project} />
             ))}
           </div>

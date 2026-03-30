@@ -90,7 +90,7 @@ export default function ProjectDetailClient({ projectId }: ProjectDetailClientPr
     }
 
     try {
-      await withdrawMutation.mutateAsync({ applicationId: myApplication.applicationId });
+      await withdrawMutation.mutateAsync({ applicationId: myApplication.applicationId ?? '' });
       success(t('applicationForm.withdrawSuccessTitle'), t('applicationForm.withdrawSuccessDescription'));
     } catch (mutationError) {
       handleError(mutationError);
@@ -184,7 +184,7 @@ export default function ProjectDetailClient({ projectId }: ProjectDetailClientPr
                 ) : (
                   <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-background-elevated)] p-4">
                     <p className="text-sm text-[var(--color-text-primary)]">
-                      {t('applicationForm.currentStatus', { status: myApplication.status })}
+                      {t('applicationForm.currentStatus', { status: myApplication.status ?? '' })}
                     </p>
                     {myApplication.status === 'PENDING' ? (
                       <button

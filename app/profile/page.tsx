@@ -45,7 +45,7 @@ export default function ProfilePage() {
   }
 
   const displayName = (user.fullName ?? `${user.firstName ?? ''} ${user.lastName ?? ''}`.trim()) || user.email;
-  const avatarInitial = (user.firstName ?? user.email).charAt(0).toUpperCase();
+  const avatarInitial = (user.firstName ?? user.email ?? '').charAt(0).toUpperCase();
 
   return (
     <div className="container mx-auto px-4 py-8">

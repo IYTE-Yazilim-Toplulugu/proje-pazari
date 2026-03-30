@@ -51,7 +51,7 @@ export default function ProfileEditForm({ user, onSave }: ProfileEditFormProps) 
     setSaving(true);
     setError(null);
     try {
-      await userApi.updateUser(data);
+      await userApi.updateUser({ ...data, userId: user.id ?? '' });
       queryClient.invalidateQueries({ queryKey: ['session'] });
       queryClient.invalidateQueries({ queryKey: ['currentUser'] });
       onSave();

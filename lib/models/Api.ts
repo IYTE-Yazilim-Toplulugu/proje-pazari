@@ -60,8 +60,6 @@ export const TokenResponseSchema = DataResponseSchema(
     }),
 );
 
-export const LoginResponseSchema = DataResponseSchema(LoginResultSchema);
-
 export const RefreshResultSchema = z.object({
     userId: z.string(),
     email: z.string(),

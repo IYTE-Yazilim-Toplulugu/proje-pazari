@@ -9,6 +9,7 @@ export interface GetProjectsParams {
   size?: number;
   sortBy?: string;
   sortDirection?: 'ASC' | 'DESC';
+  status?: string;
 }
 
 export async function getProjects(params?: GetProjectsParams): Promise<ProjectListResponse> {
@@ -17,6 +18,7 @@ export async function getProjects(params?: GetProjectsParams): Promise<ProjectLi
   if (params?.size !== undefined) queryParams.append('size', params.size.toString());
   if (params?.sortBy) queryParams.append('sortBy', params.sortBy);
   if (params?.sortDirection) queryParams.append('sortDirection', params.sortDirection);
+  if (params?.status) queryParams.append('status', params.status);
 
   return fetcher(
     `/api/v1/projects?${queryParams.toString()}`,

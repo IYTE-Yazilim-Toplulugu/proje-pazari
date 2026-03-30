@@ -17,7 +17,8 @@ export const RegisterRequestSchema = z.object({
     firstName: z.string(),
     lastName: z.string(),
     email: z.email(),
-    password: z.string(),
+    password: z.string().optional(),
+    oauth_code: z.string().optional(),
 });
 
 
@@ -101,15 +102,12 @@ export const RegisterFormSchema = RegisterRequestSchema.extend({
  * Factory function that creates a RegisterFormSchema with translated error messages.
  * @param t - Translation function from useTranslations('auth.register')
  */
-export const createRegisterFormSchema = (t: (key: string) => string) => {
-    const base = createRegisterRequestBaseSchema(t);
-    return createWithPasswordOrOAuthRefinements(base, t)
-        .safeExtend({ passwordConfirm: z.string() })
+export const createRegisterFormSchema = (t: (key: string) => string) =>
+    RegisterRequestSchema.extend({ passwordConfirm: z.string() })
         .refine((data) => data.password === data.passwordConfirm, {
             message: t('errors.passwordMismatch'),
-            path: ["passwordConfirm"],
+            path: ['passwordConfirm'],
         });
-};
 
 
 // --- Type Exports ---

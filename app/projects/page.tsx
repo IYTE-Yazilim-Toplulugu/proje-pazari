@@ -87,10 +87,10 @@ export default function ProjectsPage() {
       </div>
 
       {/* Projects Grid */}
-      {data && data.projects.length > 0 ? (
+      {data && (data.projects?.length ?? 0) > 0 ? (
         <>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-            {data.projects.map((project) => (
+            {data.projects?.map((project) => (
               <ProjectCard key={project.id} project={project} />
             ))}
           </div>
@@ -104,14 +104,14 @@ export default function ProjectsPage() {
             >
               Önceki
             </button>
-            
+
             <span className="text-gray-700 dark:text-gray-300">
-              Sayfa {currentPage + 1} / {data.totalPages}
+              Sayfa {currentPage + 1} / {data.totalPages ?? 1}
             </span>
-            
+
             <button
-              onClick={() => setCurrentPage(p => Math.min(data.totalPages - 1, p + 1))}
-              disabled={currentPage >= data.totalPages - 1}
+              onClick={() => setCurrentPage(p => Math.min((data.totalPages ?? 1) - 1, p + 1))}
+              disabled={currentPage >= (data.totalPages ?? 1) - 1}
               className="px-4 py-2 bg-blue-600 text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-blue-700"
             >
               Sonraki

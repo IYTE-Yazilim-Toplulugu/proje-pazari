@@ -7,6 +7,7 @@ import {
   applyToProject,
   getProjectApplications,
   withdrawApplication,
+  updateProjectApplicationStatus,
   type GetProjectsParams,
 } from '@/lib/api';
 
@@ -75,6 +76,24 @@ export function useWithdrawApplication(projectId: string) {
 
   return useMutation({
     mutationFn: ({ applicationId }: { applicationId: string }) => withdrawApplication(applicationId),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: [...PROJECT_KEYS.detail(projectId), 'applications'] });
+      await queryClient.invalidateQueries({ queryKey: PROJECT_KEYS.detail(projectId) });
+    },
+  });
+}
+
+export function useUpdateApplicationStatus(projectId: string) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      applicationId,
+      status,
+    }: {
+      applicationId: string;
+      status: 'APPROVED' | 'REJECTED';
+    }) => updateProjectApplicationStatus(applicationId, status),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: [...PROJECT_KEYS.detail(projectId), 'applications'] });
       await queryClient.invalidateQueries({ queryKey: PROJECT_KEYS.detail(projectId) });

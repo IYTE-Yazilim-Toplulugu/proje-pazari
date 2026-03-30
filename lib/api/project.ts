@@ -77,3 +77,16 @@ export async function withdrawApplication(applicationId: string) {
     { arg: null },
   );
 }
+
+/** [PATCH] /api/v1/applications/{applicationId}/review - Approve or reject an application. */
+export async function updateProjectApplicationStatus(
+  applicationId: string,
+  status: 'APPROVED' | 'REJECTED',
+) {
+  return mutator(
+    `/api/v1/applications/${applicationId}/review`,
+    'patch',
+    apiModel.BasicResponseSchema,
+    { arg: { applicationId, status } },
+  );
+}

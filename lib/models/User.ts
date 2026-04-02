@@ -2,28 +2,36 @@ import { z } from 'zod';
 
 
 /**
- * Represents a user profile.
+ * Matches backend's UserProfileDTO.
+ * `role` is optional — it comes from the token (RefreshTokenResult), not the profile endpoint.
  */
 export const MUserSchema = z.object({
-    id: z.number(),
-    name: z.string(),
-    surname: z.string(),
-    password: z.string().optional(),
-    o_auth: z.boolean(),
-    email: z.email(),
-    role: z.string(),
-    is_verified: z.boolean().optional(),
-    language: z.enum(['tr', 'en']).optional().default('tr'),
-    email_verification_code_expires: z.iso.datetime().nullable().optional(),
-    phone_verification_code_expires: z.iso.datetime().nullable().optional(),
-    sessions: z.any().nullable().optional(),
-    // Profile fields
+    id: z.string().optional(),
+    email: z.string().optional(),
+    firstName: z.string().optional(),
+    lastName: z.string().optional(),
+    fullName: z.string().optional(),
     description: z.string().nullable().optional(),
-    phone: z.string().nullable().optional(),
     profilePictureUrl: z.string().nullable().optional(),
     linkedinUrl: z.string().nullable().optional(),
     githubUrl: z.string().nullable().optional(),
+    joinedAt: z.string().optional(),
+    projectsCreated: z.number().optional(),
+    applicationsSubmitted: z.number().optional(),
+    projects: z.array(z.any()).optional(),
+    // Not returned by profile endpoint — populated from token if needed
+    role: z.string().optional(),
 });
 
-// --- Type Exports ---
+export const UpdateUserProfileCommandSchema = z.object({
+    userId: z.string(),
+    firstName: z.string().optional(),
+    lastName: z.string().optional(),
+    description: z.string().optional(),
+    linkedinUrl: z.string().optional(),
+    githubUrl: z.string().optional(),
+    preferredLanguage: z.string().optional(),
+});
+
 export type MUser = z.infer<typeof MUserSchema>;
+export type UpdateUserProfileCommand = z.infer<typeof UpdateUserProfileCommandSchema>;

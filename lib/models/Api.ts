@@ -3,31 +3,24 @@ import { z } from 'zod';
 /**
  * Defines all possible success and error codes returned by the API.
  */
-export const ResponseCodeSchema = z.enum({
-    Success: 0,
-    InternalError: 1,
-    InvalidRequest: 2,
-    Unauthenticated: 3,
-    Unauthorized: 4,
-    NotFound: 5,
-    Exists: 6,
-    Forbidden: 7,
-    ServiceSpecified: 8,
-});
+const ResponseCode = {
+    SUCCESS: 0,
+    BAD_REQUEST: 4,
+    UNAUTHORIZED: 5,
+    NOT_FOUND: 7,
+    VALIDATION_ERROR: 9,
+    INTERNAL_SERVER_ERROR: 10,
+} as const;
 
-/**
- * The base for all API responses.
- */
+export const ResponseCodeSchema = z.nativeEnum(ResponseCode);
+
 export const BasicResponseSchema = z.object({
     code: ResponseCodeSchema,
     codes: z.record(z.string(), z.number()).optional(),
     message: z.string().optional(),
+    timestamp: z.string().optional(),
 });
 
-/**
- * A generic response that contains a `data` payload.
- * @param T A Zod schema for the data type.
- */
 export const DataResponseSchema = <T extends z.ZodTypeAny>(T: T) =>
     BasicResponseSchema.extend({
         data: T.optional(),
@@ -43,18 +36,42 @@ export const PagedDataResponseSchema = <T extends z.ZodTypeAny>(T: T) =>
         page: z.number().int().optional(),
     });
 
-/**
- * The response schema for authentication endpoints.
- */
-export const TokenResponseSchema = BasicResponseSchema.extend({
-    token: z.string().optional(),
-    refresh_token: z.string().optional(),
-    expires: z.iso.datetime().optional(),
-    user_verified: z.boolean().optional(),
+export const LoginResultSchema = z.object({
+    userId: z.string().optional(),
+    email: z.string().optional(),
+    role: z.string().optional(),
+    accessToken: z.string().optional(),
+    refreshToken: z.string().optional(),
 });
 
+export const LoginResponseSchema = DataResponseSchema(LoginResultSchema);
+
+/**
+ * The response schema for authentication endpoints (login + refresh).
+ * Matches backend's RefreshTokenResult shape.
+ */
+export const TokenResponseSchema = DataResponseSchema(
+    z.object({
+        userId: z.string().optional(),
+        email: z.string().optional(),
+        role: z.string().optional(),
+        accessToken: z.string().optional(),
+        refreshToken: z.string().optional(),
+    }),
+);
+
+export const RefreshResultSchema = z.object({
+    userId: z.string(),
+    email: z.string(),
+    role: z.string(),
+    accessToken: z.string(),
+    refreshToken: z.string(),
+});
+
+export const RefreshResponseSchema = DataResponseSchema(RefreshResultSchema);
 
 // --- Type Exports ---
 export type ResponseCode = z.infer<typeof ResponseCodeSchema>;
 export type BasicResponse = z.infer<typeof BasicResponseSchema>;
-export type TokenResponse = z.infer<typeof TokenResponseSchema>;
+export type LoginResult = z.infer<typeof LoginResultSchema>;
+export type RefreshResult = z.infer<typeof RefreshResultSchema>;

@@ -9,11 +9,6 @@ import { userModel, apiModel, authModel } from "../models";
 import { auth, user } from '../api';
 import { ApiError } from '../api/base';
 
-import { useEffect } from 'react';
-import { useLocale } from 'next-intl';
-import { setLocale } from '../actions/locale';
-import { getCurrentUser } from '../api/user';
-
 
 // The query key for the main user session from our previous discussion
 const SESSION_QUERY_KEY = ['session'];
@@ -32,9 +27,8 @@ export const useSession = () => {
 
             if (error instanceof ApiError) {
                 if (
-                    error.code === apiModel.ResponseCodeSchema.enum.Unauthorized ||
-                    error.code === apiModel.ResponseCodeSchema.enum.Forbidden ||
-                    error.code === apiModel.ResponseCodeSchema.enum.NotFound
+                    error.code === apiModel.ResponseCodeSchema.enum.UNAUTHORIZED ||
+                    error.code === apiModel.ResponseCodeSchema.enum.NOT_FOUND
                 ) {
                     return false; // Do not retry
                 }
@@ -95,42 +89,10 @@ export const useLogout = () => {
 export const useRegister = () => {
     const router = useRouter();
     return useMutation({
-        mutationFn: (payload: authModel.RegisterRequest | authModel.OAuthRegisterRequest) => auth.register(payload),
-        onSuccess: (_data, variables) => {
-            // If registered with password, show message to check email
-            if ('password' in variables && variables.password) {
-                alert('Registration successful! Please check your email to verify your account.');
-                router.push('/login');
-            } else {
-                // If registered with OAuth, proceed to login to get a token
-                alert('Registration successful! Logging you in...');
-                // Here you would typically call the login mutation
-            }
+        mutationFn: (payload: authModel.RegisterRequest) => auth.register(payload),
+        onSuccess: () => {
+            alert('Registration successful! Please check your email to verify your account.');
+            router.push('/login');
         },
     });
 };
-
-/** Hook to get a lightweight boolean status of authentication. */
-export const useAuthStatus = () => {
-    return useQuery({
-        queryKey: ['authStatus'],
-        queryFn: auth.getStatus,
-        staleTime: 5 * 60 * 1000, // 5 minutes
-    });
-};
-
-export const useUserLanguage = () => {
-    const currentLocale = useLocale();
-
-    const { data: user } = useQuery({
-        queryKey: SESSION_QUERY_KEY,
-        queryFn: getCurrentUser,
-        staleTime: 5 * 60 * 1000,
-    })
-
-    useEffect(() => {
-        if (user?.language && user.language !== currentLocale) {
-            setLocale(user.language as 'tr' | 'en');
-        }
-    }, [user?.language, currentLocale]);
-}

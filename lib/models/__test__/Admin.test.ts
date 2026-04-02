@@ -1,11 +1,11 @@
-import { ChangeFeaturePayloadSchema, FeatureListSchema } from '../Admin';
+import { ChangeFeaturePayloadSchema, FeatureFlagSchema } from '../Admin';
 
 describe('Admin Schemas', () => {
 
-    describe('FeatureListSchema', () => {
+    describe('FeatureFlagSchema', () => {
 
-        it('should validate a correct FeatureListSchema payload', () => {
-            const validFeatureListSchema = {
+        it('should validate a correct FeatureFlagSchema payload', () => {
+            const validFeatureFlagSchema = {
                 Feed: true,
                 Company: true,
                 Cart: true,
@@ -14,7 +14,7 @@ describe('Admin Schemas', () => {
                 Form: true
             };
 
-            expect(() => FeatureListSchema.parse(validFeatureListSchema)).not.toThrow();
+            expect(() => FeatureFlagSchema.parse(validFeatureFlagSchema)).not.toThrow();
         });
 
         it('should validate a correct Change Feature payload', () => {

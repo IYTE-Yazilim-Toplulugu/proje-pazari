@@ -1,39 +1,57 @@
 import { z } from 'zod';
 
-import { fetcher, fetcherUnwrapped, mutator } from './base';
+import { fetcher, mutator } from './base';
 import { apiModel, userModel } from '../models';
 
-/** [GET] /user/get - Returns the current user. */
-export const getCurrentUser = () => fetcherUnwrapped('/user/get', userModel.MUserSchema);
+// ============================================================================
+// ÇALIŞAN ENDPOINT'LER (RESTful standartlarına ve Backend'e göre güncellendi)
+// ============================================================================
 
-/** [GET] /user/:userId - Returns a user by a given id. */
+/** [GET] /api/v1/users/me - Returns the current user profile. */
+export const getCurrentUser = () =>
+    fetcher('/api/v1/users/me', userModel.MUserSchema);
+
+/** [GET] /api/v1/users/:userId - Returns a user by a given id. */
 export const getUserById = (userId: number, fields?: string[]) =>
-    fetcher(`/user/${userId}?fields=${fields?.join(',') ?? ''}`, userModel.MUserSchema);
+    fetcher(`/api/v1/users/${userId}${fields ? `?fields=${fields.join(',')}` : ''}`, userModel.MUserSchema);
 
-/** [GET] /user/list - Gets all users with pagination and sorting. */
-export const listUsers = (params: { page?: number, pageSize?: number, sby?: string, fields?: string[] }) =>
-    fetcher(`/user/list?page=${params.page ?? ''}&pageSize=${params.pageSize ?? ''}&sby=${params.sby ?? ''}&fields=${params.fields?.join(',') ?? ''}`, z.array(userModel.MUserSchema));
+/** [GET] /api/v1/users - Gets all users with pagination and sorting. */
+export const listUsers = (params: { page?: number, pageSize?: number, sby?: string, fields?: string[] }) => {
+    // Parametreleri URLSearchParams ile daha temiz oluşturmak çok daha güvenlidir:
+    const query = new URLSearchParams();
+    if (params.page !== undefined) query.append('page', params.page.toString());
+    if (params.pageSize !== undefined) query.append('pageSize', params.pageSize.toString());
+    if (params.sby) query.append('sby', params.sby);
+    if (params.fields) query.append('fields', params.fields.join(','));
+    
+    return fetcher(`/api/v1/users?${query.toString()}`, z.array(userModel.MUserSchema));
+}
 
-/** [POST] /user/create - Creates a new user manually. */
+/** [PUT] /api/v1/users/me - Updates the user profile. */
+export const updateUser = (payload: userModel.UpdateUserProfileCommand) =>
+    mutator('/api/v1/users/me', 'put', apiModel.BasicResponseSchema, { arg: payload });
+
+
+// ============================================================================
+// DİKKAT: BACKEND'DE HENÜZ OLMAYANLAR VEYA UYUMSUZ OLANLAR!
+// ============================================================================
+
+/** [POST] /api/v1/users - Creates a new user manually. (TABLODA 'NO SUCH ENDPOINT' DİYOR) */
 export const createUser = (payload: userModel.MUser) =>
-    mutator('/user/create', 'post', apiModel.DataResponseSchema(z.number()), { arg: payload });
+    mutator('/api/v1/users', 'post', apiModel.DataResponseSchema(z.number()), { arg: payload });
 
-/** [PATCH] /user/update - Updates the user. */
-export const updateUser = (payload: Partial<userModel.MUser>) =>
-    mutator('/user/update', 'patch', apiModel.BasicResponseSchema, { arg: payload });
-
-/** [POST] /user/update/language - Updates the user's language. */
+/** [PUT] /api/v1/users/me/language - Updates the user's language. (TABLODA 'NO SUCH ENDPOINT' DİYOR) */
 export const updateUserLanguage = (language: 'tr' | 'en') =>
-    mutator(`/user/update/language`, 'patch', apiModel.BasicResponseSchema, { arg: { language } });
+    mutator(`/api/v1/users/me/language`, 'put', apiModel.BasicResponseSchema, { arg: { language } });
 
-/** [DELETE] /user/delete - Deletes the user. */
+/** [DELETE] /api/v1/users/:id - Deletes the user. (Durumu meçhul) */
 export const deleteUser = (id?: number) =>
-    mutator(`/user/delete?id=${id ?? ''}`, 'delete', apiModel.BasicResponseSchema, { arg: {} });
+    mutator(`/api/v1/users/${id ?? 'me'}`, 'delete', apiModel.BasicResponseSchema, { arg: {} });
 
-/** [POST] /user/verify/phone - Verifies the new phone number. */
+/** [POST] /api/v1/users/verify/phone - Verifies the new phone number. (Durumu meçhul) */
 export const verifyPhone = (code: string) =>
-    mutator(`/user/verify/phone?code=${code}`, 'post', apiModel.BasicResponseSchema, { arg: {} });
+    mutator(`/api/v1/users/verify/phone?code=${code}`, 'post', apiModel.BasicResponseSchema, { arg: {} });
 
-/** [POST] /user/verify/email - Verifies the new email. */
+/** [POST] /api/v1/users/verify/email - Verifies the new email. (Durumu meçhul) */
 export const verifyEmail = (code: string) =>
-    mutator(`/user/verify/email?code=${code}`, 'post', apiModel.BasicResponseSchema, { arg: {} });
+    mutator(`/api/v1/users/verify/email?code=${code}`, 'post', apiModel.BasicResponseSchema, { arg: {} });

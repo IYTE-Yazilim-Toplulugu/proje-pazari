@@ -1,17 +1,27 @@
-'use client';
+import { type LucideIcon } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
-type EmptyStateProps = {
+interface EmptyStateProps {
+  icon?: LucideIcon;
   title: string;
   description?: string;
-};
+  action?: {
+    label: string;
+    onClick: () => void;
+  };
+}
 
-export default function EmptyState({ title, description }: EmptyStateProps) {
+export default function EmptyState({ icon: Icon, title, description, action }: EmptyStateProps) {
   return (
-    <div className="rounded-lg border border-dashed border-gray-300 p-8 text-center dark:border-gray-700">
-      <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{title}</h3>
-      {description ? (
-        <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">{description}</p>
-      ) : null}
+    <div className="flex flex-col items-center justify-center py-16 px-4 text-center">
+      {Icon && <Icon className="h-12 w-12 text-muted-foreground mb-4" />}
+      <h3 className="text-lg font-semibold mb-2">{title}</h3>
+      {description && (
+        <p className="text-sm text-muted-foreground mb-6 max-w-md">{description}</p>
+      )}
+      {action && (
+        <Button onClick={action.onClick}>{action.label}</Button>
+      )}
     </div>
   );
 }

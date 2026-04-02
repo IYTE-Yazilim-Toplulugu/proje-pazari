@@ -11,14 +11,17 @@ export async function loginAction(data: authModel.LoginRequest) {
     try {
         const response = await auth.login(data);
 
-        if (response.accessToken && response.refreshToken) {
-            (await cookies()).set(AUTH_TOKEN_KEY, response.accessToken, {
-                maxAge: 60 * 60 * 24 * 30,
+        // 2. On success, set the cookie from the server
+        if (response.data?.accessToken && response.data?.refreshToken) {
+            (await cookies()).set(AUTH_TOKEN_KEY, response.data.accessToken, {
+                // secure: process.env.NODE_ENV === 'production',
+                maxAge: 60 * 60 * 24 * 30, // 30 days
                 path: '/',
                 httpOnly: false,
             });
-            (await cookies()).set(REFRESH_TOKEN_KEY, response.refreshToken, {
-                maxAge: 60 * 60 * 24 * 30,
+            (await cookies()).set(REFRESH_TOKEN_KEY, response.data.refreshToken, {
+                // secure: process.env.NODE_ENV === 'production',
+                maxAge: 60 * 60 * 24 * 30, // 30 days
                 path: '/',
                 httpOnly: true,
             });

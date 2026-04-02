@@ -1,35 +1,22 @@
+import { z } from 'zod';
 import { fetcher, mutator } from './base';
 import { adminModel, apiModel } from '../models';
 
 /**
- * [GET] /admin/feature/all
+ * [GET] /api/v1/admin/feature-flags
  * Fetches all feature flags.
- * This uses the revised `fetcher` which correctly unwraps the DataResponse.
  */
 export const getFeatures = () =>
-    fetcher('/admin/feature/all', adminModel.FeatureListSchema);
+    fetcher('/api/v1/admin/feature-flags', z.array(adminModel.FeatureFlagSchema));
 
 /**
- * [POST] /admin/feature/change/:key
+ * [PUT] /api/v1/admin/feature-flags/{key}
  * Changes the state of a single feature flag.
- * @param payload An object containing the feature `key` and its new `enabled` state.
  */
-export const changeFeature = ({ key, enabled }: adminModel.ChangeFeaturePayload) =>
+export const changeFeature = ({ key, enabled, description }: adminModel.ChangeFeaturePayload) =>
     mutator(
-        `/admin/feature/change/${key}?enabled=${enabled}`, // `enabled` is now a query parameter
-        'post',
-        apiModel.BasicResponseSchema, // Uses the standardized BasicResponse schema
-        { arg: {} } // The request body is now empty
-    );
-
-/**
- * [POST] /admin/feature/clean
- * Cleans or resets unused feature flags.
- */
-export const cleanFeatures = () =>
-    mutator(
-        '/admin/feature/clean',
-        'post',
-        apiModel.BasicResponseSchema, // Uses the standardized BasicResponse schema
-        { arg: {} } // No request body
+        `/api/v1/admin/feature-flags/${key}`,
+        'put',
+        apiModel.BasicResponseSchema,
+        { arg: { enabled, description } }
     );

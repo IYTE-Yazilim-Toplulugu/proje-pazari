@@ -27,8 +27,8 @@ export default function ProjectCard({ project }: ProjectCardProps) {
           <h3 className="text-xl font-semibold text-gray-900 dark:text-white line-clamp-2">
             {project.title}
           </h3>
-            <span className={`px-2 py-1 text-xs font-medium text-white rounded-full ${statusColors[project.status]}`}>
-              {t(`status.${project.status}`)}
+            <span className={`px-2 py-1 text-xs font-medium text-white rounded-full ${statusColors[project.status ?? 'DRAFT']}`}>
+              {t(`status.${project.status ?? 'DRAFT'}`)}
             </span>
         </div>
 
@@ -60,7 +60,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
         <div className="flex items-center justify-between pt-4 border-t border-gray-200 dark:border-gray-700">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-full flex items-center justify-center font-semibold bg-[var(--color-primary)] text-[var(--color-text-inverse)]">
-              {project.ownerName.charAt(0)}
+              {project.ownerName?.charAt(0) ?? '?'}
             </div>
             <span className="text-sm text-gray-700 dark:text-gray-300">
               {project.ownerName}
@@ -68,7 +68,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
           </div>
           
           <div className="text-sm text-gray-500 dark:text-gray-400">
-            {t('card.applicationCount', { count: project.applicationCount })}
+            {t('card.applicationCount', { count: project.applicationCount ?? 0 })}
           </div>
         </div>
       </article>

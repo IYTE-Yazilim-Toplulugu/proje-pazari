@@ -57,7 +57,7 @@ export async function handleResponse<T extends z.ZodTypeAny>(
     const json = await response.json();
     const parsedResponse = BasicResponseSchema.parse(json);
 
-    if (parsedResponse.code !== ResponseCodeSchema.enum.Success) {
+    if (parsedResponse.code !== ResponseCodeSchema.enum.SUCCESS) {
         // Handle API-level errors defined by the `code` field
         throw new ApiError(
             parsedResponse.message || 'An API error occurred.',
@@ -133,22 +133,24 @@ async function http(endpoint: string, options: RequestInit, signal?: AbortSignal
 
         try {
             // 3. Call the refresh endpoint
-            const refreshResponse = await refreshToken(currentRefreshToken);
+            const refreshResponse = await refreshToken({
+                refreshToken: currentRefreshToken,
+            });
 
-            if (refreshResponse.accessToken && refreshResponse.refreshToken) {
-                // 4. Store the new tokens
-                Cookies.set('authToken', refreshResponse.accessToken, {
+            if (refreshResponse.data?.accessToken && refreshResponse.data?.refreshToken) {
+                // 4. Store the new tokens using js-cookie for client-side access
+                Cookies.set('authToken', refreshResponse.data.accessToken, {
                     path: '/',
                     maxAge: 60 * 60 * 24 * 30,
                 });
-                Cookies.set('refreshToken', refreshResponse.refreshToken, {
+                Cookies.set('refreshToken', refreshResponse.data.refreshToken, {
                     path: '/',
                     maxAge: 60 * 60 * 24 * 30,
                 });
 
                 console.log('Token refreshed successfully. Retrying original request...');
                 // 5. Retry the original request with the new token
-                response = await makeRequest(refreshResponse.accessToken);
+                response = await makeRequest(refreshResponse.data.accessToken);
             }
         } catch (error) {
             console.error('Failed to refresh token. Logging out.', error);

@@ -45,7 +45,7 @@ export default function ProfilePage() {
   }
 
   const displayName = (user.fullName ?? `${user.firstName ?? ''} ${user.lastName ?? ''}`.trim()) || user.email;
-  const avatarInitial = (user.firstName ?? user.email).charAt(0).toUpperCase();
+  const avatarInitial = (user.firstName ?? user.email ?? '').charAt(0).toUpperCase();
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -67,14 +67,14 @@ export default function ProfilePage() {
                   {user.profilePictureUrl ? (
                     <Image
                       src={user.profilePictureUrl}
-                      alt={displayName}
+                      alt={user.fullName ?? ''}
                       width={120}
                       height={120}
                       className="rounded-full"
                     />
                   ) : (
-                    <div className="w-32 h-32 rounded-full flex items-center justify-center font-semibold text-4xl bg-[var(--color-primary)] text-[var(--color-text-inverse)]">
-                      {avatarInitial}
+                    <div className="w-32 h-32 bg-blue-500 rounded-full flex items-center justify-center text-white font-semibold text-4xl">
+                      {user.firstName?.charAt(0) ?? '?'}
                     </div>
                   )}
                 </div>
@@ -82,14 +82,9 @@ export default function ProfilePage() {
 
               <div>
                 <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-                  {displayName}
+                  {user.fullName ?? `${user.firstName ?? ''} ${user.lastName ?? ''}`.trim()}
                 </h1>
                 <p className="text-gray-600 dark:text-gray-400">{user.email}</p>
-                <div className="flex gap-2 mt-2">
-                  <span className="px-3 py-1 rounded-full text-sm bg-[color-mix(in_oklab,var(--color-primary)_16%,white)] text-[var(--color-primary-dark)]">
-                    {user.role}
-                  </span>
-                </div>
               </div>
             </div>
 

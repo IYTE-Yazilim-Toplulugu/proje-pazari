@@ -27,9 +27,8 @@ export const useSession = () => {
 
             if (error instanceof ApiError) {
                 if (
-                    error.code === apiModel.ResponseCodeSchema.enum.Unauthorized ||
-                    error.code === apiModel.ResponseCodeSchema.enum.Forbidden ||
-                    error.code === apiModel.ResponseCodeSchema.enum.NotFound
+                    error.code === apiModel.ResponseCodeSchema.enum.UNAUTHORIZED ||
+                    error.code === apiModel.ResponseCodeSchema.enum.NOT_FOUND
                 ) {
                     return false; // Do not retry
                 }
@@ -90,14 +89,10 @@ export const useLogout = () => {
 export const useRegister = () => {
     const router = useRouter();
     return useMutation({
-        mutationFn: (payload: authModel.RegisterRequest | authModel.OAuthRegisterRequest) => auth.register(payload),
-        onSuccess: (_data, variables) => {
-            if ('password' in variables && variables.password) {
-                alert('Registration successful! Please check your email to verify your account.');
-                router.push('/login');
-            } else {
-                alert('Registration successful! Logging you in...');
-            }
+        mutationFn: (payload: authModel.RegisterRequest) => auth.register(payload),
+        onSuccess: () => {
+            alert('Registration successful! Please check your email to verify your account.');
+            router.push('/login');
         },
     });
 };

@@ -10,22 +10,21 @@ export const ProjectStatusEnum = z.enum([
 
 export type ProjectStatus = z.infer<typeof ProjectStatusEnum>;
 
-/** Mirrors backend ProjectDetailDto */
 export const MProject = z.object({
-  id: z.string(),
-  ownerId: z.string(),
-  ownerName: z.string(),
-  ownerEmail: z.string(),
-  title: z.string(),
-  description: z.string(),
-  summary: z.string().nullable().optional(),
-  applicationCount: z.number().default(0),
-  status: ProjectStatusEnum,
-  maxTeamSize: z.number().nullable().optional(),
-  requiredSkills: z.array(z.string()).default([]),
-  category: z.string().nullable().optional(),
-  deadline: z.string().nullable().optional(),
-  createdAt: z.string(),
+  id: z.string().optional(),
+  ownerId: z.string().optional(),
+  ownerName: z.string().optional(),
+  ownerEmail: z.string().optional(),
+  title: z.string().optional(),
+  description: z.string().optional(),
+  summary: z.string().optional(),
+  applicationCount: z.number().optional(),
+  status: ProjectStatusEnum.optional(),
+  maxTeamSize: z.number().optional(),
+  requiredSkills: z.array(z.string()).optional(),
+  category: z.string().optional(),
+  deadline: z.string().optional(),
+  createdAt: z.string().optional(),
 });
 
 export type Project = z.infer<typeof MProject>;
@@ -39,26 +38,27 @@ export const ProjectApplicationStatusEnum = z.enum([
 
 export type ProjectApplicationStatus = z.infer<typeof ProjectApplicationStatusEnum>;
 
-/** Mirrors backend ApplicationDto */
-export const MProjectApplication = z.object({
-  applicationId: z.string(),
-  projectId: z.string(),
-  projectTitle: z.string().nullable().optional(),
-  applicantId: z.string(),
-  applicantName: z.string(),
-  applicantEmail: z.string(),
-  status: ProjectApplicationStatusEnum,
-  createdAt: z.string().nullable().optional(),
-});
-
-export type ProjectApplication = z.infer<typeof MProjectApplication>;
-
 /** Mirrors backend PagedProjectsResult */
 export const MProjectListResponse = z.object({
-  projects: z.array(MProject),
-  currentPage: z.number(),
-  totalPages: z.number(),
-  totalElements: z.number(),
+  projects: z.array(MProject).optional(),
+  currentPage: z.number().optional(),
+  totalPages: z.number().optional(),
+  totalElements: z.number().optional(),
 });
 
 export type ProjectListResponse = z.infer<typeof MProjectListResponse>;
+
+/** Mirrors backend ApplicationDto. applicantEmail is optional — backend does not return it. */
+export const MApplicationSchema = z.object({
+  applicationId: z.string().optional(),
+  projectId: z.string().optional(),
+  projectTitle: z.string().optional(),
+  applicantId: z.string().optional(),
+  applicantName: z.string().optional(),
+  applicantEmail: z.string().optional(),
+  status: ProjectApplicationStatusEnum.optional(),
+  createdAt: z.string().optional(),
+});
+
+export type Application = z.infer<typeof MApplicationSchema>;
+export type ProjectApplication = Application;

@@ -26,7 +26,6 @@ export default function RegisterPage() {
 
     const onSubmit = (data: RegisterForm) => {
         const { passwordConfirm, ...apiData } = data;
-        void passwordConfirm;
         registerUser(apiData);
     };
 

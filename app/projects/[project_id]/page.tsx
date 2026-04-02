@@ -1,90 +1,165 @@
-import type { Metadata } from 'next';
-import { MProject } from '@/lib/models';
-import ProjectDetailClient from './ProjectDetailClient';
+'use client';
 
-type Props = {
-  params: Promise<{ project_id: string }>;
-};
+import { useState } from 'react';
+import { useParams, useRouter } from 'next/navigation';
+import { useProject } from '@/lib/hooks/projectHooks';
+import { useSession } from '@/lib/hooks/authHooks';
+import ApplicationForm from '@/components/projects/ApplicationForm';
 
-type ProjectPayload = {
-  data?: unknown;
-};
+export default function ProjectDetailPage() {
+    const params = useParams();
+    const router = useRouter();
+    const projectId = params.project_id as string;
 
-async function fetchProjectForMetadata(projectId: string) {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/projects/${projectId}`, {
-    next: { revalidate: 3600 },
-  });
+    const { data: project, isLoading, error } = useProject(projectId);
+    const { data: session } = useSession();
 
-  if (!response.ok) {
-    throw new Error('Failed to fetch project metadata');
-  }
+    const [showApplicationForm, setShowApplicationForm] = useState(false);
 
-  const payload = (await response.json()) as ProjectPayload;
-  return MProject.parse(payload.data);
-}
-
-export async function generateStaticParams() {
-  try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/projects?size=100`, {
-      next: { revalidate: 3600 },
-    });
-
-    if (!response.ok) {
-      return [];
+    if (isLoading) {
+        return (
+            <div className="container mx-auto px-4 py-8">
+                <div className="max-w-4xl mx-auto">
+                    <div className="animate-pulse space-y-4">
+                        <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-3/4"></div>
+                        <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/4"></div>
+                        <div className="h-32 bg-gray-200 dark:bg-gray-700 rounded"></div>
+                    </div>
+                </div>
+            </div>
+        );
     }
 
-    const payload = (await response.json()) as { data?: { projects?: Array<{ id: string }> } };
-    return (payload.data?.projects ?? []).map((project) => ({ project_id: String(project.id) }));
-  } catch {
-    return [];
-  }
-}
+    if (error || !project) {
+        return (
+            <div className="container mx-auto px-4 py-8 text-center">
+                <p className="text-red-600 dark:text-red-400">Proje bulunamadı.</p>
+                <button
+                    onClick={() => router.push('/projects')}
+                    className="mt-4 text-blue-600 hover:text-blue-700"
+                >
+                    Projelere Dön
+                </button>
+            </div>
+        );
+    }
 
-export const revalidate = 3600;
+    // TODO: isOwner check requires backend to return ownerId in ProjectDetailDto
+    const canApply = session?.isAuthenticated && project.status === 'OPEN';
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { project_id } = await params;
+    return (
+        <div className="container mx-auto px-4 py-8">
+            <div className="max-w-4xl mx-auto">
+                {/* Back Button */}
+                <button
+                    onClick={() => router.back()}
+                    className="mb-6 text-blue-600 hover:text-blue-700 flex items-center gap-2"
+                >
+                    ← Geri Dön
+                </button>
 
-  try {
-    const project = await fetchProjectForMetadata(project_id);
+                {/* Project Header */}
+                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8 mb-6">
+                    <div className="flex justify-between items-start mb-6">
+                        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+                            {project.title}
+                        </h1>
+                        <span className={`px-3 py-1 text-sm font-medium text-white rounded-full
+                            ${project.status === 'OPEN' ? 'bg-green-500' : 'bg-gray-500'}`}>
+                            {project.status}
+                        </span>
+                    </div>
 
-    return {
-      title: project.title,
-      description: project.summary || project.description,
-      alternates: {
-        canonical: `/projects/${project.id}`,
-      },
-      openGraph: {
-        title: project.title,
-        description: project.summary || project.description,
-        type: 'article',
-        publishedTime: project.createdAt,
-        authors: [project.ownerName],
-        images: [
-          {
-            url: '/og-image.png',
-            width: 1200,
-            height: 630,
-            alt: project.title,
-          },
-        ],
-      },
-      twitter: {
-        card: 'summary_large_image',
-        title: project.title,
-        description: project.summary || project.description,
-        images: ['/twitter-image.png'],
-      },
-    };
-  } catch {
-    return {
-      title: 'Proje Detayı | IYTE Proje Pazarı',
-      description: 'Proje detayları görüntülenemiyor.',
-    };
-  }
-}
+                    {/* Owner Info */}
+                    <div className="flex items-center gap-3 mb-6 pb-6 border-b border-gray-200 dark:border-gray-700">
+                        <div className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center text-white font-semibold text-lg">
+                            {project.ownerName?.charAt(0) ?? '?'}
+                        </div>
+                        <div>
+                            <p className="font-medium text-gray-900 dark:text-white">
+                                {project.ownerName}
+                            </p>
+                            <p className="text-sm text-gray-600 dark:text-gray-400">Proje Sahibi</p>
+                        </div>
+                    </div>
 
-export default async function ProjectDetailPage({ params }: Props) {
-  const { project_id } = await params;
-  return <ProjectDetailClient projectId={project_id} />;
+                    {/* Summary */}
+                    {project.summary && (
+                        <div className="mb-6">
+                            <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">Özet</h2>
+                            <p className="text-gray-700 dark:text-gray-300">{project.summary}</p>
+                        </div>
+                    )}
+
+                    {/* Description */}
+                    <div className="mb-6">
+                        <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">Açıklama</h2>
+                        <div className="prose dark:prose-invert max-w-none">
+                            {project.description}
+                        </div>
+                    </div>
+
+                    {/* Required Skills */}
+                    {project.requiredSkills && project.requiredSkills.length > 0 && (
+                        <div className="mb-6">
+                            <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
+                                Gerekli Beceriler
+                            </h2>
+                            <div className="flex flex-wrap gap-2">
+                                {project.requiredSkills.map((skill) => (
+                                    <span
+                                        key={skill}
+                                        className="px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 rounded-full text-sm"
+                                    >
+                                        {skill}
+                                    </span>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Stats */}
+                    <div className="grid grid-cols-2 gap-4 p-4 bg-gray-50 dark:bg-gray-900 rounded-lg">
+                        <div className="text-center">
+                            <p className="text-2xl font-bold text-blue-600">
+                                {project.applicationCount ?? 0}
+                            </p>
+                            <p className="text-sm text-gray-600 dark:text-gray-400">Başvuru</p>
+                        </div>
+                        <div className="text-center">
+                            <p className="text-2xl font-bold text-blue-600">
+                                {project.createdAt
+                                    ? new Date(project.createdAt).toLocaleDateString('tr-TR')
+                                    : '-'}
+                            </p>
+                            <p className="text-sm text-gray-600 dark:text-gray-400">Oluşturulma</p>
+                        </div>
+                    </div>
+
+                    {/* Application Button/Form */}
+                    {canApply && (
+                        <div className="mt-6">
+                            {!showApplicationForm ? (
+                                <button
+                                    onClick={() => setShowApplicationForm(true)}
+                                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold
+                                               py-3 px-4 rounded-lg transition-colors"
+                                >
+                                    Projeye Başvur
+                                </button>
+                            ) : (
+                                <div className="border-t border-gray-200 dark:border-gray-700 pt-6">
+                                    <h3 className="text-lg font-semibold mb-4">Başvuruyu Onayla</h3>
+                                    <ApplicationForm
+                                        projectId={projectId}
+                                        onSuccess={() => setShowApplicationForm(false)}
+                                    />
+                                </div>
+                            )}
+                        </div>
+                    )}
+                </div>
+            </div>
+        </div>
+    );
 }

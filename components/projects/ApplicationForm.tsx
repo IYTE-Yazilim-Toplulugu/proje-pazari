@@ -1,40 +1,35 @@
 'use client';
 
-import { useState } from 'react';
+import { useApplyToProject } from '@/lib/hooks/projectHooks';
 
-type ApplicationFormProps = {
-  onSubmit: (message: string) => Promise<void> | void;
-  submitting?: boolean;
-};
+interface ApplicationFormProps {
+    projectId: string;
+    onSuccess: () => void;
+}
 
-export default function ApplicationForm({
-  onSubmit,
-  submitting = false,
-}: ApplicationFormProps) {
-  const [message, setMessage] = useState('');
+export default function ApplicationForm({ projectId, onSuccess }: ApplicationFormProps) {
+    const { mutate: apply, isPending, error } = useApplyToProject();
 
-  return (
-    <form
-      className="space-y-3"
-      onSubmit={async (event) => {
-        event.preventDefault();
-        await onSubmit(message);
-      }}
-    >
-      <textarea
-        value={message}
-        onChange={(event) => setMessage(event.target.value)}
-        rows={4}
-        className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-900 dark:text-white"
-        placeholder="Kendinizi ve katkini kisaca anlatin"
-      />
-      <button
-        type="submit"
-        disabled={submitting}
-        className="rounded-lg bg-[var(--color-btn-primary)] px-4 py-2 font-semibold text-[var(--color-text-inverse)] hover:bg-[var(--color-btn-primary-hover)] disabled:cursor-not-allowed disabled:opacity-50"
-      >
-        {submitting ? 'Gonderiliyor' : 'Basvuruyu gonder'}
-      </button>
-    </form>
-  );
+    const handleApply = () => {
+        apply(projectId, { onSuccess });
+    };
+
+    return (
+        <div className="space-y-4">
+            {error && (
+                <p className="text-sm text-red-600 dark:text-red-400">
+                    {error.message}
+                </p>
+            )}
+            <button
+                onClick={handleApply}
+                disabled={isPending}
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold
+                           py-3 px-4 rounded-lg transition-colors disabled:opacity-50
+                           disabled:cursor-not-allowed"
+            >
+                {isPending ? 'Gönderiliyor...' : 'Başvuruyu Onayla'}
+            </button>
+        </div>
+    );
 }

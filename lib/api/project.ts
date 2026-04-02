@@ -1,33 +1,24 @@
 import { z } from 'zod';
 import { fetcher, mutator } from './base';
-import { BasicResponseSchema } from '@/lib/models/Api';
-import {
-  MProject,
-  MProjectApplication,
-  MProjectListResponse,
-} from '@/lib/models';
-import type {
-  Project,
-  ProjectApplication,
-  ProjectListResponse,
-} from '@/lib/models';
-import type { BasicResponse } from '@/lib/models/Api';
+import { MProject, MProjectListResponse, MApplicationSchema } from '@/lib/models';
+import { apiModel } from '@/lib/models';
+import type { Project, ProjectListResponse } from '@/lib/models';
 
 export interface GetProjectsParams {
   page?: number;
   size?: number;
-  status?: string;
   sortBy?: string;
   sortDirection?: 'ASC' | 'DESC';
+  status?: string;
 }
 
 export async function getProjects(params?: GetProjectsParams): Promise<ProjectListResponse> {
   const queryParams = new URLSearchParams();
   if (params?.page !== undefined) queryParams.append('page', params.page.toString());
   if (params?.size !== undefined) queryParams.append('size', params.size.toString());
-  if (params?.status) queryParams.append('status', params.status);
   if (params?.sortBy) queryParams.append('sortBy', params.sortBy);
   if (params?.sortDirection) queryParams.append('sortDirection', params.sortDirection);
+  if (params?.status) queryParams.append('status', params.status);
 
   return fetcher(
     `/api/v1/projects?${queryParams.toString()}`,
@@ -54,7 +45,6 @@ export async function searchProjects(keyword: string, params?: GetProjectsParams
   queryParams.append('q', keyword);
   if (params?.page !== undefined) queryParams.append('page', params.page.toString());
   if (params?.size !== undefined) queryParams.append('size', params.size.toString());
-  if (params?.status) queryParams.append('status', params.status);
 
   return fetcher(
     `/api/v1/search/projects?${queryParams.toString()}`,
@@ -62,39 +52,43 @@ export async function searchProjects(keyword: string, params?: GetProjectsParams
   );
 }
 
-export async function applyToProject(projectId: string, message: string): Promise<BasicResponse> {
+/** [POST] /api/v1/projects/{projectId}/applications - Apply to a project. No request body needed. */
+export async function applyToProject(projectId: string) {
   return mutator(
     `/api/v1/projects/${projectId}/applications`,
     'post',
-    BasicResponseSchema,
-    { arg: { message } },
+    apiModel.BasicResponseSchema,
+    { arg: null },
   );
 }
 
-export async function getProjectApplications(projectId: string): Promise<ProjectApplication[]> {
+/** [GET] /api/v1/projects/{projectId}/applications - Get applications for a project (owner only). */
+export async function getProjectApplications(projectId: string) {
   return fetcher(
     `/api/v1/projects/${projectId}/applications`,
-    z.array(MProjectApplication),
+    z.array(MApplicationSchema),
   );
 }
 
-export async function withdrawApplication(applicationId: string): Promise<BasicResponse> {
+/** [PATCH] /api/v1/applications/{applicationId}/withdraw - Withdraw an application. */
+export async function withdrawApplication(applicationId: string) {
   return mutator(
-    `/api/v1/applications/${applicationId}`,
-    'delete',
-    BasicResponseSchema,
-    { arg: {} },
+    `/api/v1/applications/${applicationId}/withdraw`,
+    'patch',
+    apiModel.BasicResponseSchema,
+    { arg: null },
   );
 }
 
+/** [PATCH] /api/v1/applications/{applicationId}/review - Approve or reject an application. */
 export async function updateProjectApplicationStatus(
   applicationId: string,
   status: 'APPROVED' | 'REJECTED',
-): Promise<BasicResponse> {
+) {
   return mutator(
-    `/api/v1/applications/${applicationId}`,
+    `/api/v1/applications/${applicationId}/review`,
     'patch',
-    BasicResponseSchema,
-    { arg: { status } },
+    apiModel.BasicResponseSchema,
+    { arg: { applicationId, status } },
   );
 }

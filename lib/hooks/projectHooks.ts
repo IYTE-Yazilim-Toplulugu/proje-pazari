@@ -17,7 +17,7 @@ export const PROJECT_KEYS = {
   list: (params: GetProjectsParams) => [...PROJECT_KEYS.lists(), params] as const,
   details: () => [...PROJECT_KEYS.all, 'detail'] as const,
   detail: (id: string) => [...PROJECT_KEYS.details(), id] as const,
-  search: (keyword: string, params?: GetProjectsParams) => 
+  search: (keyword: string, params?: GetProjectsParams) =>
     [...PROJECT_KEYS.all, 'search', keyword, params] as const,
 };
 
@@ -61,14 +61,12 @@ export function useProjectApplications(projectId: string, enabled = true) {
   });
 }
 
-export function useApplyToProject(projectId: string) {
+export function useApplyToProject() {
   const queryClient = useQueryClient();
-
   return useMutation({
-    mutationFn: ({ message }: { message: string }) => applyToProject(projectId, message),
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: [...PROJECT_KEYS.detail(projectId), 'applications'] });
-      await queryClient.invalidateQueries({ queryKey: PROJECT_KEYS.detail(projectId) });
+    mutationFn: (projectId: string) => applyToProject(projectId),
+    onSuccess: (_data, projectId) => {
+      queryClient.invalidateQueries({ queryKey: PROJECT_KEYS.detail(projectId) });
     },
   });
 }

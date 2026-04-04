@@ -69,7 +69,8 @@
       "createAccount": "Hesap Oluştur",
       "loginLink": "Buradan giriş yapın",
       "errors": {
-        "generic": "Beklenmedik bir hata oluştu. Lütfen tekrar deneyin."
+        "generic": "Beklenmedik bir hata oluştu. Lütfen tekrar deneyin.",
+        "passwordMismatch": "Şifreler eşleşmiyor"
       },
       "placeholders": {
         "email": "siz@std.iyte.edu.tr",
@@ -151,12 +152,15 @@
     "card": {
       "applicationCount": "{count, plural, =0 {Başvuru yok} one {# Başvuru} other {# Başvuru}}"
     },
+    "loadingError": "Proje yüklenirken bir hata oluştu.",
+    "prevPage": "Projelere Dön",
     "details": {
       "apply": "Başvur",
       "applications": "Başvurular",
       "owner": "Proje Sahibi",
       "team": "Ekip",
-      "requirements": "Gereksinimler"
+      "requirements": "Gereksinimler",
+      "viewProject": "Projeyi görüntüle"
     },
     "searchPlaceholder": "Proje ara...",
     "filterByStatus": "Duruma göre filtrele",

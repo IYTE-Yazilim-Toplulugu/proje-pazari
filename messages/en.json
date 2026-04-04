@@ -69,7 +69,8 @@
       "createAccount": "Create Account",
       "loginLink": "Login here",
       "errors": {
-        "generic": "An unexpected error occurred. Please try again."
+        "generic": "An unexpected error occurred. Please try again.",
+        "passwordMismatch": "Passwords do not match"
       },
       "placeholders": {
         "email": "you@std.iyte.edu.tr",
@@ -151,12 +152,15 @@
     "card": {
       "applicationCount": "{count, plural, =0 {No Applications} one {# Application} other {# Applications}}"
     },
+    "loadingError": "An error occurred while loading the project.",
+    "prevPage": "Back to Projects",
     "details": {
       "apply": "Apply",
       "applications": "Applications",
       "owner": "Project Owner",
       "team": "Team",
-      "requirements": "Requirements"
+      "requirements": "Requirements",
+      "viewProject": "View project"
     },
     "searchPlaceholder": "Search projects...",
     "filterByStatus": "Filter by status",

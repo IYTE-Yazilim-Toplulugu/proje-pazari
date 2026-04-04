@@ -35,7 +35,7 @@ export const useSession = () => {
             }
 
             // 3 by default, but I trust to my backend bro
-            return failureCount < 0;
+            return failureCount < 3;
         },
         // **IMPORTANT**: Transform the fetched user data into our AuthContext
         select: (user: userModel.MUser | null) => {

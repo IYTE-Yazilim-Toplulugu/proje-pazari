@@ -47,7 +47,7 @@ export async function resetPassword(token: string, password: string): Promise<ap
 
 /**
  * [GET] /api/v1/auth/status - Returns if the user is authenticated.
- * **BROKEN FOR NOW BECAUSE OF FURKAN's ASS IS HUGE** (Ve Spring Boot'ta da yazılmamış!)
+ * NOTE: This endpoint is not yet implemented on the backend.
  * */
 export const getStatus = () => fetcher('/api/v1/auth/status', z.boolean());
 

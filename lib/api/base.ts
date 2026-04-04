@@ -47,17 +47,18 @@ export async function handleResponse<T extends z.ZodTypeAny>(
     }
 
     if (!response.ok) {
-        // Handle HTTP errors (e.g., 500 Internal Server Error)
+        const json = await response.json().catch(() => null);
         throw new ApiError(
-            `HTTP error! status: ${response.status}`,
-            response.status as ResponseCode
+            json?.message || `HTTP error! status: ${response.status}`,
+            json?.code ?? response.status
         );
     }
 
     const json = await response.json();
     const parsedResponse = BasicResponseSchema.parse(json);
 
-    if (parsedResponse.code !== ResponseCodeSchema.enum.SUCCESS) {
+    const SUCCESS_CODES = [ResponseCodeSchema.enum.SUCCESS, ResponseCodeSchema.enum.REGISTERED_NEEDS_VERIFY, ResponseCodeSchema.enum.EMAIL_SENT];
+    if (!SUCCESS_CODES.includes(parsedResponse.code)) {
         // Handle API-level errors defined by the `code` field
         throw new ApiError(
             parsedResponse.message || 'An API error occurred.',

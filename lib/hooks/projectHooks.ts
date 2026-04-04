@@ -1,4 +1,4 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient, keepPreviousData } from '@tanstack/react-query';
 import {
   getProjects,
   getProject,
@@ -21,11 +21,12 @@ export const PROJECT_KEYS = {
     [...PROJECT_KEYS.all, 'search', keyword, params] as const,
 };
 
-export function useProjects(params?: GetProjectsParams) {
+export function useProjects(params?: GetProjectsParams, enabled = true) {
   return useQuery({
     queryKey: PROJECT_KEYS.list(params || {}),
     queryFn: () => getProjects(params),
     staleTime: 1000 * 60 * 5, // 5 minutes
+    enabled,
   });
 }
 
@@ -49,7 +50,8 @@ export function useSearchProjects(keyword: string, params?: GetProjectsParams) {
   return useQuery({
     queryKey: PROJECT_KEYS.search(keyword, params),
     queryFn: () => searchProjects(keyword, params),
-    enabled: keyword.length > 0,
+    enabled: keyword.length >= 2,
+    placeholderData: keepPreviousData,
   });
 }
 

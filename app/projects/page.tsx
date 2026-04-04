@@ -1,42 +1,40 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useProjects, useSearchProjects } from '@/lib/hooks/projectHooks';
 import ProjectCard from '@/components/projects/ProjectCard';
 import { ProjectStatus } from '@/lib/models';
 
 export default function ProjectsPage() {
   const [searchQuery, setSearchQuery] = useState('');
+  const [debouncedQuery, setDebouncedQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<ProjectStatus | ''>('');
   const [currentPage, setCurrentPage] = useState(0);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedQuery(searchQuery);
+      setCurrentPage(0);
+    }, 400);
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
   const pageSize = 12;
 
-  // Use search or regular fetch based on query
-  const { data, isLoading, error } = searchQuery
-    ? useSearchProjects(searchQuery, { 
-        page: currentPage, 
-        size: pageSize,
-        status: statusFilter || undefined 
-      })
-    : useProjects({ 
-        page: currentPage, 
-        size: pageSize,
-        status: statusFilter || undefined,
-        sortBy: 'createdAt',
-        sortDirection: 'DESC'
-      });
+  const projectsResult = useProjects({
+    page: currentPage,
+    size: pageSize,
+    status: statusFilter || undefined,
+    sortBy: 'createdAt',
+    sortDirection: 'DESC',
+  }, !searchQuery);
 
-  if (isLoading) {
-    return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {[...Array(6)].map((_, i) => (
-            <div key={i} className="bg-gray-200 dark:bg-gray-700 rounded-lg h-64 animate-pulse" />
-          ))}
-        </div>
-      </div>
-    );
-  }
+  const searchResult = useSearchProjects(debouncedQuery, {
+    page: currentPage,
+    size: pageSize,
+    status: statusFilter || undefined,
+  });
+
+  const { data, isLoading, error } = debouncedQuery ? searchResult : projectsResult;
 
   if (error) {
     return (
@@ -80,14 +78,22 @@ export default function ProjectsPage() {
                    focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         >
           <option value="">Tüm Durumlar</option>
+          <option value="DRAFT">Taslak</option>
           <option value="OPEN">Açık</option>
           <option value="IN_PROGRESS">Devam Ediyor</option>
           <option value="COMPLETED">Tamamlandı</option>
+          <option value="CANCELLED">İptal Edildi</option>
         </select>
       </div>
 
       {/* Projects Grid */}
-      {data && (data.projects?.length ?? 0) > 0 ? (
+      {isLoading ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[...Array(6)].map((_, i) => (
+            <div key={i} className="bg-gray-200 dark:bg-gray-700 rounded-lg h-64 animate-pulse" />
+          ))}
+        </div>
+      ) : data && (data.projects?.length ?? 0) > 0 ? (
         <>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
             {data.projects?.map((project) => (

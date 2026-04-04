@@ -27,10 +27,11 @@ export default function ProjectDetailClient({ projectId }: ProjectDetailClientPr
   const { handleError } = useApiError();
   const { data: project, isLoading, error } = useProjectDetail(projectId);
   const { data: session } = useSession();
+  const isOwner = !!session?.userId && !!project && String(session.userId) === project.ownerId;
   const {
     data: applications = [],
     isLoading: applicationsLoading,
-  } = useProjectApplications(projectId, !!session?.isAuthenticated);
+  } = useProjectApplications(projectId, isOwner);
   const withdrawMutation = useWithdrawApplication(projectId);
   const reviewMutation = useUpdateApplicationStatus(projectId);
   const [showApplicationForm, setShowApplicationForm] = useState(false);
@@ -75,7 +76,6 @@ export default function ProjectDetailClient({ projectId }: ProjectDetailClientPr
     dateCreated: project.createdAt,
   };
 
-  const isOwner = session?.userId != null && String(session.userId) === project.ownerId;
   const canApply = !!session?.isAuthenticated && !isOwner && project.status === 'OPEN';
   const myApplication = applications.find((application) => String(application.applicantId) === String(session?.userId));
 

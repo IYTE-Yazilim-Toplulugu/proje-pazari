@@ -3,6 +3,7 @@
 import { Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { z } from 'zod';
+import { useTranslations } from 'next-intl';
 
 const ResetPasswordSchema = z.object({
     password: z.string().min(8, 'Password must be at least 8 characters.'),
@@ -15,17 +16,19 @@ const ResetPasswordSchema = z.object({
 type ResetPasswordForm = z.infer<typeof ResetPasswordSchema>;
 
 function ResetPasswordContent() {
+    const t = useTranslations('auth.resetPassword');
     const router = useRouter();
     const searchParams = useSearchParams();
     const token = searchParams.get('token');
 
     // Implementation similar to forgot password
-    return <div>Reset Password</div>;
+    return <div>{t('title')}</div>;
 }
 
 export default function ResetPasswordPage() {
+    const t = useTranslations('auth.resetPassword');
     return (
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<div>{t('loading')}</div>}>
             <ResetPasswordContent />
         </Suspense>
     );

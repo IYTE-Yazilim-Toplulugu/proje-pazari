@@ -19,6 +19,7 @@ import LanguageSwitcher from '@/components/shared/LanguageSwitcher';
 
 export default function Header() {
   const t = useTranslations('nav');
+  const tProfile = useTranslations('profile');
   const { data: session, isLoading } = useSession();
   const { mutate: logout } = useLogout();
   const router = useRouter();
@@ -77,10 +78,10 @@ export default function Header() {
                   {t('profile')}
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => router.push('/my-projects')}>
-                  Projelerim
+                  {tProfile('myProjects')}
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => router.push('/applications')}>
-                  Başvurularım
+                  {tProfile('myApplications')}
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem

@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/contexts/AuthContext';
 import { PermissionSchema } from '@/lib/models/Auth';
 import { useFeatures, useChangeFeature } from '@/lib/hooks/adminHooks';
+import { useTranslations } from 'next-intl';
 
 // A simple component for the toggle switch
 const FeatureToggle = ({ featureKey, isEnabled, onToggle, isChanging }: {
@@ -12,7 +13,9 @@ const FeatureToggle = ({ featureKey, isEnabled, onToggle, isChanging }: {
     isEnabled: boolean;
     onToggle: (key: string, enabled: boolean) => void;
     isChanging: boolean;
-}) => (
+}) => {
+    const t = useTranslations('admin');
+    return (
     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.5rem', borderBottom: '1px solid #eee' }}>
         <span>{featureKey}</span>
         <button
@@ -24,15 +27,16 @@ const FeatureToggle = ({ featureKey, isEnabled, onToggle, isChanging }: {
                 backgroundColor: isEnabled ? '#48bb78' : '#f56565',
                 color: 'white',
                 border: 'none',
-                borderRadius: '4px',
-            }}
-        >
-            {isChanging ? 'Updating...' : (isEnabled ? 'Enabled' : 'Disabled')}
-        </button>
-    </div>
+            borderRadius: '4px',
+        }}
+    >
+        {isChanging ? t('updating') : (isEnabled ? t('enabled') : t('disabled'))}
+    </button>
+</div>
 );
 
 export default function AdminPage() {
+    const t = useTranslations('admin');
     const { hasPermission, isLoading: isAuthLoading } = useAuth();
     const router = useRouter();
 
@@ -54,7 +58,7 @@ export default function AdminPage() {
         return (
             <>
                 <main style={{ padding: '2rem' }}>
-                    <p>Verifying access...</p>
+                    <p>{t('verifyingAccess')}</p>
                 </main>
             </>
         );
@@ -64,10 +68,10 @@ export default function AdminPage() {
     return (
         <>
             <main style={{ maxWidth: '800px', margin: '2rem auto', padding: '0 1rem' }}>
-                <h1>Admin Panel - Feature Flags</h1>
+                <h1>{t('featureFlags')}</h1>
 
-                {isFeaturesLoading && <p>Loading feature flags...</p>}
-                {error && <p style={{ color: 'red' }}>Error fetching features: {error.message}</p>}
+                {isFeaturesLoading && <p>{t('loadingFeatures')}</p>}
+                {error && <p style={{ color: 'red' }}>{t('errorFetching', { message: error.message })}</p>}
 
                 {features && (
                     <div style={{ border: '1px solid #ddd', borderRadius: '8px' }}>

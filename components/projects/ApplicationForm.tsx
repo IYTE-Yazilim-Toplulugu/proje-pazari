@@ -1,6 +1,7 @@
 'use client';
 
 import { useApplyToProject } from '@/lib/hooks/projectHooks';
+import { useTranslations } from 'next-intl';
 
 interface ApplicationFormProps {
     projectId: string;
@@ -8,6 +9,7 @@ interface ApplicationFormProps {
 }
 
 export default function ApplicationForm({ projectId, onSuccess }: ApplicationFormProps) {
+    const t = useTranslations('projects.applicationForm');
     const { mutate: apply, isPending, error } = useApplyToProject();
 
     const handleApply = () => {
@@ -28,7 +30,7 @@ export default function ApplicationForm({ projectId, onSuccess }: ApplicationFor
                            py-3 px-4 rounded-lg transition-colors disabled:opacity-50
                            disabled:cursor-not-allowed"
             >
-                {isPending ? 'Gönderiliyor...' : 'Başvuruyu Onayla'}
+                {isPending ? t('submitting') : t('confirmApplication')}
             </button>
         </div>
     );

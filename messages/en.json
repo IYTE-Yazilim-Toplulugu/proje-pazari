@@ -14,7 +14,12 @@
     "edit": "Edit",
     "back": "Back",
     "search": "Search",
-    "unknownError": "Unknown error"
+    "unknownError": "Unknown error",
+    "confirm": "Confirm",
+    "errorTitle": "Something went wrong!",
+    "errorDesc": "Please try refreshing the page.",
+    "tryAgain": "Try Again",
+    "fetchErrorTitle": "An error occurred while loading data"
   },
   "nav": {
     "projectMarket": "Project Market",
@@ -64,7 +69,7 @@
       "createAccount": "Create Account",
       "loginLink": "Login here",
       "errors": {
-        "generic":"An unexpected error occurred. Please try again."
+        "generic": "An unexpected error occurred. Please try again."
       },
       "placeholders": {
         "email": "you@std.iyte.edu.tr",
@@ -80,6 +85,35 @@
         "resendBtn": "Resend Verification Email",
         "sending": "Sending..."
       }
+    },
+    "forgotPassword": {
+      "email": "Email",
+      "forgotPasswordTitle": "Forgot Password",
+      "sendResetLink": "Send Reset Link",
+      "backToLogin": "Back to login",
+      "checkEmailTitle": "Check Your Email",
+      "checkEmailDesc": "If an account exists with that email, we've sent password reset instructions.",
+      "emailSentTitle": "Email Sent",
+      "emailSentDesc": "Password reset instructions have been sent to your email.",
+      "errors": {
+        "invalidEmail": "Invalid email address",
+        "generic": "An error occurred. Please try again."
+      },
+      "placeholders": {
+        "email": "you@std.iyte.edu.tr"
+      },
+      "title": "Forgot Password",
+      "emailLabel": "Email Address",
+      "submitBtn": "Send Reset Link",
+      "successMessage": "Check your email for a reset link."
+    },
+    "resetPassword": {
+      "title": "Reset Password",
+      "newPassword": "New Password",
+      "confirmPassword": "Confirm Password",
+      "submitBtn": "Reset Password",
+      "loading": "Loading...",
+      "tokenMissing": "Token is missing"
     }
   },
   "oauth": {
@@ -97,24 +131,10 @@
     "processing": {
       "title": "Authenticating",
       "description": "Please wait, your information is being processed..."
-    }
-  },
-  "forgotPassword": {
-    "email": "Email",
-    "forgotPasswordTitle": "Forgot Password",
-    "sendResetLink": "Send Reset Link",
-    "backToLogin": "Back to login",
-    "checkEmailTitle": "Check Your Email",
-    "checkEmailDesc": "If an account exists with that email, we've sent password reset instructions.",
-    "emailSentTitle": "Email Sent",
-    "emailSentDesc": "Password reset instructions have been sent to your email.",
-    "errors": {
-      "invalidEmail": "Invalid email address",
-      "generic": "An error occurred. Please try again."
     },
-    "placeholders": {
-        "email": "you@std.iyte.edu.tr"
-    }
+    "completing": "Completing sign-in...",
+    "success": "Sign-in successful! Redirecting...",
+    "failed": "Sign-in failed. Please try again."
   },
   "projects": {
     "title": "Projects",
@@ -137,6 +157,30 @@
       "owner": "Project Owner",
       "team": "Team",
       "requirements": "Requirements"
+    },
+    "searchPlaceholder": "Search projects...",
+    "filterByStatus": "Filter by status",
+    "allStatuses": "All Statuses",
+    "noProjectsFound": "No projects found.",
+    "loadingError": "Failed to load projects.",
+    "prevPage": "Previous",
+    "nextPage": "Next",
+    "page": "Page {current} of {total}",
+    "subtitle": "Discover projects where IYTE students can work together",
+    "applicationForm": {
+      "submitting": "Submitting...",
+      "confirmApplication": "Confirm Application",
+      "successTitle": "Application Successful",
+      "successDescription": "Your application has been successfully submitted.",
+      "currentStatus": "Current Status: {status}",
+      "withdraw": "Withdraw Application",
+      "withdrawSuccessTitle": "Application Withdrawn",
+      "withdrawSuccessDescription": "Your application has been successfully withdrawn."
+    },
+    "applications": {
+      "approvedTitle": "Application Approved",
+      "rejectedTitle": "Application Rejected",
+      "updateDescription": "The application status has been updated."
     }
   },
   "profile": {
@@ -149,7 +193,7 @@
     "social": "Social Links",
     "language": "Language Preference",
     "edit": {
-    "name": "First Name",
+      "name": "First Name",
       "surname": "Last Name",
       "about": "About",
       "phone": "Phone",
@@ -192,5 +236,41 @@
     "maxLength": "Must be at most {max} characters",
     "notFound": "Page not found",
     "serverError": "A server error occurred"
+  },
+  "admin": {
+    "featureFlags": "Admin Panel - Feature Flags",
+    "enabled": "Enabled",
+    "disabled": "Disabled",
+    "updating": "Updating...",
+    "notAuthorized": "You are not authorized to view this page.",
+    "verifyingAccess": "Verifying access...",
+    "loadingFeatures": "Loading feature flags...",
+    "errorFetching": "Error fetching features: {message}"
+  },
+  "apiStatus": {
+    "title": "API Status",
+    "online": "Online",
+    "offline": "Offline",
+    "totalQueries": "Total Queries: {count}",
+    "failedQueries": "Failed Queries: {count}"
+  },
+  "footer": {
+    "brand": "Project Market",
+    "description": "A platform for IYTE students to collaborate on projects.",
+    "pages": "Pages",
+    "projects": "Projects",
+    "about": "About",
+    "legal": "Legal",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "contact": "Contact",
+    "community": "IYTE Software Society",
+    "rights": "© {year} IYTE Software Society. All rights reserved."
+  },
+  "metadata": {
+    "title_default": "IYTE Project Market",
+    "title_template": "%s | IYTE Project Market",
+    "description": "A platform for Izmir Institute of Technology students to collaborate on projects",
+    "siteName": "IYTE Project Market"
   }
 }

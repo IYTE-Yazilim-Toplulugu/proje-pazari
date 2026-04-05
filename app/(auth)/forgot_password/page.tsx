@@ -13,7 +13,7 @@ type ForgotPasswordForm = {
 };
 
 export default function ForgotPasswordPage() {
-  const t = useTranslations('forgotPassword');
+  const t = useTranslations('auth.forgotPassword');
   const [submitted, setSubmitted] = useState(false);
   const { success, error: showError } = useToast();
   const ForgotPasswordSchema = z.object({

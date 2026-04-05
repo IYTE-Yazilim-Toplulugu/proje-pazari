@@ -14,7 +14,12 @@
     "edit": "Düzenle",
     "back": "Geri",
     "search": "Ara",
-    "unknownError": "Bilinmeyen hata"
+    "unknownError": "Bilinmeyen hata",
+    "confirm": "Onayla",
+    "errorTitle": "Bir şeyler ters gitti!",
+    "errorDesc": "Lütfen sayfayı yenilemeyi deneyin.",
+    "tryAgain": "Tekrar Dene",
+    "fetchErrorTitle": "Veri yüklenirken hata oluştu"
   },
   "nav": {
     "projectMarket": "Proje Pazarı",
@@ -81,41 +86,56 @@
         "resendBtn": "Doğrulama E-postasını Tekrar Gönder",
         "sending": "Gönderiliyor..."
       }
+    },
+    "forgotPassword": {
+      "email": "E-posta",
+      "forgotPasswordTitle": "Şifremi Unuttum",
+      "sendResetLink": "Sıfırlama Bağlantısı Gönder",
+      "backToLogin": "Giriş sayfasına dön",
+      "checkEmailTitle": "E-postanızı Kontrol Edin",
+      "checkEmailDesc": "Eğer bu adrese kayıtlı bir hesap varsa, şifre sıfırlama talimatlarını gönderdik.",
+      "emailSentTitle": "E-posta Gönderildi",
+      "emailSentDesc": "Sıfırlama talimatları e-posta adresinize gönderildi.",
+      "errors": {
+        "invalidEmail": "Geçersiz e-posta adresi",
+        "generic": "Bir hata oluştu. Lütfen tekrar deneyin."
+      },
+      "placeholders": {
+        "email": "siz@std.iyte.edu.tr"
+      },
+      "title": "Şifremi Unuttum",
+      "emailLabel": "E-posta Adresi",
+      "submitBtn": "Sıfırlama Bağlantısı Gönder",
+      "successMessage": "Sıfırlama bağlantısı için e-postanızı kontrol edin."
+    },
+    "resetPassword": {
+      "title": "Şifreyi Sıfırla",
+      "newPassword": "Yeni Şifre",
+      "confirmPassword": "Şifreyi Onayla",
+      "submitBtn": "Şifreyi Sıfırla",
+      "loading": "Yükleniyor...",
+      "tokenMissing": "Token eksik"
     }
   },
   "oauth": {
-      "buttonLabel": "{provider} ile devam et",
-      "invalidParams": "OAuth doğrulama sırasında geçersiz parametreler.",
-      "loginSuccess": "Başarıyla giriş yaptınız!",
-      "tokenStorageError": "Oturum bilgileri saklanırken bir hata oluştu. Lütfen tekrar giriş yapın.",
-      "missingTokens": "Token bilgileri eksik",
-      "registrationSuccess": "Kayıt başarılı! Hoş geldiniz.",
-      "registrationError": "Kayıt sırasında bir hata oluştu. Lütfen tekrar deneyin.",
-      "missingUserInfo": "Kullanıcı bilgileri eksik",
-      "sessionError": "Oturum Hatası: {msg}",
-      "authError": "Kimlik Doğrulama Hatası: {code}",
-      "unexpectedStatus": "Beklenmeyen bir durum oluştu.",
-      "processing": {
-          "title": "Kimlik Doğrulaması Yapılıyor",
-          "description": "Lütfen bekleyin, bilgileriniz işleniyor..."
-      }
-  },
-  "forgotPassword": {
-    "email": "E-posta",
-    "forgotPasswordTitle": "Şifremi Unuttum",
-    "sendResetLink": "Sıfırlama Bağlantısı Gönder",
-    "backToLogin": "Giriş sayfasına dön",
-    "checkEmailTitle": "E-postanızı Kontrol Edin",
-    "checkEmailDesc": "Eğer bu adrese kayıtlı bir hesap varsa, şifre sıfırlama talimatlarını gönderdik.",
-    "emailSentTitle": "E-posta Gönderildi",
-    "emailSentDesc": "Sıfırlama talimatları e-posta adresinize gönderildi.",
-    "errors": {
-      "invalidEmail": "Geçersiz e-posta adresi",
-      "generic": "Bir hata oluştu. Lütfen tekrar deneyin."
+    "buttonLabel": "{provider} ile devam et",
+    "invalidParams": "OAuth doğrulama sırasında geçersiz parametreler.",
+    "loginSuccess": "Başarıyla giriş yaptınız!",
+    "tokenStorageError": "Oturum bilgileri saklanırken bir hata oluştu. Lütfen tekrar giriş yapın.",
+    "missingTokens": "Token bilgileri eksik",
+    "registrationSuccess": "Kayıt başarılı! Hoş geldiniz.",
+    "registrationError": "Kayıt sırasında bir hata oluştu. Lütfen tekrar deneyin.",
+    "missingUserInfo": "Kullanıcı bilgileri eksik",
+    "sessionError": "Oturum Hatası: {msg}",
+    "authError": "Kimlik Doğrulama Hatası: {code}",
+    "unexpectedStatus": "Beklenmeyen bir durum oluştu.",
+    "processing": {
+      "title": "Kimlik Doğrulaması Yapılıyor",
+      "description": "Lütfen bekleyin, bilgileriniz işleniyor..."
     },
-    "placeholders": {
-        "email": "siz@std.iyte.edu.tr"
-    }
+    "completing": "Giriş tamamlanıyor...",
+    "success": "Giriş başarılı! Yönlendiriliyor...",
+    "failed": "Giriş başarısız. Lütfen tekrar deneyin."
   },
   "projects": {
     "title": "Projeler",
@@ -141,6 +161,30 @@
       "team": "Ekip",
       "requirements": "Gereksinimler",
       "viewProject": "Projeyi görüntüle"
+    },
+    "searchPlaceholder": "Proje ara...",
+    "filterByStatus": "Duruma göre filtrele",
+    "allStatuses": "Tüm Durumlar",
+    "noProjectsFound": "Henüz proje bulunmuyor.",
+    "loadingError": "Projeler yüklenirken bir hata oluştu.",
+    "prevPage": "Önceki",
+    "nextPage": "Sonraki",
+    "page": "Sayfa {current} / {total}",
+    "subtitle": "IYTE öğrencilerinin birlikte çalışabileceği projeleri keşfedin",
+    "applicationForm": {
+      "submitting": "Gönderiliyor...",
+      "confirmApplication": "Başvuruyu Onayla",
+      "successTitle": "Başvuru Başarılı",
+      "successDescription": "Başvurunuz başarıyla gönderildi.",
+      "currentStatus": "Mevcut Durum: {status}",
+      "withdraw": "Başvuruyu Geri Çek",
+      "withdrawSuccessTitle": "Başvuru Geri Çekildi",
+      "withdrawSuccessDescription": "Başvurunuz başarıyla geri çekildi."
+    },
+    "applications": {
+      "approvedTitle": "Başvuru Onaylandı",
+      "rejectedTitle": "Başvuru Reddedildi",
+      "updateDescription": "Başvuru durumu güncellendi."
     }
   },
   "profile": {
@@ -196,5 +240,41 @@
     "maxLength": "En fazla {max} karakter olabilir",
     "notFound": "Sayfa bulunamadı",
     "serverError": "Sunucu hatası oluştu"
+  },
+  "admin": {
+    "featureFlags": "Yönetici Paneli - Özellik Bayrakları",
+    "enabled": "Aktif",
+    "disabled": "Devre Dışı",
+    "updating": "Güncelleniyor...",
+    "notAuthorized": "Bu sayfayı görüntüleme yetkiniz yok.",
+    "verifyingAccess": "Erişim doğrulanıyor...",
+    "loadingFeatures": "Özellik bayrakları yükleniyor...",
+    "errorFetching": "Özellikler alınırken hata oluştu: {message}"
+  },
+  "apiStatus": {
+    "title": "API Durumu",
+    "online": "Çevrimiçi",
+    "offline": "Çevrimdışı",
+    "totalQueries": "Toplam Sorgu: {count}",
+    "failedQueries": "Başarısız Sorgu: {count}"
+  },
+  "footer": {
+    "brand": "Proje Pazarı",
+    "description": "IYTE öğrencilerinin projeler üzerinde işbirliği yapabileceği platform.",
+    "pages": "Sayfalar",
+    "projects": "Projeler",
+    "about": "Hakkında",
+    "legal": "Yasal",
+    "privacy": "Gizlilik Politikası",
+    "terms": "Kullanım Koşulları",
+    "contact": "İletişim",
+    "community": "IYTE Yazılım Topluluğu",
+    "rights": "© {year} IYTE Yazılım Topluluğu. Tüm hakları saklıdır."
+  },
+  "metadata": {
+    "title_default": "IYTE Proje Pazarı",
+    "title_template": "%s | IYTE Proje Pazarı",
+    "description": "İzmir Yüksek Teknoloji Enstitüsü öğrencilerinin projeler üzerinde işbirliği yapabileceği platform",
+    "siteName": "IYTE Proje Pazarı"
   }
 }

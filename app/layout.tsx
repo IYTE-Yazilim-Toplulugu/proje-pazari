@@ -6,7 +6,7 @@ import Header from "@/components/shared/Header";
 import Footer from "@/components/shared/Footer";
 import { Toaster } from "@/components/ui/sonner";
 import {NextIntlClientProvider} from 'next-intl';
-import {getLocale, getMessages} from 'next-intl/server';
+import {getLocale, getMessages, getTranslations} from 'next-intl/server';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -23,49 +23,54 @@ const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  metadataBase: new URL('https://projepazari.iyte.edu.tr'),
-  
-  title: {
-    default: 'IYTE Proje Pazarı',
-    template: '%s | IYTE Proje Pazarı',
-  },
-  description: 'İzmir Yüksek Teknoloji Enstitüsü öğrencilerinin projeler üzerinde işbirliği yapabileceği platform',
-  icons: {
-    icon: [
-      { url: '/favicon.ico', sizes: 'any' },
-      { url: '/favicon.svg', type: 'image/svg+xml' },
-      { url: '/favicon-96x96.png', sizes: '96x96', type: 'image/png' },
-    ],
-    apple: [
-      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
-    ],
-  },
-  manifest: '/site.webmanifest',
-  openGraph: {
-    title: 'IYTE Proje Pazarı',
-    description: 'İzmir Yüksek Teknoloji Enstitüsü öğrencileri için proje işbirliği platformu',
-    url: 'https://projepazari.iyte.edu.tr',
-    siteName: 'IYTE Proje Pazarı',
-    images: [
-      {
-        url: '/og-image.png',
-        width: 1200,
-        height: 630,
-        alt: 'IYTE Proje Pazarı',
-      },
-    ],
-    locale: 'tr_TR',
-    type: 'website',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'IYTE Proje Pazarı',
-    description: 'İzmir Yüksek Teknoloji Enstitüsü öğrencileri için proje işbirliği platformu',
-    images: ['/twitter-image.png'],
-    creator: '@iyteyazilim',
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getLocale();
+  const t = await getTranslations({locale, namespace: 'metadata'});
+
+  return {
+    metadataBase: new URL('https://projepazari.iyte.edu.tr'),
+    
+    title: {
+      default: t('title_default'),
+      template: t('title_template'),
+    },
+    description: t('description'),
+    icons: {
+      icon: [
+        { url: '/favicon.ico', sizes: 'any' },
+        { url: '/favicon.svg', type: 'image/svg+xml' },
+        { url: '/favicon-96x96.png', sizes: '96x96', type: 'image/png' },
+      ],
+      apple: [
+        { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+      ],
+    },
+    manifest: '/site.webmanifest',
+    openGraph: {
+      title: t('title_default'),
+      description: t('description'),
+      url: 'https://projepazari.iyte.edu.tr',
+      siteName: t('siteName'),
+      images: [
+        {
+          url: '/og-image.png',
+          width: 1200,
+          height: 630,
+          alt: t('title_default'),
+        },
+      ],
+      locale: locale === 'tr' ? 'tr_TR' : 'en_US',
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: t('title_default'),
+      description: t('description'),
+      images: ['/twitter-image.png'],
+      creator: '@iyteyazilim',
+    },
+  };
+}
 
 export const viewport: Viewport = {
   themeColor: [

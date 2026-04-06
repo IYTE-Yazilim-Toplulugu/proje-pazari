@@ -70,7 +70,8 @@
       "loginLink": "Buradan giriş yapın",
       "errors": {
         "generic": "Beklenmedik bir hata oluştu. Lütfen tekrar deneyin.",
-        "passwordMismatch": "Şifreler eşleşmiyor"
+        "passwordMismatch": "Şifreler eşleşmiyor",
+        "invalidEmailDomain": "Yalnızca @std.iyte.edu.tr veya @iyte.edu.tr e-posta adresleri kabul edilmektedir"
       },
       "placeholders": {
         "email": "siz@std.iyte.edu.tr",

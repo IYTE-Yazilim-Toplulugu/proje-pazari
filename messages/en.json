@@ -70,7 +70,8 @@
       "loginLink": "Login here",
       "errors": {
         "generic": "An unexpected error occurred. Please try again.",
-        "passwordMismatch": "Passwords do not match"
+        "passwordMismatch": "Passwords do not match",
+        "invalidEmailDomain": "Only @std.iyte.edu.tr or @iyte.edu.tr email addresses are allowed"
       },
       "placeholders": {
         "email": "you@std.iyte.edu.tr",

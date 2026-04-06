@@ -107,7 +107,16 @@ export const createRegisterFormSchema = (t: (key: string) => string) =>
         .refine((data) => data.password === data.passwordConfirm, {
             message: t('errors.passwordMismatch'),
             path: ['passwordConfirm'],
-        });
+        })
+        .refine(
+            (data) =>
+                data.email.endsWith('@std.iyte.edu.tr') ||
+                data.email.endsWith('@iyte.edu.tr'),
+            {
+                message: t('errors.invalidEmailDomain'),
+                path: ['email'],
+            }
+        );
 
 
 // --- Type Exports ---

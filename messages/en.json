@@ -71,7 +71,12 @@
       "errors": {
         "generic": "An unexpected error occurred. Please try again.",
         "passwordMismatch": "Passwords do not match",
-        "invalidEmailDomain": "Only @std.iyte.edu.tr or @iyte.edu.tr email addresses are allowed"
+        "invalidEmailDomain": "Only @std.iyte.edu.tr or @iyte.edu.tr email addresses are allowed",
+        "passwordMin": "Password must be at least 8 characters",
+        "passwordLowercase": "Password must contain at least one lowercase letter",
+        "passwordUppercase": "Password must contain at least one uppercase letter",
+        "passwordDigit": "Password must contain at least one number",
+        "passwordSpecial": "Password must contain at least one special character"
       },
       "placeholders": {
         "email": "you@std.iyte.edu.tr",

@@ -18,7 +18,6 @@ export const RegisterRequestSchema = z.object({
     lastName: z.string(),
     email: z.email(),
     password: z.string().optional(),
-    oauth_code: z.string().optional(),
 });
 
 
@@ -109,6 +108,12 @@ export const createRegisterFormSchema = (t: (key: string) => string) =>
             (val) => val.endsWith('@std.iyte.edu.tr') || val.endsWith('@iyte.edu.tr'),
             { message: t('errors.invalidEmailDomain') }
         ),
+        password: z.string()
+            .min(8, { message: t('errors.passwordMin') })
+            .refine((val) => /[a-z]/.test(val), { message: t('errors.passwordLowercase') })
+            .refine((val) => /[A-Z]/.test(val), { message: t('errors.passwordUppercase') })
+            .refine((val) => /\d/.test(val), { message: t('errors.passwordDigit') })
+            .refine((val) => /[^A-Za-z0-9]/.test(val), { message: t('errors.passwordSpecial') }),
     }).refine((data) => data.password === data.passwordConfirm, {
         message: t('errors.passwordMismatch'),
         path: ['passwordConfirm'],
@@ -121,5 +126,5 @@ export type LogoutRequest = z.infer<typeof LogoutRequestSchema>;
 export type RegisterRequest = z.infer<typeof RegisterRequestSchema>;
 export type RefreshTokenRequest = z.infer<typeof RefreshTokenRequestSchema>;
 export type OAuthCompleteQuery = z.infer<typeof OAuthCompleteQuerySchema>;
-export type RegisterForm = z.infer<typeof RegisterFormSchema>;
+export type RegisterForm = z.infer<ReturnType<typeof createRegisterFormSchema>>;
 

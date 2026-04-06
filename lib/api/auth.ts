@@ -50,13 +50,3 @@ export async function resetPassword(token: string, password: string): Promise<ap
  * NOTE: This endpoint is not yet implemented on the backend.
  * */
 export const getStatus = () => fetcher('/api/v1/auth/status', z.boolean());
-
-// --- OAuth Redirect Helpers ---
-
-type OAuthService = 'google' | 'meta' | 'microsoft';
-
-export const getOAuthRedirectUrl = (serviceId: OAuthService): string => {
-    // Frontend ve Backend 8080 portunda birleşiyorsa base URL'i de /api/v1'e çektik
-    const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8080/api/v1';
-    return `${baseUrl}/auth/oauth/${serviceId}/redirect`;
-};

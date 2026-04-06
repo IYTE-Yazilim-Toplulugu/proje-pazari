@@ -103,20 +103,16 @@ export const RegisterFormSchema = RegisterRequestSchema.extend({
  * @param t - Translation function from useTranslations('auth.register')
  */
 export const createRegisterFormSchema = (t: (key: string) => string) =>
-    RegisterRequestSchema.extend({ passwordConfirm: z.string() })
-        .refine((data) => data.password === data.passwordConfirm, {
-            message: t('errors.passwordMismatch'),
-            path: ['passwordConfirm'],
-        })
-        .refine(
-            (data) =>
-                data.email.endsWith('@std.iyte.edu.tr') ||
-                data.email.endsWith('@iyte.edu.tr'),
-            {
-                message: t('errors.invalidEmailDomain'),
-                path: ['email'],
-            }
-        );
+    RegisterRequestSchema.extend({
+        passwordConfirm: z.string(),
+        email: z.email().refine(
+            (val) => val.endsWith('@std.iyte.edu.tr') || val.endsWith('@iyte.edu.tr'),
+            { message: t('errors.invalidEmailDomain') }
+        ),
+    }).refine((data) => data.password === data.passwordConfirm, {
+        message: t('errors.passwordMismatch'),
+        path: ['passwordConfirm'],
+    });
 
 
 // --- Type Exports ---

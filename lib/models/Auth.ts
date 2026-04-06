@@ -20,7 +20,6 @@ export const RegisterRequestSchema = z.object({
     password: z.string().optional(),
 });
 
-
 export const RefreshTokenRequestSchema = z.object({
     refreshToken: z.string(),
 });
@@ -29,7 +28,6 @@ export const RefreshTokenRequestSchema = z.object({
 
 export const RegisterStatusSchema = z.enum({
     SendError: 0,
-    OAuthVerificationError: 1,
     LowAge: 2,
     HighAge: 3,
 });
@@ -38,35 +36,7 @@ export const RefreshStatusSchema = z.enum({
     Expired: 0,
 });
 
-// --- Frontend Redirect Page Schemas ---
-
-/**
- * Status codes for the /oauth/complete frontend page.
- */
-export const GStatusSchema = z.enum({
-    AuthenticationError: 0,
-    SessionGenerationError: 1,
-    SuccessfulUserNeedsRegister: 2,
-    SuccessfulJwtTokenProvided: 3,
-});
-
-/**
- * Zod schema for parsing query parameters on the /oauth/complete page.
- */
-export const OAuthCompleteQuerySchema = z.object({
-    status: z.preprocess(Number, GStatusSchema),
-    // Fields for AuthenticationError
-    code: z.string().optional(),
-    // Fields for SessionGenerationError
-    msg: z.string().optional(),
-    // Fields for SuccessfulUserNeedsRegister
-    firstName: z.string().optional(),
-    lastName: z.string().optional(),
-    email: z.email().optional(),
-    vcode: z.string().optional(),
-    accessToken: z.string().optional(),
-    refreshToken: z.string().optional(),
-});
+// --- Frontend Page Schemas ---
 
 /**
  * Status codes for the /register/complete frontend page.
@@ -125,6 +95,4 @@ export type LoginRequest = z.infer<typeof LoginRequestSchema>;
 export type LogoutRequest = z.infer<typeof LogoutRequestSchema>;
 export type RegisterRequest = z.infer<typeof RegisterRequestSchema>;
 export type RefreshTokenRequest = z.infer<typeof RefreshTokenRequestSchema>;
-export type OAuthCompleteQuery = z.infer<typeof OAuthCompleteQuerySchema>;
 export type RegisterForm = z.infer<ReturnType<typeof createRegisterFormSchema>>;
-

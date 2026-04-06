@@ -115,19 +115,34 @@ async function http(endpoint: string, options: RequestInit, signal?: AbortSignal
         const currentToken = Cookies.get('authToken');
         const currentRefreshToken = Cookies.get('refreshToken');
 
+        // --- LOCALE EXTRACTION AND PATH NORMALIZATION ---
+        let locale = 'tr'; // Default fallback
+        let unlocalizedPath = '/';
+
+        if (typeof window !== 'undefined') {
+            const pathname = window.location.pathname;
+            const pathParts = pathname.split('/').filter(Boolean);
+
+            // Extract locale from the first segment if it exists
+            if (pathParts[0] === 'en' || pathParts[0] === 'tr') {
+                locale = pathParts[0];
+            }
+
+            // Remove the locale prefix to normalize the path for checking
+            unlocalizedPath = pathname.replace(new RegExp(`^/${locale}`), '') || '/';
+        }
+
+        // Check if the user is already on a public/auth route
+        const isPublicRoute = typeof window !== 'undefined' && (
+            unlocalizedPath.startsWith('/login') ||
+            unlocalizedPath.startsWith('/register') ||
+            unlocalizedPath.startsWith('/oauth/complete') ||
+            unlocalizedPath === '/'
+        );
+
         if (!currentToken || !currentRefreshToken) {
-            if (
-                !(typeof window !== 'undefined' &&
-                    (
-                        window.location.pathname.startsWith('/login') ||
-                        window.location.pathname.startsWith('/register') ||
-                        window.location.pathname.startsWith('/oauth/complete') ||
-                        window.location.pathname === '/' ||
-                        window.location.pathname === ''
-                    )
-                )
-            ) {
-                window.location.href = '/login'; // Force logout
+            if (!isPublicRoute && typeof window !== 'undefined') {
+                window.location.href = `/${locale}/login`; // Redirect with proper locale
             }
             return response;
         }
@@ -158,7 +173,11 @@ async function http(endpoint: string, options: RequestInit, signal?: AbortSignal
             // If refresh fails, the session is invalid. Clear cookies using js-cookie
             Cookies.remove('authToken', { path: '/' });
             Cookies.remove('refreshToken', { path: '/' });
-            window.location.href = '/login'; // Force logout
+            
+            if (typeof window !== 'undefined') {
+                window.location.href = `/${locale}/login`; // Redirect with proper locale on refresh failure
+            }
+            
             // We still throw the original error to let React Query know the request failed
             throw new Error('Session expired. Please log in again.');
         }

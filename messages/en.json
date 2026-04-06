@@ -123,26 +123,6 @@
       "tokenMissing": "Token is missing"
     }
   },
-  "oauth": {
-    "buttonLabel": "Continue with {provider}",
-    "invalidParams": "Invalid parameters during OAuth verification.",
-    "loginSuccess": "Successfully logged in!",
-    "tokenStorageError": "An error occurred while storing session. Please log in again.",
-    "missingTokens": "Token information is missing",
-    "registrationSuccess": "Registration successful! Welcome.",
-    "registrationError": "An error occurred during registration. Please try again.",
-    "missingUserInfo": "User information is missing",
-    "sessionError": "Session Error: {msg}",
-    "authError": "Authentication Error: {code}",
-    "unexpectedStatus": "An unexpected situation occurred.",
-    "processing": {
-      "title": "Authenticating",
-      "description": "Please wait, your information is being processed..."
-    },
-    "completing": "Completing sign-in...",
-    "success": "Sign-in successful! Redirecting...",
-    "failed": "Sign-in failed. Please try again."
-  },
   "projects": {
     "title": "Projects",
     "create": "New Project",
@@ -158,8 +138,6 @@
     "card": {
       "applicationCount": "{count, plural, =0 {No Applications} one {# Application} other {# Applications}}"
     },
-    "loadingError": "An error occurred while loading the project.",
-    "prevPage": "Back to Projects",
     "details": {
       "apply": "Apply",
       "applications": "Applications",

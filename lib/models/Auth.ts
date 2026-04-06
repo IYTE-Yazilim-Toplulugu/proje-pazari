@@ -36,8 +36,6 @@ export const RefreshStatusSchema = z.enum({
     Expired: 0,
 });
 
-// --- Frontend Page Schemas ---
-
 /**
  * Status codes for the /register/complete frontend page.
  */
@@ -95,4 +93,5 @@ export type LoginRequest = z.infer<typeof LoginRequestSchema>;
 export type LogoutRequest = z.infer<typeof LogoutRequestSchema>;
 export type RegisterRequest = z.infer<typeof RegisterRequestSchema>;
 export type RefreshTokenRequest = z.infer<typeof RefreshTokenRequestSchema>;
-export type RegisterForm = z.infer<ReturnType<typeof createRegisterFormSchema>>;
+export type RegisterForm = z.infer<typeof RegisterFormSchema>;
+

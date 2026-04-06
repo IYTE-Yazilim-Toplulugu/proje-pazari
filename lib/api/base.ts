@@ -22,6 +22,18 @@ import { BasicResponseSchema, DataResponseSchema, ResponseCode, ResponseCodeSche
 //   return config;
 // });
 
+let isRefreshing = false;
+type QueueEntry = { resolve: (token: string) => void; reject: (err: unknown) => void };
+const refreshQueue: QueueEntry[] = [];
+
+function drainQueue(token: string) {
+    refreshQueue.splice(0).forEach(({ resolve }) => resolve(token));
+}
+
+function rejectQueue(err: unknown) {
+    refreshQueue.splice(0).forEach(({ reject }) => reject(err));
+}
+
 /**
  * A custom error class to handle structured API errors.
  */
@@ -57,7 +69,7 @@ export async function handleResponse<T extends z.ZodTypeAny>(
     const json = await response.json();
     const parsedResponse = BasicResponseSchema.parse(json);
 
-    const SUCCESS_CODES: ResponseCode[] = [ResponseCodeSchema.enum.SUCCESS, ResponseCodeSchema.enum.REGISTERED_NEEDS_VERIFY, ResponseCodeSchema.enum.EMAIL_SENT];
+    const SUCCESS_CODES: ResponseCode[] =[ResponseCodeSchema.enum.SUCCESS, ResponseCodeSchema.enum.REGISTERED_NEEDS_VERIFY, ResponseCodeSchema.enum.EMAIL_SENT];
     if (!SUCCESS_CODES.includes(parsedResponse.code)) {
         // Handle API-level errors defined by the `code` field
         throw new ApiError(
@@ -131,14 +143,25 @@ async function http(endpoint: string, options: RequestInit, signal?: AbortSignal
             return response;
         }
 
+        // 3. If a refresh is already in flight, queue this request and wait
+        if (isRefreshing) {
+            const newToken = await new Promise<string>((resolve, reject) => {
+                refreshQueue.push({ resolve, reject });
+            });
+            response = await makeRequest(newToken);
+            return response;
+        }
+
+        isRefreshing = true;
+
         try {
-            // 3. Call the refresh endpoint
+            // 4. Call the refresh endpoint (only one request will reach here)
             const refreshResponse = await refreshToken({
                 refreshToken: currentRefreshToken,
             });
 
             if (refreshResponse.data?.accessToken && refreshResponse.data?.refreshToken) {
-                // 4. Store the new tokens using js-cookie for client-side access
+                // 5. Store the new tokens using js-cookie for client-side access
                 Cookies.set('authToken', refreshResponse.data.accessToken, {
                     path: '/',
                     maxAge: 60 * 60 * 24 * 30,
@@ -149,17 +172,21 @@ async function http(endpoint: string, options: RequestInit, signal?: AbortSignal
                 });
 
                 console.log('Token refreshed successfully. Retrying original request...');
-                // 5. Retry the original request with the new token
+                drainQueue(refreshResponse.data.accessToken);
+                // 6. Retry the original request with the new token
                 response = await makeRequest(refreshResponse.data.accessToken);
             }
         } catch (error) {
             console.error('Failed to refresh token. Logging out.', error);
+            rejectQueue(error);
             // If refresh fails, the session is invalid. Clear cookies using js-cookie
             Cookies.remove('authToken', { path: '/' });
             Cookies.remove('refreshToken', { path: '/' });
             window.location.href = '/login'; // Force logout
             // We still throw the original error to let React Query know the request failed
             throw new Error('Session expired. Please log in again.');
+        } finally {
+            isRefreshing = false;
         }
     }
 

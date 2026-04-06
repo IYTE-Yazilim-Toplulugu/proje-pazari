@@ -34,6 +34,7 @@ const FeatureToggle = ({ featureKey, isEnabled, onToggle, isChanging }: {
     </button>
 </div>
 );
+}
 
 export default function AdminPage() {
     const t = useTranslations('admin');

@@ -11,7 +11,44 @@
   --color-card-foreground: oklch(0.145 0 0);
   --color-popover: oklch(1 0 0);
   --color-popover-foreground: oklch(0.145 0 0);
-  --color-primary: oklch(0.205 0 0);
+  
+  /* ── IYTE Brand ─────────────────────────────────────────────── */
+  --color-primary:       #E30613;
+  --color-primary-dark:  #B3040F;
+  --color-primary-light: #FF3B47;
+
+  /* ── Button ─────────────────────────────────────────────────── */
+  --color-btn-primary:         #E30613;
+  --color-btn-primary-hover:   #B3040F;
+  --color-btn-secondary:       #F5F5F5;
+  --color-btn-danger:          #F44336;
+  --color-btn-disabled:        #D4D4D4;
+
+  /* ── Background ─────────────────────────────────────────────── */
+  --color-background-elevated:  #FFFFFF;
+  --color-background-secondary: #EBEBEB;
+
+  /* ── Card ───────────────────────────────────────────────────── */
+  --color-card-border-solid: #E4EBF2;
+  --color-card-elevated:     rgba(255,255,255,0.95);
+
+  /* ── Status ─────────────────────────────────────────────────── */
+  --color-success: #4CAF50;
+  --color-warning: #FF9500;
+  --color-error:   #F44336;
+  --color-info:    #5AC8FA;
+
+  /* ── Text ───────────────────────────────────────────────────── */
+  --color-text-primary:   #2D3748;
+  --color-text-secondary: #4A5568;
+  --color-text-tertiary:  #718096;
+  --color-text-inverse:   #FFFFFF;
+
+  /* ── Navigation ─────────────────────────────────────────────── */
+  --color-nav-bg:       #FFFFFF;
+  --color-nav-active:   #E30613;
+  --color-nav-inactive: #6B7280;
+  
   --color-primary-foreground: oklch(0.985 0 0);
   --color-secondary: oklch(0.97 0 0);
   --color-secondary-foreground: oklch(0.205 0 0);
@@ -88,6 +125,7 @@ body {
   color: var(--foreground);
   font-family: var(--font-jetbrains-mono), monospace;
 }
+
 .form-container {
   @apply max-w-md mx-auto p-6 bg-white dark:bg-gray-900 rounded-lg shadow-lg;
 }
@@ -110,7 +148,7 @@ body {
 
 .form-input {
   @apply w-full px-4 py-2 border border-gray-300 dark:border-gray-600 
-         rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent
+         rounded-lg focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent
          bg-white dark:bg-gray-800 text-gray-900 dark:text-white
          placeholder-gray-400 dark:placeholder-gray-500;
 }
@@ -124,7 +162,7 @@ body {
 }
 
 .form-button {
-  @apply w-full bg-orange-600 hover:bg-orange-700 text-white font-semibold 
+  @apply w-full bg-[var(--color-btn-primary)] hover:bg-[var(--color-btn-primary-hover)] text-white font-semibold 
          py-2 px-4 rounded-lg transition-colors disabled:opacity-50 
          disabled:cursor-not-allowed;
 }

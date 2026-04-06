@@ -121,7 +121,6 @@ async function http(endpoint: string, options: RequestInit, signal?: AbortSignal
                     (
                         window.location.pathname.startsWith('/login') ||
                         window.location.pathname.startsWith('/register') ||
-                        window.location.pathname.startsWith('/oauth/complete') ||
                         window.location.pathname === '/' ||
                         window.location.pathname === ''
                     )

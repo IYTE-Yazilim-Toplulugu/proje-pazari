@@ -117,26 +117,6 @@
       "tokenMissing": "Token eksik"
     }
   },
-  "oauth": {
-    "buttonLabel": "{provider} ile devam et",
-    "invalidParams": "OAuth doğrulama sırasında geçersiz parametreler.",
-    "loginSuccess": "Başarıyla giriş yaptınız!",
-    "tokenStorageError": "Oturum bilgileri saklanırken bir hata oluştu. Lütfen tekrar giriş yapın.",
-    "missingTokens": "Token bilgileri eksik",
-    "registrationSuccess": "Kayıt başarılı! Hoş geldiniz.",
-    "registrationError": "Kayıt sırasında bir hata oluştu. Lütfen tekrar deneyin.",
-    "missingUserInfo": "Kullanıcı bilgileri eksik",
-    "sessionError": "Oturum Hatası: {msg}",
-    "authError": "Kimlik Doğrulama Hatası: {code}",
-    "unexpectedStatus": "Beklenmeyen bir durum oluştu.",
-    "processing": {
-      "title": "Kimlik Doğrulaması Yapılıyor",
-      "description": "Lütfen bekleyin, bilgileriniz işleniyor..."
-    },
-    "completing": "Giriş tamamlanıyor...",
-    "success": "Giriş başarılı! Yönlendiriliyor...",
-    "failed": "Giriş başarısız. Lütfen tekrar deneyin."
-  },
   "projects": {
     "title": "Projeler",
     "create": "Yeni Proje",
@@ -152,8 +132,6 @@
     "card": {
       "applicationCount": "{count, plural, =0 {Başvuru yok} one {# Başvuru} other {# Başvuru}}"
     },
-    "loadingError": "Proje yüklenirken bir hata oluştu.",
-    "prevPage": "Projelere Dön",
     "details": {
       "apply": "Başvur",
       "applications": "Başvurular",

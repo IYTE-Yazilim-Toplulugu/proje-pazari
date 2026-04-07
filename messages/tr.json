@@ -138,7 +138,8 @@
       "owner": "Proje Sahibi",
       "team": "Ekip",
       "requirements": "Gereksinimler",
-      "viewProject": "Projeyi görüntüle"
+      "viewProject": "Projeyi görüntüle",
+      "description": "Açıklama"
     },
     "searchPlaceholder": "Proje ara...",
     "filterByStatus": "Duruma göre filtrele",

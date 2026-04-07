@@ -138,7 +138,8 @@
       "owner": "Project Owner",
       "team": "Team",
       "requirements": "Requirements",
-      "viewProject": "View project"
+      "viewProject": "View project",
+      "description": "Description"
     },
     "searchPlaceholder": "Search projects...",
     "filterByStatus": "Filter by status",

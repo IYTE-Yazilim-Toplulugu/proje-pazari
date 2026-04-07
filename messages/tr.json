@@ -70,7 +70,13 @@
       "loginLink": "Buradan giriş yapın",
       "errors": {
         "generic": "Beklenmedik bir hata oluştu. Lütfen tekrar deneyin.",
-        "passwordMismatch": "Şifreler eşleşmiyor"
+        "passwordMismatch": "Şifreler eşleşmiyor",
+        "invalidEmailDomain": "Yalnızca @std.iyte.edu.tr veya @iyte.edu.tr e-posta adresleri kabul edilmektedir",
+        "passwordMin": "Şifre en az 8 karakter olmalıdır",
+        "passwordLowercase": "Şifre en az bir küçük harf içermelidir",
+        "passwordUppercase": "Şifre en az bir büyük harf içermelidir",
+        "passwordDigit": "Şifre en az bir rakam içermelidir",
+        "passwordSpecial": "Şifre en az bir özel karakter içermelidir"
       },
       "placeholders": {
         "email": "siz@std.iyte.edu.tr",

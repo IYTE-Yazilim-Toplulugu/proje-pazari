@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { getPasswordStrength } from '@/lib/utils/password';
 
 export * from './_Execution';
 
@@ -19,7 +20,6 @@ export const RegisterRequestSchema = z.object({
     email: z.email(),
     password: z.string().optional(),
 });
-
 
 export const RefreshTokenRequestSchema = z.object({
     refreshToken: z.string(),
@@ -71,11 +71,34 @@ export const RegisterFormSchema = RegisterRequestSchema.extend({
  * @param t - Translation function from useTranslations('auth.register')
  */
 export const createRegisterFormSchema = (t: (key: string) => string) =>
-    RegisterRequestSchema.extend({ passwordConfirm: z.string() })
-        .refine((data) => data.password === data.passwordConfirm, {
-            message: t('errors.passwordMismatch'),
-            path: ['passwordConfirm'],
-        });
+    RegisterRequestSchema.extend({
+        passwordConfirm: z.string(),
+        email: z.email().refine(
+            (val) => val.endsWith('@std.iyte.edu.tr') || val.endsWith('@iyte.edu.tr'),
+            { message: t('errors.invalidEmailDomain') }
+        ),
+        password: z.string().superRefine((val, ctx) => {
+            const { flags } = getPasswordStrength(val);
+            if (!flags.minLength) {
+                ctx.addIssue({ code: 'custom', message: t('errors.passwordMin') });
+            }
+            if (!flags.hasLower) {
+                ctx.addIssue({ code: 'custom', message: t('errors.passwordLowercase') });
+            }
+            if (!flags.hasUpper) {
+                ctx.addIssue({ code: 'custom', message: t('errors.passwordUppercase') });
+            }
+            if (!flags.hasDigit) {
+                ctx.addIssue({ code: 'custom', message: t('errors.passwordDigit') });
+            }
+            if (!flags.hasSpecial) {
+                ctx.addIssue({ code: 'custom', message: t('errors.passwordSpecial') });
+            }
+        }),
+    }).refine((data) => data.password === data.passwordConfirm, {
+        message: t('errors.passwordMismatch'),
+        path: ['passwordConfirm'],
+    });
 
 
 // --- Type Exports ---

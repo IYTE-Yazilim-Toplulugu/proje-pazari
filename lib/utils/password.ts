@@ -1,23 +1,30 @@
-export type PasswordStrength = 'Weak' | 'Medium' | 'Strong';
-
-export type PasswordStrengthResult = {
-  label: PasswordStrength;
-  width: '33%' | '66%' | '100%';
-  color: 'bg-red-500' | 'bg-yellow-500' | 'bg-green-600';
+export type PasswordFlags = {
+  minLength: boolean;
+  hasLower: boolean;
+  hasUpper: boolean;
+  hasDigit: boolean;
+  hasSpecial: boolean;
 };
 
-export const PASSWORD_RULES = {
-  minLength: (val: string) => val.length >= 8,
-  hasLowercase: (val: string) => /[a-z]/.test(val),
-  hasUppercase: (val: string) => /[A-Z]/.test(val),
-  hasDigit: (val: string) => /\d/.test(val),
-  hasSpecial: (val: string) => /[^A-Za-z0-9]/.test(val),
+export type PasswordStrength = 'weak' | 'medium' | 'strong';
+
+export type PasswordStrengthResult = {
+  flags: PasswordFlags;
+  strength: PasswordStrength;
+  score: number;
 };
 
 export function getPasswordStrength(password: string): PasswordStrengthResult {
-  const score = Object.values(PASSWORD_RULES).filter((check) => check(password)).length;
+  const flags: PasswordFlags = {
+    minLength: password.length >= 8,
+    hasLower: /[a-z]/.test(password),
+    hasUpper: /[A-Z]/.test(password),
+    hasDigit: /\d/.test(password),
+    hasSpecial: /[^A-Za-z0-9]/.test(password),
+  };
 
-  if (score <= 2) return { label: 'Weak', width: '33%', color: 'bg-red-500' };
-  if (score <= 4) return { label: 'Medium', width: '66%', color: 'bg-yellow-500' };
-  return { label: 'Strong', width: '100%', color: 'bg-green-600' };
+  const score = Object.values(flags).filter(Boolean).length;
+  const strength: PasswordStrength = score <= 2 ? 'weak' : score <= 4 ? 'medium' : 'strong';
+
+  return { flags, strength, score };
 }

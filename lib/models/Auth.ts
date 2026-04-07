@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { PASSWORD_RULES } from '@/lib/utils/password';
+import { getPasswordStrength } from '@/lib/utils/password';
 
 export * from './_Execution';
 
@@ -77,12 +77,24 @@ export const createRegisterFormSchema = (t: (key: string) => string) =>
             (val) => val.endsWith('@std.iyte.edu.tr') || val.endsWith('@iyte.edu.tr'),
             { message: t('errors.invalidEmailDomain') }
         ),
-        password: z.string()
-            .min(8, { message: t('errors.passwordMin') })
-            .refine(PASSWORD_RULES.hasLowercase, { message: t('errors.passwordLowercase') })
-            .refine(PASSWORD_RULES.hasUppercase, { message: t('errors.passwordUppercase') })
-            .refine(PASSWORD_RULES.hasDigit, { message: t('errors.passwordDigit') })
-            .refine(PASSWORD_RULES.hasSpecial, { message: t('errors.passwordSpecial') }),
+        password: z.string().superRefine((val, ctx) => {
+            const { flags } = getPasswordStrength(val);
+            if (!flags.minLength) {
+                ctx.addIssue({ code: 'custom', message: t('errors.passwordMin') });
+            }
+            if (!flags.hasLower) {
+                ctx.addIssue({ code: 'custom', message: t('errors.passwordLowercase') });
+            }
+            if (!flags.hasUpper) {
+                ctx.addIssue({ code: 'custom', message: t('errors.passwordUppercase') });
+            }
+            if (!flags.hasDigit) {
+                ctx.addIssue({ code: 'custom', message: t('errors.passwordDigit') });
+            }
+            if (!flags.hasSpecial) {
+                ctx.addIssue({ code: 'custom', message: t('errors.passwordSpecial') });
+            }
+        }),
     }).refine((data) => data.password === data.passwordConfirm, {
         message: t('errors.passwordMismatch'),
         path: ['passwordConfirm'],

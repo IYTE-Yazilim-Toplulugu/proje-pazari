@@ -245,6 +245,14 @@ export const fetcher = async <T extends z.ZodTypeAny>(
         return null as z.infer<T>;
     }
 
+    // Prove to TypeScript that parsed.data is not undefined
+    if (parsed.data === undefined) {
+        throw new ApiError(
+            'API response succeeded but did not contain expected data.', 
+            parsed.code ?? 0 
+        );
+    }
+
     return parsed.data;
 };
 

@@ -1,25 +1,10 @@
 'use client';
 
+import { getPasswordStrength } from '@/lib/utils/password';
+
 type PasswordStrengthIndicatorProps = {
   password?: string;
 };
-
-function getStrength(password: string) {
-  let score = 0;
-  if (password.length >= 8) score += 1;
-  if (/[a-z]/.test(password)) score += 1;
-  if (/[A-Z]/.test(password)) score += 1;
-  if (/\d/.test(password)) score += 1;
-  if (/[^A-Za-z0-9]/.test(password)) score += 1;
-
-  if (score <= 2) {
-    return { label: 'Weak', width: '33%', color: 'bg-red-500' };
-  }
-  if (score <= 4) {
-    return { label: 'Medium', width: '66%', color: 'bg-yellow-500' };
-  }
-  return { label: 'Strong', width: '100%', color: 'bg-green-600' };
-}
 
 export default function PasswordStrengthIndicator({
   password = '',
@@ -28,7 +13,7 @@ export default function PasswordStrengthIndicator({
     return null;
   }
 
-  const strength = getStrength(password);
+  const strength = getPasswordStrength(password);
 
   return (
     <div className="mt-2">

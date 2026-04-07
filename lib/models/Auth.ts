@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { PASSWORD_RULES } from '@/lib/utils/password';
 
 export * from './_Execution';
 
@@ -78,10 +79,10 @@ export const createRegisterFormSchema = (t: (key: string) => string) =>
         ),
         password: z.string()
             .min(8, { message: t('errors.passwordMin') })
-            .refine((val) => /[a-z]/.test(val), { message: t('errors.passwordLowercase') })
-            .refine((val) => /[A-Z]/.test(val), { message: t('errors.passwordUppercase') })
-            .refine((val) => /\d/.test(val), { message: t('errors.passwordDigit') })
-            .refine((val) => /[^A-Za-z0-9]/.test(val), { message: t('errors.passwordSpecial') }),
+            .refine(PASSWORD_RULES.hasLowercase, { message: t('errors.passwordLowercase') })
+            .refine(PASSWORD_RULES.hasUppercase, { message: t('errors.passwordUppercase') })
+            .refine(PASSWORD_RULES.hasDigit, { message: t('errors.passwordDigit') })
+            .refine(PASSWORD_RULES.hasSpecial, { message: t('errors.passwordSpecial') }),
     }).refine((data) => data.password === data.passwordConfirm, {
         message: t('errors.passwordMismatch'),
         path: ['passwordConfirm'],

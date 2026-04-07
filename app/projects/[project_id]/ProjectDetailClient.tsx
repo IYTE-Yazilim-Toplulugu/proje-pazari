@@ -15,6 +15,8 @@ import {
   useUpdateApplicationStatus,
   useWithdrawApplication,
 } from '@/lib/hooks/projectHooks';
+import { ProjectStatusEnum, ProjectApplicationStatusEnum } from '@/lib/models';
+import type { ProjectApplicationStatus } from '@/lib/models';
 
 type ProjectDetailClientProps = {
   projectId: string;
@@ -76,7 +78,7 @@ export default function ProjectDetailClient({ projectId }: ProjectDetailClientPr
     dateCreated: project.createdAt,
   };
 
-  const canApply = !!session?.isAuthenticated && !isOwner && project.status === 'OPEN';
+  const canApply = !!session?.isAuthenticated && !isOwner && project.status === ProjectStatusEnum.enum.OPEN;
   const myApplication = applications.find((application) => String(application.applicantId) === String(session?.userId));
 
   const handleApplySuccess = () => {
@@ -97,11 +99,11 @@ export default function ProjectDetailClient({ projectId }: ProjectDetailClientPr
     }
   };
 
-  const handleReview = async (applicationId: string, status: 'APPROVED' | 'REJECTED') => {
+  const handleReview = async (applicationId: string, status: Extract<ProjectApplicationStatus, 'APPROVED' | 'REJECTED'>) => {
     try {
       await reviewMutation.mutateAsync({ applicationId, status });
       success(
-        status === 'APPROVED' ? t('applications.approvedTitle') : t('applications.rejectedTitle'),
+        status === ProjectApplicationStatusEnum.enum.APPROVED ? t('applications.approvedTitle') : t('applications.rejectedTitle'),
         t('applications.updateDescription'),
       );
     } catch (mutationError) {
@@ -186,7 +188,7 @@ export default function ProjectDetailClient({ projectId }: ProjectDetailClientPr
                     <p className="text-sm text-[var(--color-text-primary)]">
                       {t('applicationForm.currentStatus', { status: myApplication.status ?? '' })}
                     </p>
-                    {myApplication.status === 'PENDING' ? (
+                    {myApplication.status === ProjectApplicationStatusEnum.enum.PENDING ? (
                       <button
                         onClick={handleWithdraw}
                         disabled={withdrawMutation.isPending}
@@ -206,8 +208,8 @@ export default function ProjectDetailClient({ projectId }: ProjectDetailClientPr
                 <ApplicationsList
                   applications={applications}
                   loading={applicationsLoading || reviewMutation.isPending}
-                  onApprove={(id) => handleReview(id, 'APPROVED')}
-                  onReject={(id) => handleReview(id, 'REJECTED')}
+                  onApprove={(id) => handleReview(id, ProjectApplicationStatusEnum.enum.APPROVED)}
+                  onReject={(id) => handleReview(id, ProjectApplicationStatusEnum.enum.REJECTED)}
                 />
               </div>
             ) : null}

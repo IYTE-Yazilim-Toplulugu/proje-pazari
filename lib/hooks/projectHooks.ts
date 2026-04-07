@@ -2,7 +2,6 @@ import { useQuery, useMutation, useQueryClient, keepPreviousData } from '@tansta
 import {
   getProjects,
   getProject,
-  getProjectDetail,
   searchProjects,
   applyToProject,
   getProjectApplications,
@@ -10,6 +9,7 @@ import {
   updateProjectApplicationStatus,
   type GetProjectsParams,
 } from '@/lib/api';
+import type { ProjectApplicationStatus } from '@/lib/models';
 
 export const PROJECT_KEYS = {
   all: ['projects'] as const,
@@ -41,7 +41,7 @@ export function useProject(id: string, enabled = true) {
 export function useProjectDetail(id: string, enabled = true) {
   return useQuery({
     queryKey: PROJECT_KEYS.detail(id),
-    queryFn: () => getProjectDetail(id),
+    queryFn: () => getProject(id),
     enabled: enabled && !!id,
   });
 }
@@ -94,7 +94,7 @@ export function useUpdateApplicationStatus(projectId: string) {
       status,
     }: {
       applicationId: string;
-      status: 'APPROVED' | 'REJECTED';
+      status: Extract<ProjectApplicationStatus, 'APPROVED' | 'REJECTED'>;
     }) => updateProjectApplicationStatus(applicationId, status),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: [...PROJECT_KEYS.detail(projectId), 'applications'] });

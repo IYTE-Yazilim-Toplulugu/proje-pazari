@@ -21,6 +21,7 @@ export default function RegisterPage() {
         formState: { errors },
     } = useForm<RegisterForm>({
         resolver: zodResolver(createRegisterFormSchema(t)),
+        mode: 'onBlur',
     });
     const passwordValue = useWatch({ control, name: 'password' });
 

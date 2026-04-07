@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { MProject } from './Project';
 
 
 /**
@@ -18,7 +19,7 @@ export const MUserSchema = z.object({
     joinedAt: z.string().optional(),
     projectsCreated: z.number().optional(),
     applicationsSubmitted: z.number().optional(),
-    projects: z.array(z.any()).optional(),
+    projects: z.array(MProject).optional(),
     // Not returned by profile endpoint — populated from token if needed
     role: z.string().optional(),
 });

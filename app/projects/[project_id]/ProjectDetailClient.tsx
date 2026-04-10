@@ -129,7 +129,7 @@ export default function ProjectDetailClient({ projectId }: ProjectDetailClientPr
               </span>
             </div>
 
-            <div className="mb-6 flex items-center gap-3 border-b border-gray-200 pb-6 dark:border-gray-700">
+            <div className="mb-3 flex items-center gap-3 border-b border-gray-200 pb-6 dark:border-gray-700">
               <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[var(--color-primary)] text-lg font-semibold text-[var(--color-text-inverse)]">
                 {project.ownerName?.charAt(0) ?? '?'}
               </div>
@@ -139,14 +139,13 @@ export default function ProjectDetailClient({ projectId }: ProjectDetailClientPr
               </div>
             </div>
 
-            <div className="mb-6">
-              <h2 className="mb-3 text-xl font-semibold text-gray-900 dark:text-white">{t('details.requirements')}</h2>
-              <p className="text-gray-700 dark:text-gray-300">{project.summary}</p>
+            <div className="mb-10">
+              <h2 className="mb-3 text-xl font-semibold text-gray-900 dark:text-white">{t('details.description')}</h2>
+              <div className="prose max-w-none dark:prose-invert">{project.description}</div>
             </div>
 
-            <div className="mb-6">
-              <h2 className="mb-3 text-xl font-semibold text-gray-900 dark:text-white">{t('details.team')}</h2>
-              <div className="prose max-w-none dark:prose-invert">{project.description}</div>
+            <div className="mb-3">
+              <h2 className="mb-3 text-xl font-semibold text-gray-900 dark:text-white">{t('details.requirements')}</h2>
             </div>
 
             {project.requiredSkills?.length ? (

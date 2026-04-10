@@ -1,4 +1,5 @@
 import type { Application } from '@/lib/models';
+import { ProjectApplicationStatusEnum } from '@/lib/models';
 
 interface ApplicationsListProps {
     applications: Application[];
@@ -25,7 +26,7 @@ export default function ApplicationsList({ applications, onApprove, onReject }: 
                         </span>
                     </div>
 
-                    {app.status === 'PENDING' && (
+                    {app.status === ProjectApplicationStatusEnum.enum.PENDING && (
                         <div className="flex gap-2">
                             <button
                                 onClick={() => onApprove(app.applicationId!)}
@@ -42,9 +43,9 @@ export default function ApplicationsList({ applications, onApprove, onReject }: 
                         </div>
                     )}
 
-                    {app.status && app.status !== 'PENDING' && (
+                    {app.status && app.status !== ProjectApplicationStatusEnum.enum.PENDING && (
                         <span className={`inline-block px-3 py-1 rounded-full text-sm ${
-                            app.status === 'APPROVED'
+                            app.status === ProjectApplicationStatusEnum.enum.APPROVED
                                 ? 'bg-green-100 text-green-700'
                                 : 'bg-red-100 text-red-700'
                         }`}>

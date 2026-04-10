@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { fetcher, mutator } from './base';
 import { MProject, MProjectListResponse, MApplicationSchema, MSearchProjectResult, mapSearchResultToProject } from '@/lib/models';
 import { apiModel } from '@/lib/models';
-import type { Project, ProjectListResponse } from '@/lib/models';
+import type { Project, ProjectListResponse, ProjectApplicationStatus } from '@/lib/models';
 
 export interface GetProjectsParams {
   page?: number;
@@ -33,12 +33,6 @@ export async function getProject(id: string): Promise<Project> {
   );
 }
 
-export async function getProjectDetail(id: string): Promise<Project> {
-  return fetcher(
-    `/api/v1/projects/${id}`,
-    MProject,
-  );
-}
 
 export async function searchProjects(keyword: string, params?: GetProjectsParams): Promise<ProjectListResponse> {
   const queryParams = new URLSearchParams();
@@ -92,7 +86,7 @@ export async function withdrawApplication(applicationId: string) {
 /** [PATCH] /api/v1/applications/{applicationId}/review - Approve or reject an application. */
 export async function updateProjectApplicationStatus(
   applicationId: string,
-  status: 'APPROVED' | 'REJECTED',
+  status: Extract<ProjectApplicationStatus, 'APPROVED' | 'REJECTED'>,
 ) {
   return mutator(
     `/api/v1/applications/${applicationId}/review`,

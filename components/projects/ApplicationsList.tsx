@@ -2,6 +2,7 @@
 
 import { useTranslations } from 'next-intl';
 import type { ProjectApplication } from '@/lib/models';
+import { ProjectApplicationStatusEnum } from '@/lib/models';
 
 type ApplicationsListProps = {
   applications: ProjectApplication[];
@@ -43,7 +44,7 @@ export default function ApplicationsList({
             {t('noMessage')}
           </p>
 
-          {application.status === 'PENDING' ? (
+          {application.status === ProjectApplicationStatusEnum.enum.PENDING ? (
             <div className="flex flex-wrap gap-2">
               <button
                 onClick={() => onApprove(application.applicationId ?? '')}

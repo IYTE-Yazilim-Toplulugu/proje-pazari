@@ -1,7 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import type { Project } from '@/lib/models';
+import type { Project, ProjectStatus } from '@/lib/models';
+import { ProjectStatusEnum } from '@/lib/models';
 import { useTranslations } from 'next-intl';
 
 interface ProjectCardProps {
@@ -11,7 +12,7 @@ interface ProjectCardProps {
 export default function ProjectCard({ project }: ProjectCardProps) {
   const t = useTranslations("projects");
   
-  const statusColors = {
+  const statusColors: Record<ProjectStatus, string> = {
     DRAFT: 'bg-gray-500',
     OPEN: 'bg-green-500',
     IN_PROGRESS: 'bg-[var(--color-primary)]',
@@ -27,8 +28,8 @@ export default function ProjectCard({ project }: ProjectCardProps) {
           <h3 className="text-xl font-semibold text-gray-900 dark:text-white line-clamp-2">
             {project.title}
           </h3>
-            <span className={`px-2 py-1 text-xs font-medium text-white rounded-full ${statusColors[project.status ?? 'DRAFT']}`}>
-              {t(`status.${project.status ?? 'DRAFT'}`)}
+            <span className={`px-2 py-1 text-xs font-medium text-white rounded-full ${statusColors[project.status ?? ProjectStatusEnum.enum.DRAFT]}`}>
+              {t(`status.${project.status ?? ProjectStatusEnum.enum.DRAFT}`)}
             </span>
         </div>
 

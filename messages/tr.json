@@ -119,8 +119,24 @@
       "newPassword": "Yeni Şifre",
       "confirmPassword": "Şifreyi Onayla",
       "submitBtn": "Şifreyi Sıfırla",
+      "submitting": "Sıfırlanıyor...",
       "loading": "Yükleniyor...",
-      "tokenMissing": "Token eksik"
+      "tokenMissing": "Sıfırlama bağlantısı eksik veya geçersiz.",
+      "tokenMissingDesc": "Lütfen yeni bir şifre sıfırlama bağlantısı isteyin.",
+      "requestNewLink": "Yeni sıfırlama bağlantısı iste",
+      "successTitle": "Şifre Sıfırlama Başarılı",
+      "successDesc": "Şifreniz güncellendi. Giriş sayfasına yönlendiriliyorsunuz...",
+      "backToLogin": "Giriş sayfasına dön",
+      "placeholders": {
+        "newPassword": "Yeni şifre girin",
+        "confirmPassword": "Yeni şifreyi onaylayın"
+      },
+      "errors": {
+        "passwordMin": "Şifre en az 8 karakter olmalıdır",
+        "passwordMismatch": "Şifreler eşleşmiyor",
+        "generic": "Bir hata oluştu. Lütfen tekrar deneyin.",
+        "invalidToken": "Sıfırlama bağlantısı geçersiz veya süresi dolmuş."
+      }
     }
   },
   "projects": {

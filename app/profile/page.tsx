@@ -162,10 +162,12 @@ export default function ProfilePage() {
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
             Projelerim
           </h2>
-          <EmptyState
-            title="Henüz proje bulunmuyor"
-            description="İlk projenizi oluşturduğunuzda burada listelenecek."
-          />
+          <a
+            href="/my-projects"
+            className="inline-block px-4 py-2 rounded-lg text-[var(--color-text-inverse)] bg-[var(--color-btn-primary)] hover:bg-[var(--color-btn-primary-hover)]"
+          >
+            Projelerimi Gör
+          </a>
         </div>
 
         {/* User's Applications */}

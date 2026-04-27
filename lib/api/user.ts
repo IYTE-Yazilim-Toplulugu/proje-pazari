@@ -2,6 +2,7 @@ import { z } from 'zod';
 
 import { fetcher, mutator } from './base';
 import { apiModel, userModel } from '../models';
+import { MApplicationSchema } from '../models';
 
 // ============================================================================
 // ÇALIŞAN ENDPOINT'LER (RESTful standartlarına ve Backend'e göre güncellendi)
@@ -31,6 +32,10 @@ export const listUsers = (params: { page?: number, pageSize?: number, sby?: stri
 export const updateUser = (payload: userModel.UpdateUserProfileCommand) =>
     mutator('/api/v1/users/me', 'put', apiModel.BasicResponseSchema, { arg: payload });
 
+
+/** [GET] /api/v1/users/me/applications - Returns the applications submitted by the authenticated user. */
+export const getMyApplications = () =>
+    fetcher('/api/v1/users/me/applications', z.array(MApplicationSchema));
 
 // ============================================================================
 // DİKKAT: BACKEND'DE HENÜZ OLMAYANLAR VEYA UYUMSUZ OLANLAR!

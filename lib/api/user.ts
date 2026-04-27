@@ -44,6 +44,10 @@ const PagedApplicationsResponseSchema = z.object({
 export const getMyApplications = () =>
     fetcher('/api/v1/users/me/applications', PagedApplicationsResponseSchema);
 
+/** [GET] /api/v1/users/me/applications - Returns the applications submitted by the authenticated user. */
+export const getMyApplications = () =>
+    fetcher('/api/v1/users/me/applications', z.array(MApplicationSchema));
+
 // ============================================================================
 // DİKKAT: BACKEND'DE HENÜZ OLMAYANLAR VEYA UYUMSUZ OLANLAR!
 // ============================================================================

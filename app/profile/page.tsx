@@ -15,11 +15,8 @@ import { user as userApi } from '@/lib/api';
 export default function ProfilePage() {
   const { data: authContext, isLoading: isAuthLoading } = useSession();
   const router = useRouter();
-<<<<<<< HEAD
   const locale = useLocale();
-=======
   const t = useTranslations('profile');
->>>>>>> 01fba1e (feat:created application page and fixed translation errors on profile page)
   const [isEditing, setIsEditing] = useState(false);
 
   const { data: user, isLoading: isUserLoading } = useQuery({

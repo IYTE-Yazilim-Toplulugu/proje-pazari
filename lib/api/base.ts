@@ -25,6 +25,7 @@ import { BasicResponseSchema, DataResponseSchema, ResponseCode, ResponseCodeSche
 let isRefreshing = false;
 type QueueEntry = { resolve: (token: string) => void; reject: (err: unknown) => void };
 const refreshQueue: QueueEntry[] = [];
+const AUTH_COOKIE_EXPIRES_DAYS = 30;
 
 function drainQueue(token: string) {
     refreshQueue.splice(0).forEach(({ resolve }) => resolve(token));
@@ -121,8 +122,10 @@ async function http(endpoint: string, options: RequestInit, signal?: AbortSignal
     // 1. Make the initial request
     let response = await makeRequest(token);
 
+    const isAuthEndpoint = endpoint.startsWith('/api/v1/auth/');
+
     // 2. If the request fails with a 401, try to refresh the token
-    if (response.status === 401) {
+    if (response.status === 401 && !isAuthEndpoint) {
         console.log('Access token expired or did not authenticate. Attempting to refresh...');
         const currentToken = Cookies.get('authToken');
         const currentRefreshToken = Cookies.get('refreshToken');
@@ -180,11 +183,13 @@ async function http(endpoint: string, options: RequestInit, signal?: AbortSignal
                 // 5. Store the new tokens using js-cookie for client-side access
                 Cookies.set('authToken', refreshResponse.data.accessToken, {
                     path: '/',
-                    maxAge: 60 * 60 * 24 * 30,
+                    expires: AUTH_COOKIE_EXPIRES_DAYS,
+                    sameSite: 'lax',
                 });
                 Cookies.set('refreshToken', refreshResponse.data.refreshToken, {
                     path: '/',
-                    maxAge: 60 * 60 * 24 * 30,
+                    expires: AUTH_COOKIE_EXPIRES_DAYS,
+                    sameSite: 'lax',
                 });
 
                 console.log('Token refreshed successfully. Retrying original request...');

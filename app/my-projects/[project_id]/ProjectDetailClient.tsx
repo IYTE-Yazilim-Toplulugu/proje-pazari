@@ -12,9 +12,10 @@ import {
   useProjectApplications,
   useProjectDetail,
   useUpdateApplicationStatus,
+  useUpdateProjectStatus,
 } from '@/lib/hooks/projectHooks';
-import { ProjectApplicationStatusEnum } from '@/lib/models';
-import type { ProjectApplicationStatus } from '@/lib/models';
+import { ProjectApplicationStatusEnum, ProjectStatusEnum } from '@/lib/models';
+import type { ProjectApplicationStatus, ProjectStatus } from '@/lib/models';
 
 type ProjectDetailClientProps = {
   projectId: string;
@@ -42,6 +43,7 @@ export default function ProjectDetailClient({ projectId }: ProjectDetailClientPr
   } = useProjectApplications(projectId, isOwner);
 
   const reviewMutation = useUpdateApplicationStatus(projectId);
+  const statusMutation = useUpdateProjectStatus(projectId);
 
   const handleReview = async (
     applicationId: string,
@@ -58,6 +60,23 @@ export default function ProjectDetailClient({ projectId }: ProjectDetailClientPr
     } catch (mutationError) {
       handleError(mutationError);
     }
+  };
+
+  const handleStatusChange = async (status: ProjectStatus) => {
+    try {
+      await statusMutation.mutateAsync(status);
+      success(t(`status.${status}`), '');
+    } catch (mutationError) {
+      handleError(mutationError);
+    }
+  };
+
+  const nextStatuses: Record<string, ProjectStatus[]> = {
+    DRAFT: [ProjectStatusEnum.enum.OPEN, ProjectStatusEnum.enum.CANCELLED],
+    OPEN: [ProjectStatusEnum.enum.IN_PROGRESS, ProjectStatusEnum.enum.CANCELLED],
+    IN_PROGRESS: [ProjectStatusEnum.enum.COMPLETED, ProjectStatusEnum.enum.CANCELLED],
+    COMPLETED: [],
+    CANCELLED: [],
   };
 
   if (isLoading || isSessionLoading) {
@@ -141,6 +160,24 @@ export default function ProjectDetailClient({ projectId }: ProjectDetailClientPr
                 </div>
               </div>
             ) : null}
+
+            {(nextStatuses[project.status ?? ''] ?? []).length > 0 && (
+              <div className="mt-6 border-t border-gray-200 pt-6 dark:border-gray-700">
+                <h2 className="mb-3 text-xl font-semibold text-gray-900 dark:text-white">Proje Durumu</h2>
+                <div className="flex flex-wrap gap-2">
+                  {(nextStatuses[project.status ?? ''] ?? []).map((status) => (
+                    <button
+                      key={status}
+                      onClick={() => handleStatusChange(status)}
+                      disabled={statusMutation.isPending}
+                      className="rounded-lg bg-[var(--color-btn-primary)] px-4 py-2 text-sm font-semibold text-[var(--color-text-inverse)] hover:bg-[var(--color-btn-primary-hover)] disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {t(`status.${status}`)} olarak işaretle
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
 
             <div className="mt-6 border-t border-gray-200 pt-6 dark:border-gray-700">
               <h2 className="mb-3 text-xl font-semibold text-gray-900 dark:text-white">{t('details.applications')}</h2>

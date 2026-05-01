@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { fetcher, mutator } from './base';
 import { MProject, MProjectListResponse, MApplicationSchema, MSearchProjectResult, mapSearchResultToProject } from '@/lib/models';
 import { apiModel } from '@/lib/models';
-import type { Project, ProjectListResponse, ProjectApplicationStatus } from '@/lib/models';
+import type { Project, ProjectListResponse, ProjectApplicationStatus, ProjectStatus } from '@/lib/models';
 
 export interface GetProjectsParams {
   page?: number;
@@ -80,6 +80,16 @@ export async function withdrawApplication(applicationId: string) {
     'patch',
     apiModel.BasicResponseSchema,
     { arg: null },
+  );
+}
+
+/** [PATCH] /api/v1/projects/{projectId}/status - Update project status (owner only). */
+export async function updateProjectStatus(projectId: string, status: ProjectStatus) {
+  return mutator(
+    `/api/v1/projects/${projectId}/status`,
+    'patch',
+    apiModel.BasicResponseSchema,
+    { arg: { status } },
   );
 }
 

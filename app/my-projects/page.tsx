@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from '@/lib/hooks/authHooks';
 import { useQuery } from '@tanstack/react-query';
@@ -28,13 +28,17 @@ async function fetchAllMyProjects(userId: string): Promise<Project[]> {
 export default function MyProjectsPage() {
   const { data: authContext, isLoading: isAuthLoading } = useSession();
   const router = useRouter();
-  const [myProjects, setMyProjects] = useState<Project[]>([]);
-  const [isFetching, setIsFetching] = useState(false);
 
   const { data: user, isLoading: isUserLoading } = useQuery({
     queryKey: ['currentUser'],
     queryFn: userApi.getCurrentUser,
     enabled: authContext?.isAuthenticated === true,
+  });
+
+  const { data: myProjects = [], isLoading: isProjectsLoading } = useQuery({
+    queryKey: ['myProjects', user?.id],
+    queryFn: () => fetchAllMyProjects(user!.id!),
+    enabled: !!user?.id,
   });
 
   useEffect(() => {
@@ -43,15 +47,7 @@ export default function MyProjectsPage() {
     }
   }, [isAuthLoading, authContext, router]);
 
-  useEffect(() => {
-    if (!user?.id) return;
-    setIsFetching(true);
-    fetchAllMyProjects(user.id)
-      .then(setMyProjects)
-      .finally(() => setIsFetching(false));
-  }, [user?.id]);
-
-  const isLoading = isAuthLoading || isUserLoading || isFetching;
+  const isLoading = isAuthLoading || isUserLoading || isProjectsLoading;
 
   if (!isAuthLoading && !authContext?.isAuthenticated) {
     return null;
@@ -76,7 +72,7 @@ export default function MyProjectsPage() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {myProjects.map((project) => (
-            <ProjectCard key={project.id ?? ''} project={project} />
+            <ProjectCard key={project.id ?? ''} project={project} href={`/my-projects/${project.id}`} />
           ))}
         </div>
       )}

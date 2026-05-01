@@ -7,9 +7,10 @@ import { useTranslations } from 'next-intl';
 
 interface ProjectCardProps {
   project: Project;
+  href?: string;
 }
 
-export default function ProjectCard({ project }: ProjectCardProps) {
+export default function ProjectCard({ project, href }: ProjectCardProps) {
   const t = useTranslations("projects");
   
   const statusColors: Record<ProjectStatus, string> = {
@@ -21,7 +22,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
   };
 
   return (
-    <Link href={`/projects/${project.id}`} aria-label={`${project.title} ${t('details.viewProject')}`}>
+    <Link href={href ?? `/projects/${project.id}`} aria-label={`${project.title} ${t('details.viewProject')}`}>
       <article className="bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-xl transition-shadow p-6 h-full border border-gray-200 dark:border-gray-700 focus-within:ring-2 focus-within:ring-[var(--color-primary)]">
         {/* Header */}
         <div className="flex items-start justify-between mb-4">

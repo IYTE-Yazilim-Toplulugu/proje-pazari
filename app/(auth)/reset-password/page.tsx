@@ -12,6 +12,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { resetPassword } from '@/lib/api/auth';
+import { ApiError } from '@/lib/api/base';
+import { ResponseCodeSchema } from '@/lib/models/Api';
 
 const ResetPasswordSchema = z.object({
     password: z.string().min(8, 'Password must be at least 8 characters.'),
@@ -22,6 +24,18 @@ const ResetPasswordSchema = z.object({
 });
 
 type ResetPasswordForm = z.infer<typeof ResetPasswordSchema>;
+
+function isInvalidResetTokenError(error: unknown) {
+    if (!(error instanceof ApiError)) {
+        return false;
+    }
+
+    return [
+        ResponseCodeSchema.enum.BAD_REQUEST,
+        ResponseCodeSchema.enum.UNAUTHORIZED,
+        ResponseCodeSchema.enum.NOT_FOUND,
+    ].includes(error.code);
+}
 
 function ResetPasswordContent() {
     const t = useTranslations('auth.resetPassword');
@@ -41,8 +55,9 @@ function ResetPasswordContent() {
             setSucceeded(true);
             success(t('successTitle'), t('successDesc'));
             setTimeout(() => router.push('/login'), 2000);
-        } catch {
-            showError('Error', t('errors.generic'));
+        } catch (error) {
+            const messageKey = isInvalidResetTokenError(error) ? 'errors.invalidToken' : 'errors.generic';
+            showError('Error', t(messageKey));
         }
     };
 

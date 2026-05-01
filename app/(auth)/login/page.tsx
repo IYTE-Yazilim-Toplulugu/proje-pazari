@@ -91,7 +91,7 @@ export default function LoginPage() {
             </label>
 
             <Link
-              href="/forgot_password"
+              href="/forgot-password"
               className="text-sm text-[var(--color-primary)] hover:text-[var(--color-primary-dark)]"
             >
               {t("forgotPassword")}

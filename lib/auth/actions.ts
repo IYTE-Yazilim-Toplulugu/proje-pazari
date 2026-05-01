@@ -6,24 +6,25 @@ import { authModel } from '@/lib/models';
 
 const AUTH_TOKEN_KEY = 'authToken';
 const REFRESH_TOKEN_KEY = 'refreshToken';
+const AUTH_COOKIE_MAX_AGE = 60 * 60 * 24 * 30; // 30 days
 
 export async function loginAction(data: authModel.LoginRequest) {
     try {
         const response = await auth.login(data);
 
-        // 2. On success, set the cookie from the server
         if (response.data?.accessToken && response.data?.refreshToken) {
+            // The client API layer reads these cookies to attach Authorization headers.
             (await cookies()).set(AUTH_TOKEN_KEY, response.data.accessToken, {
                 // secure: process.env.NODE_ENV === 'production',
-                maxAge: 60 * 60 * 24 * 30, // 30 days
+                maxAge: AUTH_COOKIE_MAX_AGE,
                 path: '/',
-                httpOnly: true,
+                sameSite: 'lax',
             });
             (await cookies()).set(REFRESH_TOKEN_KEY, response.data.refreshToken, {
                 // secure: process.env.NODE_ENV === 'production',
-                maxAge: 60 * 60 * 24 * 30, // 30 days
+                maxAge: AUTH_COOKIE_MAX_AGE,
                 path: '/',
-                httpOnly: true,
+                sameSite: 'lax',
             });
         }
         return { success: true };

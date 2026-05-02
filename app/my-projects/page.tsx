@@ -5,25 +5,8 @@ import { useRouter } from 'next/navigation';
 import { useSession } from '@/lib/hooks/authHooks';
 import { useQuery } from '@tanstack/react-query';
 import { user as userApi } from '@/lib/api';
-import { getProjects } from '@/lib/api/project';
 import ProjectCard from '@/components/projects/ProjectCard';
 import { Skeleton } from '@/components/ui/skeleton';
-import type { Project } from '@/lib/models';
-
-async function fetchAllMyProjects(userId: string): Promise<Project[]> {
-  const all: Project[] = [];
-  let page = 0;
-  let totalPages = 1;
-
-  while (page < totalPages) {
-    const response = await getProjects({ page, size: 20 });
-    all.push(...(response.projects ?? []).filter((p: Project) => p.ownerId === userId));
-    totalPages = response.totalPages ?? 1;
-    page++;
-  }
-
-  return all;
-}
 
 export default function MyProjectsPage() {
   const { data: authContext, isLoading: isAuthLoading } = useSession();
@@ -35,19 +18,14 @@ export default function MyProjectsPage() {
     enabled: authContext?.isAuthenticated === true,
   });
 
-  const { data: myProjects = [], isLoading: isProjectsLoading } = useQuery({
-    queryKey: ['myProjects', user?.id],
-    queryFn: () => fetchAllMyProjects(user!.id!),
-    enabled: !!user?.id,
-  });
-
   useEffect(() => {
     if (!isAuthLoading && !authContext?.isAuthenticated) {
       router.push('/login');
     }
   }, [isAuthLoading, authContext, router]);
 
-  const isLoading = isAuthLoading || isUserLoading || isProjectsLoading;
+  const isLoading = isAuthLoading || isUserLoading;
+  const myProjects = user?.projects ?? [];
 
   if (!isAuthLoading && !authContext?.isAuthenticated) {
     return null;

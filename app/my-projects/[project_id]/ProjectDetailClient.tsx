@@ -135,9 +135,21 @@ export default function ProjectDetailClient({ projectId }: ProjectDetailClientPr
           <div className="mb-6 rounded-lg bg-white p-8 shadow-md dark:bg-gray-800">
             <div className="mb-6 flex items-start justify-between">
               <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{project.title}</h1>
-              <span className="rounded-full bg-[var(--color-primary)] px-3 py-1 text-sm font-medium text-white">
-                {t(`status.${project.status}`)}
-              </span>
+              <select
+                value={project.status ?? ''}
+                onChange={(e) => handleStatusChange(e.target.value as ProjectStatus)}
+                disabled={statusMutation.isPending}
+                className="rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-1 text-sm font-medium text-gray-900 dark:text-white disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <option value={project.status ?? ''} disabled>
+                  {t(`status.${project.status}`)}
+                </option>
+                {(nextStatuses[project.status ?? ''] ?? []).map((status) => (
+                  <option key={status} value={status}>
+                    {t(`status.${status}`)}
+                  </option>
+                ))}
+              </select>
             </div>
 
             <div className="mb-10">
@@ -160,24 +172,6 @@ export default function ProjectDetailClient({ projectId }: ProjectDetailClientPr
                 </div>
               </div>
             ) : null}
-
-            {(nextStatuses[project.status ?? ''] ?? []).length > 0 && (
-              <div className="mt-6 border-t border-gray-200 pt-6 dark:border-gray-700">
-                <h2 className="mb-3 text-xl font-semibold text-gray-900 dark:text-white">Proje Durumu</h2>
-                <div className="flex flex-wrap gap-2">
-                  {(nextStatuses[project.status ?? ''] ?? []).map((status) => (
-                    <button
-                      key={status}
-                      onClick={() => handleStatusChange(status)}
-                      disabled={statusMutation.isPending}
-                      className="rounded-lg bg-[var(--color-btn-primary)] px-4 py-2 text-sm font-semibold text-[var(--color-text-inverse)] hover:bg-[var(--color-btn-primary-hover)] disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                      {t(`status.${status}`)} olarak işaretle
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
 
             <div className="mt-6 border-t border-gray-200 pt-6 dark:border-gray-700">
               <h2 className="mb-3 text-xl font-semibold text-gray-900 dark:text-white">{t('details.applications')}</h2>

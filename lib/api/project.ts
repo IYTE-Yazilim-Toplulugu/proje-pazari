@@ -89,7 +89,7 @@ export async function updateProjectStatus(projectId: string, status: ProjectStat
     `/api/v1/projects/${projectId}/status`,
     'patch',
     apiModel.BasicResponseSchema,
-    { arg: { status } },
+    { arg: { projectId, newStatus: status } },
   );
 }
 
@@ -100,7 +100,7 @@ export async function updateProjectApplicationStatus(
 ) {
   return mutator(
     `/api/v1/applications/${applicationId}/review`,
-    'put',
+    'patch',
     apiModel.BasicResponseSchema,
     { arg: { status, reviewMessage: '' } },
   );

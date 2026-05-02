@@ -40,6 +40,7 @@ export default function ProjectDetailClient({ projectId }: ProjectDetailClientPr
   const {
     data: applications = [],
     isLoading: applicationsLoading,
+    isError: applicationsError,
   } = useProjectApplications(projectId, isOwner);
 
   const reviewMutation = useUpdateApplicationStatus(projectId);
@@ -175,12 +176,16 @@ export default function ProjectDetailClient({ projectId }: ProjectDetailClientPr
 
             <div className="mt-6 border-t border-gray-200 pt-6 dark:border-gray-700">
               <h2 className="mb-3 text-xl font-semibold text-gray-900 dark:text-white">{t('details.applications')}</h2>
-              <ApplicationsList
-                applications={applications}
-                loading={applicationsLoading || reviewMutation.isPending}
-                onApprove={(id) => handleReview(id, ProjectApplicationStatusEnum.enum.APPROVED)}
-                onReject={(id) => handleReview(id, ProjectApplicationStatusEnum.enum.REJECTED)}
-              />
+              {applicationsError ? (
+                <p className="text-sm text-red-600 dark:text-red-400">{t('loadingError')}</p>
+              ) : (
+                <ApplicationsList
+                  applications={applications}
+                  loading={applicationsLoading || reviewMutation.isPending}
+                  onApprove={(id) => handleReview(id, ProjectApplicationStatusEnum.enum.APPROVED)}
+                  onReject={(id) => handleReview(id, ProjectApplicationStatusEnum.enum.REJECTED)}
+                />
+              )}
             </div>
           </div>
         </div>

@@ -166,6 +166,10 @@
       "withdrawSuccessTitle": "Application Withdrawn",
       "withdrawSuccessDescription": "Your application has been successfully withdrawn."
     },
+    "myProjects": {
+      "title": "My Projects",
+      "empty": "You haven't created any projects yet."
+    },
     "applications": {
       "approvedTitle": "Application Approved",
       "rejectedTitle": "Application Rejected",

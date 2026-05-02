@@ -166,6 +166,10 @@
       "withdrawSuccessTitle": "Başvuru Geri Çekildi",
       "withdrawSuccessDescription": "Başvurunuz başarıyla geri çekildi."
     },
+    "myProjects": {
+      "title": "Projelerim",
+      "empty": "Henüz hiç proje oluşturmadınız."
+    },
     "applications": {
       "approvedTitle": "Başvuru Onaylandı",
       "rejectedTitle": "Başvuru Reddedildi",

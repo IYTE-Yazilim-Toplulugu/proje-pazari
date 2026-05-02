@@ -17,13 +17,13 @@ export async function loginAction(data: authModel.LoginRequest) {
                 // secure: process.env.NODE_ENV === 'production',
                 maxAge: 60 * 60 * 24 * 30, // 30 days
                 path: '/',
-                httpOnly: true,
+                httpOnly: false,
             });
             (await cookies()).set(REFRESH_TOKEN_KEY, response.data.refreshToken, {
                 // secure: process.env.NODE_ENV === 'production',
                 maxAge: 60 * 60 * 24 * 30, // 30 days
                 path: '/',
-                httpOnly: true,
+                httpOnly: false,
             });
         }
         return { success: true };

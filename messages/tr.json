@@ -169,7 +169,11 @@
     "applications": {
       "approvedTitle": "Başvuru Onaylandı",
       "rejectedTitle": "Başvuru Reddedildi",
-      "updateDescription": "Başvuru durumu güncellendi."
+      "updateDescription": "Başvuru durumu güncellendi.",
+      "empty": "Henüz hiç başvuru bulunmuyor.",
+      "approve": "Onayla",
+      "reject": "Reddet",
+      "noMessage": "Başvuru mesajı yok."
     }
   },
   "profile": {

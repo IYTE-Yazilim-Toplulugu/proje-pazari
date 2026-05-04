@@ -32,10 +32,17 @@ export const listUsers = (params: { page?: number, pageSize?: number, sby?: stri
 export const updateUser = (payload: userModel.UpdateUserProfileCommand) =>
     mutator('/api/v1/users/me', 'put', apiModel.BasicResponseSchema, { arg: payload });
 
+// Response schema for GET /api/v1/users/me/applications
+const PagedApplicationsResponseSchema = z.object({
+    applications: z.array(MApplicationSchema),
+    currentPage: z.number().optional(),
+    totalPages: z.number().optional(),
+    totalElements: z.number().optional(),
+});
 
-/** [GET] /api/v1/users/me/applications - Returns the applications submitted by the authenticated user. */
+/** [GET] /api/v1/users/me/applications - Returns paged applications submitted by the authenticated user. */
 export const getMyApplications = () =>
-    fetcher('/api/v1/users/me/applications', z.array(MApplicationSchema));
+    fetcher('/api/v1/users/me/applications', PagedApplicationsResponseSchema);
 
 // ============================================================================
 // DİKKAT: BACKEND'DE HENÜZ OLMAYANLAR VEYA UYUMSUZ OLANLAR!

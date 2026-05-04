@@ -204,7 +204,7 @@ describe("LoginPage", () => {
       expect(forgotPasswordLink).toBeInTheDocument();
       expect(forgotPasswordLink.closest("a")).toHaveAttribute(
         "href",
-        "/forgot_password"
+        "/forgot-password"
       );
     });
 

@@ -119,8 +119,24 @@
       "newPassword": "New Password",
       "confirmPassword": "Confirm Password",
       "submitBtn": "Reset Password",
+      "submitting": "Resetting...",
       "loading": "Loading...",
-      "tokenMissing": "Token is missing"
+      "tokenMissing": "Reset link is missing or invalid.",
+      "tokenMissingDesc": "Please request a new password reset link.",
+      "requestNewLink": "Request a new reset link",
+      "successTitle": "Password Reset Successful",
+      "successDesc": "Your password has been updated. Redirecting to login...",
+      "backToLogin": "Back to login",
+      "placeholders": {
+        "newPassword": "Enter new password",
+        "confirmPassword": "Confirm new password"
+      },
+      "errors": {
+        "passwordMin": "Password must be at least 8 characters",
+        "passwordMismatch": "Passwords don't match",
+        "generic": "An error occurred. Please try again.",
+        "invalidToken": "Reset link is invalid or has expired."
+      }
     }
   },
   "projects": {

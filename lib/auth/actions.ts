@@ -18,12 +18,14 @@ export async function loginAction(data: authModel.LoginRequest) {
                 // secure: process.env.NODE_ENV === 'production',
                 maxAge: AUTH_COOKIE_MAX_AGE,
                 path: '/',
+                httpOnly: false,
                 sameSite: 'lax',
             });
             (await cookies()).set(REFRESH_TOKEN_KEY, response.data.refreshToken, {
                 // secure: process.env.NODE_ENV === 'production',
                 maxAge: AUTH_COOKIE_MAX_AGE,
                 path: '/',
+                httpOnly: false,
                 sameSite: 'lax',
             });
         }

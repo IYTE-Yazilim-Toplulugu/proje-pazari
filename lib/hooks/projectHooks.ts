@@ -7,9 +7,10 @@ import {
   getProjectApplications,
   withdrawApplication,
   updateProjectApplicationStatus,
+  updateProjectStatus,
   type GetProjectsParams,
 } from '@/lib/api';
-import type { ProjectApplicationStatus } from '@/lib/models';
+import type { ProjectApplicationStatus, ProjectStatus } from '@/lib/models';
 
 export const PROJECT_KEYS = {
   all: ['projects'] as const,
@@ -99,6 +100,18 @@ export function useUpdateApplicationStatus(projectId: string) {
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: [...PROJECT_KEYS.detail(projectId), 'applications'] });
       await queryClient.invalidateQueries({ queryKey: PROJECT_KEYS.detail(projectId) });
+    },
+  });
+}
+
+export function useUpdateProjectStatus(projectId: string) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (status: ProjectStatus) => updateProjectStatus(projectId, status),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: PROJECT_KEYS.detail(projectId) });
+      await queryClient.invalidateQueries({ queryKey: PROJECT_KEYS.lists() });
     },
   });
 }

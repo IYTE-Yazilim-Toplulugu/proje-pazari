@@ -78,7 +78,7 @@ export default function ProfilePage() {
                     />
                   ) : (
                     <div className="w-32 h-32 bg-blue-500 rounded-full flex items-center justify-center text-white font-semibold text-4xl">
-                      {user.firstName?.charAt(0) ?? '?'}
+                      {avatarInitial || '?'}
                     </div>
                   )}
                 </div>
@@ -86,7 +86,7 @@ export default function ProfilePage() {
 
               <div>
                 <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-                  {user.fullName ?? `${user.firstName ?? ''} ${user.lastName ?? ''}`.trim()}
+                  {displayName}
                 </h1>
                 <p className="text-gray-600 dark:text-gray-400">{user.email}</p>
               </div>

@@ -166,10 +166,18 @@
       "withdrawSuccessTitle": "Application Withdrawn",
       "withdrawSuccessDescription": "Your application has been successfully withdrawn."
     },
+    "myProjects": {
+      "title": "My Projects",
+      "empty": "You haven't created any projects yet."
+    },
     "applications": {
       "approvedTitle": "Application Approved",
       "rejectedTitle": "Application Rejected",
-      "updateDescription": "The application status has been updated."
+      "updateDescription": "The application status has been updated.",
+      "empty": "No applications yet.",
+      "approve": "Approve",
+      "reject": "Reject",
+      "noMessage": "No application message."
     }
   },
   "profile": {

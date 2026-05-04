@@ -5,18 +5,10 @@ import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import StructuredData from '@/components/seo/StructuredData';
 import ApplicationForm from '@/components/projects/ApplicationForm';
-import ApplicationsList from '@/components/projects/ApplicationsList';
 import { useToast } from '@/lib/hooks/useToast';
-import { useApiError } from '@/lib/hooks/useApiError';
 import { useSession } from '@/lib/hooks/authHooks';
-import {
-  useProjectApplications,
-  useProjectDetail,
-  useUpdateApplicationStatus,
-  useWithdrawApplication,
-} from '@/lib/hooks/projectHooks';
-import { ProjectStatusEnum, ProjectApplicationStatusEnum } from '@/lib/models';
-import type { ProjectApplicationStatus } from '@/lib/models';
+import { useProjectDetail } from '@/lib/hooks/projectHooks';
+import { ProjectStatusEnum } from '@/lib/models';
 
 type ProjectDetailClientProps = {
   projectId: string;
@@ -26,16 +18,9 @@ export default function ProjectDetailClient({ projectId }: ProjectDetailClientPr
   const t = useTranslations('projects');
   const router = useRouter();
   const { success } = useToast();
-  const { handleError } = useApiError();
   const { data: project, isLoading, error } = useProjectDetail(projectId);
   const { data: session } = useSession();
   const isOwner = !!session?.userId && !!project && String(session.userId) === project.ownerId;
-  const {
-    data: applications = [],
-    isLoading: applicationsLoading,
-  } = useProjectApplications(projectId, isOwner);
-  const withdrawMutation = useWithdrawApplication(projectId);
-  const reviewMutation = useUpdateApplicationStatus(projectId);
   const [showApplicationForm, setShowApplicationForm] = useState(false);
 
   if (isLoading) {
@@ -71,44 +56,18 @@ export default function ProjectDetailClient({ projectId }: ProjectDetailClientPr
     '@type': 'CreativeWork',
     name: project.title,
     description: project.description,
-    author: {
-      '@type': 'Person',
-      name: project.ownerName,
-    },
+    author: { '@type': 'Person', name: project.ownerName },
     dateCreated: project.createdAt,
   };
 
-  const canApply = !!session?.isAuthenticated && !isOwner && project.status === ProjectStatusEnum.enum.OPEN;
-  const myApplication = applications.find((application) => String(application.applicantId) === String(session?.userId));
+  const canApply =
+    !!session?.isAuthenticated &&
+    !isOwner &&
+    project.status === ProjectStatusEnum.enum.OPEN;
 
   const handleApplySuccess = () => {
     success(t('applicationForm.successTitle'), t('applicationForm.successDescription'));
     setShowApplicationForm(false);
-  };
-
-  const handleWithdraw = async () => {
-    if (!myApplication) {
-      return;
-    }
-
-    try {
-      await withdrawMutation.mutateAsync({ applicationId: myApplication.applicationId ?? '' });
-      success(t('applicationForm.withdrawSuccessTitle'), t('applicationForm.withdrawSuccessDescription'));
-    } catch (mutationError) {
-      handleError(mutationError);
-    }
-  };
-
-  const handleReview = async (applicationId: string, status: Extract<ProjectApplicationStatus, 'APPROVED' | 'REJECTED'>) => {
-    try {
-      await reviewMutation.mutateAsync({ applicationId, status });
-      success(
-        status === ProjectApplicationStatusEnum.enum.APPROVED ? t('applications.approvedTitle') : t('applications.rejectedTitle'),
-        t('applications.updateDescription'),
-      );
-    } catch (mutationError) {
-      handleError(mutationError);
-    }
   };
 
   return (
@@ -167,49 +126,17 @@ export default function ProjectDetailClient({ projectId }: ProjectDetailClientPr
 
             {canApply ? (
               <div className="mt-6 border-t border-gray-200 pt-6 dark:border-gray-700">
-                {!myApplication ? (
-                  <>
-                    <button
-                      onClick={() => setShowApplicationForm((s) => !s)}
-                      className="w-full rounded-lg bg-[var(--color-btn-primary)] px-4 py-3 font-semibold text-[var(--color-text-inverse)] transition-colors hover:bg-[var(--color-btn-primary-hover)]"
-                    >
-                      {t('details.apply')}
-                    </button>
-
-                    {showApplicationForm ? (
-                      <div className="mt-4">
-                        <ApplicationForm projectId={projectId} onSuccess={handleApplySuccess} />
-                      </div>
-                    ) : null}
-                  </>
-                ) : (
-                  <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-background-elevated)] p-4">
-                    <p className="text-sm text-[var(--color-text-primary)]">
-                      {t('applicationForm.currentStatus', { status: myApplication.status ?? '' })}
-                    </p>
-                    {myApplication.status === ProjectApplicationStatusEnum.enum.PENDING ? (
-                      <button
-                        onClick={handleWithdraw}
-                        disabled={withdrawMutation.isPending}
-                        className="mt-3 rounded-lg bg-[var(--color-btn-danger)] px-4 py-2 text-sm font-semibold text-[var(--color-text-inverse)] hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-50"
-                      >
-                        {t('applicationForm.withdraw')}
-                      </button>
-                    ) : null}
+                <button
+                  onClick={() => setShowApplicationForm((s) => !s)}
+                  className="w-full rounded-lg bg-[var(--color-btn-primary)] px-4 py-3 font-semibold text-[var(--color-text-inverse)] transition-colors hover:bg-[var(--color-btn-primary-hover)]"
+                >
+                  {t('details.apply')}
+                </button>
+                {showApplicationForm ? (
+                  <div className="mt-4">
+                    <ApplicationForm projectId={projectId} onSuccess={handleApplySuccess} />
                   </div>
-                )}
-              </div>
-            ) : null}
-
-            {isOwner ? (
-              <div className="mt-6 border-t border-gray-200 pt-6 dark:border-gray-700">
-                <h2 className="mb-3 text-xl font-semibold text-gray-900 dark:text-white">{t('details.applications')}</h2>
-                <ApplicationsList
-                  applications={applications}
-                  loading={applicationsLoading || reviewMutation.isPending}
-                  onApprove={(id) => handleReview(id, ProjectApplicationStatusEnum.enum.APPROVED)}
-                  onReject={(id) => handleReview(id, ProjectApplicationStatusEnum.enum.REJECTED)}
-                />
+                ) : null}
               </div>
             ) : null}
           </div>

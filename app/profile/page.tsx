@@ -8,6 +8,7 @@ import Image from 'next/image';
 import ProfileEditForm from '@/components/profile/ProfileEditForm';
 import ProfilePictureUpload from '@/components/profile/ProfilePictureUpload';
 import EmptyState from '@/components/shared/EmptyState';
+import Link from 'next/link';
 import { user as userApi } from '@/lib/api';
 
 export default function ProfilePage() {
@@ -162,10 +163,12 @@ export default function ProfilePage() {
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
             Projelerim
           </h2>
-          <EmptyState
-            title="Henüz proje bulunmuyor"
-            description="İlk projenizi oluşturduğunuzda burada listelenecek."
-          />
+          <Link
+            href="/my-projects"
+            className="inline-block px-4 py-2 rounded-lg text-[var(--color-text-inverse)] bg-[var(--color-btn-primary)] hover:bg-[var(--color-btn-primary-hover)]"
+          >
+            Projelerimi Gör
+          </Link>
         </div>
 
         {/* User's Applications */}

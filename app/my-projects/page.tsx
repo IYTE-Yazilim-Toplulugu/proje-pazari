@@ -1,0 +1,61 @@
+'use client';
+
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { useSession } from '@/lib/hooks/authHooks';
+import { useQuery } from '@tanstack/react-query';
+import { useTranslations } from 'next-intl';
+import { user as userApi } from '@/lib/api';
+import ProjectCard from '@/components/projects/ProjectCard';
+import { Skeleton } from '@/components/ui/skeleton';
+
+export default function MyProjectsPage() {
+  const t = useTranslations('projects.myProjects');
+  const { data: authContext, isLoading: isAuthLoading } = useSession();
+  const router = useRouter();
+
+  const { data: user, isLoading: isUserLoading } = useQuery({
+    queryKey: ['currentUser'],
+    queryFn: userApi.getCurrentUser,
+    enabled: authContext?.isAuthenticated === true,
+  });
+
+  useEffect(() => {
+    if (!isAuthLoading && !authContext?.isAuthenticated) {
+      router.push('/login');
+    }
+  }, [isAuthLoading, authContext, router]);
+
+  const isLoading = isAuthLoading || isUserLoading;
+  const myProjects = user?.projects ?? [];
+
+  if (!isAuthLoading && !authContext?.isAuthenticated) {
+    return null;
+  }
+
+  return (
+    <div className="container mx-auto px-4 py-8">
+      <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">
+        {t('title')}
+      </h1>
+
+      {isLoading ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <Skeleton key={i} className="h-56 rounded-lg" />
+          ))}
+        </div>
+      ) : myProjects.length === 0 ? (
+        <div className="text-center py-16 text-gray-500 dark:text-gray-400">
+          <p className="text-lg">{t('empty')}</p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {myProjects.map((project) => (
+            <ProjectCard key={project.id ?? ''} project={project} href={`/my-projects/${project.id}`} />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}

@@ -13,28 +13,30 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { resetPassword } from '@/lib/api/auth';
 import { ApiError } from '@/lib/api/base';
-import { ResponseCodeSchema } from '@/lib/models/Api';
+import { ResponseCodeSchema, type ResponseCode } from '@/lib/models/Api';
 
-const ResetPasswordSchema = z.object({
-    password: z.string().min(8, 'Password must be at least 8 characters.'),
+const createResetPasswordSchema = (t: (key: string) => string) => z.object({
+    password: z.string().min(8, t('errors.passwordMin')),
     confirmPassword: z.string(),
 }).refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords don't match",
-    path: ["confirmPassword"],
+    message: t('errors.passwordMismatch'),
+    path: ['confirmPassword'],
 });
 
-type ResetPasswordForm = z.infer<typeof ResetPasswordSchema>;
+type ResetPasswordForm = z.infer<ReturnType<typeof createResetPasswordSchema>>;
+
+const invalidTokenCodes: ResponseCode[] = [
+    ResponseCodeSchema.enum.BAD_REQUEST,
+    ResponseCodeSchema.enum.UNAUTHORIZED,
+    ResponseCodeSchema.enum.NOT_FOUND,
+];
 
 function isInvalidResetTokenError(error: unknown) {
     if (!(error instanceof ApiError)) {
         return false;
     }
 
-    return [
-        ResponseCodeSchema.enum.BAD_REQUEST,
-        ResponseCodeSchema.enum.UNAUTHORIZED,
-        ResponseCodeSchema.enum.NOT_FOUND,
-    ].includes(error.code);
+    return invalidTokenCodes.includes(error.code);
 }
 
 function ResetPasswordContent() {
@@ -46,7 +48,7 @@ function ResetPasswordContent() {
     const { success, error: showError } = useToast();
 
     const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<ResetPasswordForm>({
-        resolver: zodResolver(ResetPasswordSchema),
+        resolver: zodResolver(createResetPasswordSchema(t)),
     });
 
     const onSubmit = async (data: ResetPasswordForm) => {

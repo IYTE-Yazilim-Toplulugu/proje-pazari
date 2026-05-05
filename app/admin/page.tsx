@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/contexts/AuthContext';
 import { PermissionSchema } from '@/lib/models/Auth';
 import { useFeatures, useChangeFeature } from '@/lib/hooks/adminHooks';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 
 // A simple component for the toggle switch
 const FeatureToggle = ({ featureKey, isEnabled, onToggle, isChanging }: {
@@ -38,6 +38,7 @@ const FeatureToggle = ({ featureKey, isEnabled, onToggle, isChanging }: {
 
 export default function AdminPage() {
     const t = useTranslations('admin');
+    const locale = useLocale();
     const { hasPermission, isLoading: isAuthLoading } = useAuth();
     const router = useRouter();
 
@@ -45,8 +46,7 @@ export default function AdminPage() {
     useEffect(() => {
         // Wait until auth state is loaded
         if (!isAuthLoading && !hasPermission(PermissionSchema.enum.AdminPanel)) {
-            // If user does not have permission, redirect them
-            router.replace('/unauthorized'); // Or your login page
+            router.replace(`/${locale}/login`);
         }
     }, [isAuthLoading, hasPermission, router]);
 

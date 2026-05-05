@@ -122,6 +122,7 @@ async function http(endpoint: string, options: RequestInit, signal?: AbortSignal
     // 1. Make the initial request
     let response = await makeRequest(token);
 
+    // Skip refresh on auth endpoints to prevent an infinite refresh loop.
     const isAuthEndpoint = endpoint.startsWith('/api/v1/auth/');
 
     // 2. If the request fails with a 401, try to refresh the token

@@ -1,4 +1,5 @@
 import { useRouter } from 'next/navigation';
+import { useLocale } from 'next-intl';
 
 import { ZodError } from 'zod';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -74,13 +75,14 @@ export const useLogin = () => {
 export const useLogout = () => {
     const queryClient = useQueryClient();
     const router = useRouter();
+    const locale = useLocale();
 
     return useMutation({
         mutationFn: logoutAction,
         onSuccess: () => {
             // Update the UI instantly and redirect
             queryClient.setQueryData(SESSION_QUERY_KEY, authModel.GUEST_CONTEXT);
-            router.push('/login');
+            router.push(`/${locale}/login`);
         },
     });
 };
@@ -88,11 +90,12 @@ export const useLogout = () => {
 /** Hook for user registration. */
 export const useRegister = () => {
     const router = useRouter();
+    const locale = useLocale();
     return useMutation({
         mutationFn: (payload: authModel.RegisterRequest) => auth.register(payload),
         onSuccess: () => {
             alert('Registration successful! Please check your email to verify your account.');
-            router.push('/login');
+            router.push(`/${locale}/login`);
         },
     });
 };

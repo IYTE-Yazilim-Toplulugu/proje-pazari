@@ -15,14 +15,14 @@ export async function loginAction(data: authModel.LoginRequest) {
         if (response.data?.accessToken && response.data?.refreshToken) {
             // The client API layer reads these cookies to attach Authorization headers.
             (await cookies()).set(AUTH_TOKEN_KEY, response.data.accessToken, {
-                // secure: process.env.NODE_ENV === 'production',
+                secure: process.env.NODE_ENV === 'production',
                 maxAge: AUTH_COOKIE_MAX_AGE,
                 path: '/',
                 httpOnly: false,
                 sameSite: 'lax',
             });
             (await cookies()).set(REFRESH_TOKEN_KEY, response.data.refreshToken, {
-                // secure: process.env.NODE_ENV === 'production',
+                secure: process.env.NODE_ENV === 'production',
                 maxAge: AUTH_COOKIE_MAX_AGE,
                 path: '/',
                 httpOnly: false,

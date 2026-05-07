@@ -19,7 +19,9 @@
     "errorTitle": "Something went wrong!",
     "errorDesc": "Please try refreshing the page.",
     "tryAgain": "Try Again",
-    "fetchErrorTitle": "An error occurred while loading data"
+    "fetchErrorTitle": "An error occurred while loading data",
+    "sessionExpiredTitle": "Session Expired",
+    "sessionExpiredDesc": "Your session has expired. Redirecting to login..."
   },
   "nav": {
     "projectMarket": "Project Market",

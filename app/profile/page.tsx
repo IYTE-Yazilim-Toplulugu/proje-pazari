@@ -9,11 +9,13 @@ import ProfileEditForm from '@/components/profile/ProfileEditForm';
 import ProfilePictureUpload from '@/components/profile/ProfilePictureUpload';
 import EmptyState from '@/components/shared/EmptyState';
 import Link from 'next/link';
+import { useLocale } from 'next-intl';
 import { user as userApi } from '@/lib/api';
 
 export default function ProfilePage() {
   const { data: authContext, isLoading: isAuthLoading } = useSession();
   const router = useRouter();
+  const locale = useLocale();
   const [isEditing, setIsEditing] = useState(false);
 
   const { data: user, isLoading: isUserLoading } = useQuery({
@@ -26,7 +28,7 @@ export default function ProfilePage() {
 
   useEffect(() => {
     if (!isAuthLoading && !authContext?.isAuthenticated) {
-      router.push('/login');
+      router.push(`/${locale}/login`);
     }
   }, [isAuthLoading, authContext, router]);
 

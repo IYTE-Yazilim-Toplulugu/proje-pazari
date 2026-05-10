@@ -82,6 +82,9 @@ export const useLogout = () => {
             queryClient.setQueryData(SESSION_QUERY_KEY, null);
             router.push('/login');
         },
+        onError: (error: Error) => {
+            console.error('Logout failed:', error.message);
+        },
     });
 };
 

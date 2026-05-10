@@ -81,8 +81,11 @@ export const useLogout = () => {
         mutationFn: logoutAction,
         onSuccess: () => {
             // Update the UI instantly and redirect
-            queryClient.setQueryData(SESSION_QUERY_KEY, authModel.GUEST_CONTEXT);
+            queryClient.setQueryData(SESSION_QUERY_KEY, null);
             router.push(`/${locale}/login`);
+        },
+        onError: (error: Error) => {
+            console.error('Logout failed:', error.message);
         },
     });
 };

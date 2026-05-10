@@ -186,11 +186,13 @@ async function http(endpoint: string, options: RequestInit, signal?: AbortSignal
                     path: '/',
                     expires: AUTH_COOKIE_EXPIRES_DAYS,
                     sameSite: 'lax',
+                    secure: process.env.NODE_ENV === 'production',
                 });
                 Cookies.set('refreshToken', refreshResponse.data.refreshToken, {
                     path: '/',
                     expires: AUTH_COOKIE_EXPIRES_DAYS,
                     sameSite: 'lax',
+                    secure: process.env.NODE_ENV === 'production',
                 });
 
                 console.log('Token refreshed successfully. Retrying original request...');

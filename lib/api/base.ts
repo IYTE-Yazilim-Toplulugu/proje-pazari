@@ -85,6 +85,62 @@ export async function handleResponse<T extends z.ZodTypeAny>(
 }
 
 /**
+ * Redacts sensitive fields from a RequestInit object for safe console logging.
+ *
+ * Deep-clones the options, parses the JSON body (if present), and replaces the
+ * values of known sensitive keys with "[REDACTED]". The Authorization header
+ * value is also masked.
+ *
+ * @param options The original RequestInit object.
+ * @returns A sanitized copy safe for logging.
+ */
+const SENSITIVE_KEYS = new Set(['password', 'accessToken', 'refreshToken', 'token']);
+
+function sanitizeForLog(options: RequestInit): Record<string, unknown> {
+    // Shallow-clone the top-level options so we never mutate the original
+    const sanitized: Record<string, unknown> = { ...options };
+
+    // --- Redact Authorization header ---
+    if (options.headers) {
+        const headersObj: Record<string, string> = {};
+
+        if (options.headers instanceof Headers) {
+            options.headers.forEach((value, key) => {
+                headersObj[key] = key.toLowerCase() === 'authorization' ? 'Bearer [REDACTED]' : value;
+            });
+        } else if (Array.isArray(options.headers)) {
+            for (const [key, value] of options.headers) {
+                headersObj[key] = key.toLowerCase() === 'authorization' ? 'Bearer [REDACTED]' : value;
+            }
+        } else {
+            // Record<string, string>
+            for (const [key, value] of Object.entries(options.headers)) {
+                headersObj[key] = key.toLowerCase() === 'authorization' ? 'Bearer [REDACTED]' : value;
+            }
+        }
+
+        sanitized.headers = headersObj;
+    }
+
+    // --- Redact sensitive keys in the JSON body ---
+    if (typeof options.body === 'string') {
+        try {
+            const parsed = JSON.parse(options.body) as Record<string, unknown>;
+            for (const key of Object.keys(parsed)) {
+                if (SENSITIVE_KEYS.has(key)) {
+                    parsed[key] = '[REDACTED]';
+                }
+            }
+            sanitized.body = parsed; // log the object form for readability
+        } catch {
+            // body is not JSON — leave as-is (e.g. FormData, which is already opaque)
+        }
+    }
+
+    return sanitized;
+}
+
+/**
  * This is our central HTTP client function that wraps `fetch`.
  * Handles automatic token refreshing.
  *
@@ -101,7 +157,7 @@ async function http(endpoint: string, options: RequestInit, signal?: AbortSignal
     if (process.env.NODE_ENV === 'development') {
         console.group('API Request');
         console.log('URL:', url);
-        console.log('Options:', options);
+        console.log('Options:', sanitizeForLog(options));
         console.groupEnd();
     }
 

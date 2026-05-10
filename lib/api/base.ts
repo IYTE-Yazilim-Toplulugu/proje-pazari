@@ -158,7 +158,11 @@ async function http(endpoint: string, options: RequestInit, signal?: AbortSignal
 
         if (!currentToken || !currentRefreshToken) {
             if (!isPublicRoute && typeof window !== 'undefined') {
-                window.location.href = `/${locale}/login`; // Redirect with proper locale
+                isRefreshing = false;
+                window.dispatchEvent(new CustomEvent('auth:session-expired'));
+                setTimeout(() => {
+                    window.location.href = `/${locale}/login`;
+                }, 1500);
             }
             return response;
         }
@@ -208,7 +212,10 @@ async function http(endpoint: string, options: RequestInit, signal?: AbortSignal
             Cookies.remove('refreshToken', { path: '/' });
             
             if (typeof window !== 'undefined') {
-                window.location.href = `/${locale}/login`; // Redirect with proper locale on refresh failure
+                window.dispatchEvent(new CustomEvent('auth:session-expired'));
+                setTimeout(() => {
+                    window.location.href = `/${locale}/login`;
+                }, 1500);
             }
             
             // We still throw the original error to let React Query know the request failed

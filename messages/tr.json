@@ -19,7 +19,9 @@
     "errorTitle": "Bir şeyler ters gitti!",
     "errorDesc": "Lütfen sayfayı yenilemeyi deneyin.",
     "tryAgain": "Tekrar Dene",
-    "fetchErrorTitle": "Veri yüklenirken hata oluştu"
+    "fetchErrorTitle": "Veri yüklenirken hata oluştu",
+    "sessionExpiredTitle": "Oturum Süresi Doldu",
+    "sessionExpiredDesc": "Oturumunuz sona erdi. Giriş sayfasına yönlendiriliyorsunuz..."
   },
   "nav": {
     "projectMarket": "Proje Pazarı",

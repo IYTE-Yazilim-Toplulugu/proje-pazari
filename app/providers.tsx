@@ -3,7 +3,7 @@
 import { QueryClient, QueryClientProvider, QueryCache } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { AuthProvider } from '@/lib/contexts/AuthContext';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { useTranslations } from 'next-intl';
 import { useToast } from '@/lib/hooks/useToast';
 import ApiStatus from '@/components/shared/ApiStatus';
@@ -11,10 +11,12 @@ import ApiStatus from '@/components/shared/ApiStatus';
 type ErrorWithCode = Error & { code?: number };
 
 export default function Providers({ children }: { children: React.ReactNode }) {
-  const { error: showError } = useToast();
+  const { error: showError, warning: showWarning } = useToast();
   const t = useTranslations('common');
   const tRef = useRef(t);
   tRef.current = t;
+  const showWarningRef = useRef(showWarning);
+  showWarningRef.current = showWarning;
 
   const [queryClient] = useState(() => new QueryClient({
     defaultOptions: {
@@ -38,6 +40,21 @@ export default function Providers({ children }: { children: React.ReactNode }) {
       },
     }),
   }));
+
+  const handleSessionExpired = useCallback(() => {
+    showWarningRef.current(
+      tRef.current('sessionExpiredTitle'),
+      tRef.current('sessionExpiredDesc')
+    );
+    queryClient.clear();
+  }, [queryClient]);
+
+  useEffect(() => {
+    window.addEventListener('auth:session-expired', handleSessionExpired);
+    return () => {
+      window.removeEventListener('auth:session-expired', handleSessionExpired);
+    };
+  }, [handleSessionExpired]);
 
   return (
     <QueryClientProvider client={queryClient}>

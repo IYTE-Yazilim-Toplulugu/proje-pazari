@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import { user as userApi } from '@/lib/api';
 import { useSession } from '@/lib/hooks/authHooks';
 import { ProjectApplicationStatusEnum } from '@/lib/models';
@@ -24,6 +24,8 @@ export default function ApplicationsPage() {
   const router = useRouter();
   const t = useTranslations('profile');
   const tApplications = useTranslations('projects.applications');
+  const tProjects = useTranslations('projects');
+  const locale = useLocale();
 
   const {
     data: applicationsResponse,
@@ -85,7 +87,7 @@ export default function ApplicationsPage() {
       return dateValue;
     }
 
-    return new Intl.DateTimeFormat('tr-TR', { dateStyle: 'medium' }).format(date);
+        return new Intl.DateTimeFormat(locale ?? 'en-US', { dateStyle: 'medium' }).format(date);
   };
 
   const getStatusBadgeVariant = (status?: string | null) => {
@@ -122,18 +124,18 @@ export default function ApplicationsPage() {
           <div className="space-y-4">
             {applications.map((application) => (
               <Card key={application.applicationId ?? `${application.projectId}-${application.createdAt}`}>
-                <CardHeader className="flex flex-row items-start justify-between gap-4 border-b border-border/60">
+                <CardHeader className="flex flex-row items-start justify-between gap-4">
                   <div className="space-y-1">
                     <CardTitle className="text-lg">
-                      {application.projectTitle ?? 'Isimsiz proje'}
+                      {application.projectTitle ?? tApplications('unnamedProject')}
                     </CardTitle>
                     <CardDescription>
-                      Basvuru tarihi: {formatDate(application.createdAt)}
+                      {tApplications('applicationDateLabel')}: {formatDate(application.createdAt)}
                     </CardDescription>
                   </div>
 
                   <Badge variant={getStatusBadgeVariant(application.status)}>
-                    {application.status ?? 'PENDING'}
+                    {application.status ? tProjects(`status.${application.status}`) : tApplications('pendingStatus')}
                   </Badge>
                 </CardHeader>
               </Card>

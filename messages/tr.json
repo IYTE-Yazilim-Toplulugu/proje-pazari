@@ -149,6 +149,7 @@
     "status": {
       "DRAFT": "Taslak",
       "OPEN": "Açık",
+      "PENDING": "Beklemede",
       "IN_PROGRESS": "Devam Ediyor",
       "COMPLETED": "Tamamlandı",
       "CANCELLED": "İptal Edildi"
@@ -192,6 +193,9 @@
       "approvedTitle": "Başvuru Onaylandı",
       "rejectedTitle": "Başvuru Reddedildi",
       "updateDescription": "Başvuru durumu güncellendi.",
+      "unnamedProject": "İsimsiz proje",
+      "applicationDateLabel": "Başvuru tarihi",
+      "pendingStatus": "Beklemede",
       "noApplicationsTitle": "Henüz başvurunuz yok",
       "viewProjects": "Projeleri Gör",
       "empty": "Henüz hiç başvuru bulunmuyor.",

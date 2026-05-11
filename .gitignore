@@ -42,3 +42,7 @@ next-env.d.ts
 
 # auto-generated files
 lib/models/generated.ts
+
+# Playwright test artifacts
+tests/e2e/test-results/
+tests/e2e/playwright-report/

@@ -24,7 +24,6 @@ export default function ApplicationsPage() {
   const router = useRouter();
   const t = useTranslations('profile');
   const tApplications = useTranslations('projects.applications');
-  const tProjects = useTranslations('projects');
   const locale = useLocale();
 
   const {
@@ -135,7 +134,7 @@ export default function ApplicationsPage() {
                   </div>
 
                   <Badge variant={getStatusBadgeVariant(application.status)}>
-                    {application.status ? tProjects(`status.${application.status}`) : tApplications('pendingStatus')}
+                    {tApplications(`status${application.status ?? 'PENDING'}`)}
                   </Badge>
                 </CardHeader>
               </Card>

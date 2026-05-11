@@ -149,7 +149,6 @@
     "status": {
       "DRAFT": "Draft",
       "OPEN": "Open",
-      "PENDING": "Pending",
       "IN_PROGRESS": "In Progress",
       "COMPLETED": "Completed",
       "CANCELLED": "Cancelled"
@@ -195,6 +194,10 @@
       "updateDescription": "The application status has been updated.",
       "unnamedProject": "Unnamed project",
       "applicationDateLabel": "Application date",
+      "statusPENDING": "Pending",
+      "statusAPPROVED": "Approved",
+      "statusREJECTED": "Rejected",
+      "statusWITHDRAWN": "Withdrawn",
       "pendingStatus": "Pending",
       "noApplicationsTitle": "You do not have any applications yet",
       "viewProjects": "View Projects",

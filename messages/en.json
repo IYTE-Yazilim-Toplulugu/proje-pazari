@@ -198,7 +198,6 @@
       "statusAPPROVED": "Approved",
       "statusREJECTED": "Rejected",
       "statusWITHDRAWN": "Withdrawn",
-      "pendingStatus": "Pending",
       "noApplicationsTitle": "You do not have any applications yet",
       "viewProjects": "View Projects",
       "empty": "No applications yet.",

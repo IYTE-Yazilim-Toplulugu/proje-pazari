@@ -31,7 +31,7 @@ export default function ApplicationsPage() {
     isLoading: isApplicationsLoading,
     isError,
   } = useQuery({
-    queryKey: ['my-applications'],
+    queryKey: ['my-applications', authContext?.userId],
     queryFn: userApi.getMyApplications,
     enabled: authContext?.isAuthenticated === true,
   });
@@ -96,6 +96,10 @@ export default function ApplicationsPage() {
 
     if (status === ProjectApplicationStatusEnum.enum.REJECTED) {
       return 'destructive' as const;
+    }
+
+    if (status === ProjectApplicationStatusEnum.enum.WITHDRAWN) {
+      return 'outline' as const;
     }
 
     return 'secondary' as const;

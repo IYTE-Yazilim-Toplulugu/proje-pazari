@@ -1,8 +1,7 @@
 import { z } from 'zod';
 
 import { fetcher, mutator } from './base';
-import { apiModel, userModel } from '../models';
-import { MApplicationSchema } from '../models';
+import { apiModel, userModel, MApplicationSchema } from '../models';
 
 // ============================================================================
 // ÇALIŞAN ENDPOINT'LER (RESTful standartlarına ve Backend'e göre güncellendi)

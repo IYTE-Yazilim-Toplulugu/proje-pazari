@@ -70,7 +70,11 @@ export async function handleResponse<T extends z.ZodTypeAny>(
     const json = await response.json();
     const parsedResponse = BasicResponseSchema.parse(json);
 
-    const SUCCESS_CODES: ResponseCode[] =[ResponseCodeSchema.enum.SUCCESS, ResponseCodeSchema.enum.REGISTERED_NEEDS_VERIFY, ResponseCodeSchema.enum.EMAIL_SENT];
+    const SUCCESS_CODES: ResponseCode[] = [
+        ResponseCodeSchema.enum.SUCCESS,
+        ResponseCodeSchema.enum.REGISTERED_NEEDS_VERIFICATION,
+        ResponseCodeSchema.enum.EMAIL_SENT,
+    ];
     if (!SUCCESS_CODES.includes(parsedResponse.code)) {
         // Handle API-level errors defined by the `code` field
         throw new ApiError(

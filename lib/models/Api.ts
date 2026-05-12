@@ -3,14 +3,14 @@ import { z } from 'zod';
 /**
  * Coarse HTTP-category response code returned by the API in the `code` field.
  *
- * Values must stay in parity with the backend `ResponseCode` enum (0-10); the
+ * Values must stay in parity with the backend `ResponseCode` enum (0-11); the
  * names here are the frontend's own labels. Missing a value makes
  * `z.nativeEnum().parse()` throw on otherwise-valid responses.
  */
 const ResponseCode = {
     SUCCESS: 0,
     EMAIL_SENT: 1, // backend: NO_CONTENT
-    REGISTERED_NEEDS_VERIFY: 2, // backend: CREATED
+    CREATED: 2,
     ACCEPTED: 3,
     BAD_REQUEST: 4,
     UNAUTHORIZED: 5,
@@ -19,6 +19,7 @@ const ResponseCode = {
     CONFLICT: 8,
     VALIDATION_ERROR: 9,
     INTERNAL_SERVER_ERROR: 10,
+    REGISTERED_NEEDS_VERIFICATION: 11,
 } as const;
 
 export const ResponseCodeSchema = z.nativeEnum(ResponseCode);

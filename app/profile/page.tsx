@@ -5,9 +5,9 @@ import { useSession } from '@/lib/hooks/authHooks';
 import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import { useTranslations } from 'next-intl';
 import ProfileEditForm from '@/components/profile/ProfileEditForm';
 import ProfilePictureUpload from '@/components/profile/ProfilePictureUpload';
-import EmptyState from '@/components/shared/EmptyState';
 import Link from 'next/link';
 import { useLocale } from 'next-intl';
 import { user as userApi } from '@/lib/api';
@@ -16,6 +16,7 @@ export default function ProfilePage() {
   const { data: authContext, isLoading: isAuthLoading } = useSession();
   const router = useRouter();
   const locale = useLocale();
+  const t = useTranslations('profile');
   const [isEditing, setIsEditing] = useState(false);
 
   const { data: user, isLoading: isUserLoading } = useQuery({
@@ -95,7 +96,7 @@ export default function ProfilePage() {
               onClick={() => setIsEditing(!isEditing)}
               className="px-4 py-2 rounded-lg text-[var(--color-text-inverse)] bg-[var(--color-btn-primary)] hover:bg-[var(--color-btn-primary-hover)]"
             >
-              {isEditing ? 'İptal' : 'Düzenle'}
+              {isEditing ? t('cancelButton') : t('editButton')}
             </button>
           </div>
 
@@ -107,7 +108,7 @@ export default function ProfilePage() {
               {user.description && (
                 <div className="mb-6">
                   <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-                    Hakkımda
+                    {t('aboutSection')}
                   </h2>
                   <p className="text-gray-700 dark:text-gray-300">
                     {user.description}
@@ -118,11 +119,11 @@ export default function ProfilePage() {
               {/* Contact Info */}
               <div className="mb-6">
                 <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">
-                  İletişim Bilgileri
+                  {t('contactSection')}
                 </h2>
                 <div className="space-y-2">
                   <div className="flex items-center gap-2">
-                    <span className="text-gray-600 dark:text-gray-400">Email:</span>
+                    <span className="text-gray-600 dark:text-gray-400">{t('emailLabel')}</span>
                     <span className="text-gray-900 dark:text-white">{user.email}</span>
                   </div>
                 </div>
@@ -131,7 +132,7 @@ export default function ProfilePage() {
               {/* Social Links */}
               <div className="mb-6">
                 <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">
-                  Sosyal Bağlantılar
+                  {t('socialSection')}
                 </h2>
                 <div className="flex gap-3">
                   {user.linkedinUrl && (
@@ -163,25 +164,29 @@ export default function ProfilePage() {
         {/* User's Projects */}
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8 mb-6">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-            Projelerim
+            {t('myProjects')}
           </h2>
           <Link
             href="/my-projects"
             className="inline-block px-4 py-2 rounded-lg text-[var(--color-text-inverse)] bg-[var(--color-btn-primary)] hover:bg-[var(--color-btn-primary-hover)]"
           >
-            Projelerimi Gör
+            {t('viewProjects')}
           </Link>
         </div>
 
         {/* User's Applications */}
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-            Başvurularım
+            {t('myApplications')}
           </h2>
-          <EmptyState
-            title="Henüz başvuru bulunmuyor"
-            description="Projelere başvurduğunuzda durumlarını burada takip edebilirsiniz."
-          />
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <Link
+              href="/applications"
+              className="inline-block px-4 py-2 rounded-lg text-[var(--color-text-inverse)] bg-[var(--color-btn-primary)] hover:bg-[var(--color-btn-primary-hover)]"
+            >
+              {t('viewApplications')}
+            </Link>
+          </div>
         </div>
       </div>
     </div>

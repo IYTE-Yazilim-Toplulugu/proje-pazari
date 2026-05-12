@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 import { fetcher, mutator } from './base';
-import { apiModel, userModel } from '../models';
+import { apiModel, userModel, MApplicationSchema } from '../models';
 
 // ============================================================================
 // ÇALIŞAN ENDPOINT'LER (RESTful standartlarına ve Backend'e göre güncellendi)
@@ -30,6 +30,18 @@ export const listUsers = (params: { page?: number, pageSize?: number, sby?: stri
 /** [PUT] /api/v1/users/me - Updates the user profile. */
 export const updateUser = (payload: userModel.UpdateUserProfileCommand) =>
     mutator('/api/v1/users/me', 'put', apiModel.BasicResponseSchema, { arg: payload });
+
+// Response schema for GET /api/v1/users/me/applications
+const PagedApplicationsResponseSchema = z.object({
+    applications: z.array(MApplicationSchema),
+    currentPage: z.number().optional(),
+    totalPages: z.number().optional(),
+    totalElements: z.number().optional(),
+});
+
+/** [GET] /api/v1/users/me/applications - Returns paged applications submitted by the authenticated user. */
+export const getMyApplications = () =>
+    fetcher('/api/v1/users/me/applications', PagedApplicationsResponseSchema);
 
 
 // ============================================================================

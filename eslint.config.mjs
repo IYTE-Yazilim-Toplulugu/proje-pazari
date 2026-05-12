@@ -12,11 +12,13 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
-    "**/__tests__/**",
-    "**/__test__/**",
-    "jest.config.js",
-    "jest.setup.js",
   ]),
+  {
+    files: ['**/__tests__/**/*.{ts,tsx}', '**/__test__/**/*.{ts,tsx}', 'lib/mocks/**/*.ts', 'jest.setup.js'],
+    rules: {
+      '@typescript-eslint/no-explicit-any': 'off',
+    },
+  },
 ]);
 
 export default eslintConfig;

@@ -3,8 +3,8 @@ import { test, expect } from '@playwright/test';
 // Auth tests run without stored auth state to test the login flow itself
 test.use({ storageState: { cookies: [], origins: [] } });
 
-const VALID_EMAIL = process.env.E2E_TEST_EMAIL ?? 'test@std.iyte.edu.tr';
-const VALID_PASSWORD = process.env.E2E_TEST_PASSWORD ?? 'Test123!';
+const VALID_EMAIL = process.env.TEST_USER_EMAIL ?? 'test@std.iyte.edu.tr';
+const VALID_PASSWORD = process.env.TEST_USER_PASSWORD ?? 'Test123!';
 
 test.describe('Auth flow', () => {
   test('User can log in with valid credentials and is redirected to home', async ({ page }) => {

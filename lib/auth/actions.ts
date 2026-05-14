@@ -13,7 +13,9 @@ export async function loginAction(data: authModel.LoginRequest) {
         const response = await auth.login(data);
 
         if (response.data?.accessToken && response.data?.refreshToken) {
-            // The client API layer reads these cookies to attach Authorization headers.
+            // Cookies are intentionally not httpOnly: the client-side API layer (js-cookie)
+            // must be able to read them to attach the JWT as an Authorization header on
+            // every outgoing request. The secure flag is enabled in production.
             (await cookies()).set(AUTH_TOKEN_KEY, response.data.accessToken, {
                 secure: process.env.NODE_ENV === 'production',
                 maxAge: AUTH_COOKIE_MAX_AGE,

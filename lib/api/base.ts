@@ -40,12 +40,20 @@ function rejectQueue(err: unknown) {
  */
 export class ApiError extends Error {
     readonly code: ResponseCode;
+    /** Stable, granular machine-readable error identifier — branch on this. */
+    readonly errorCode?: string;
     readonly details?: Record<string, number>;
 
-    constructor(message: string, code: ResponseCode, details?: Record<string, number>) {
+    constructor(
+        message: string,
+        code: ResponseCode,
+        errorCode?: string,
+        details?: Record<string, number>
+    ) {
         super(message);
         this.name = 'ApiError';
         this.code = code;
+        this.errorCode = errorCode;
         this.details = details;
     }
 }
@@ -63,7 +71,8 @@ export async function handleResponse<T extends z.ZodTypeAny>(
         const json = await response.json().catch(() => null);
         throw new ApiError(
             json?.message || `HTTP error! status: ${response.status}`,
-            json?.code ?? response.status
+            json?.code ?? response.status,
+            json?.errorCode
         );
     }
 
@@ -81,6 +90,7 @@ export async function handleResponse<T extends z.ZodTypeAny>(
         throw new ApiError(
             parsedResponse.message || 'An API error occurred.',
             parsedResponse.code,
+            parsedResponse.errorCode,
             parsedResponse.codes
         );
     }

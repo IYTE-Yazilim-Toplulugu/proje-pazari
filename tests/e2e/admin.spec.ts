@@ -17,6 +17,7 @@ test.describe('Admin flow', () => {
     }
 
     await page.context().clearCookies();
+    await page.evaluate(() => window.localStorage.clear());
     await page.goto('/login');
     await page.getByLabel(/e-posta/i).fill(adminEmail);
     await page.getByLabel(/şifre/i).fill(adminPassword);

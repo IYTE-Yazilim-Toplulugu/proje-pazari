@@ -18,7 +18,6 @@ import {
 } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 
-
 export default function ApplicationsPage() {
   const { data: authContext, isLoading: isAuthLoading } = useSession();
   const router = useRouter();
@@ -86,7 +85,7 @@ export default function ApplicationsPage() {
       return dateValue;
     }
 
-        return new Intl.DateTimeFormat(locale ?? 'en-US', { dateStyle: 'medium' }).format(date);
+    return new Intl.DateTimeFormat(locale ?? 'en-US', { dateStyle: 'medium' }).format(date);
   };
 
   const getStatusBadgeVariant = (status?: string | null) => {

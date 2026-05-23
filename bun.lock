@@ -18,6 +18,7 @@
         "zod": "^4.2.1",
       },
       "devDependencies": {
+        "@playwright/test": "^1.60.0",
         "@tailwindcss/postcss": "^4",
         "@testing-library/jest-dom": "^6.9.1",
         "@testing-library/react": "^16.3.1",
@@ -26,6 +27,7 @@
         "@types/node": "^20",
         "@types/react": "^19.2.9",
         "@types/react-dom": "^19",
+        "dotenv": "^17.4.2",
         "eslint": "^9",
         "eslint-config-next": "16.0.8",
         "jest": "^30.2.0",

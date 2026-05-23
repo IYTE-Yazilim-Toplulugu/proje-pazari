@@ -278,7 +278,9 @@
     "notAuthorized": "Bu sayfayı görüntüleme yetkiniz yok.",
     "verifyingAccess": "Erişim doğrulanıyor...",
     "loadingFeatures": "Özellik bayrakları yükleniyor...",
-    "errorFetching": "Özellikler alınırken hata oluştu: {message}"
+    "errorFetching": "Özellikler alınırken hata oluştu: {message}",
+    "featureUpdateErrorTitle": "Özellik bayrağı güncellenemedi",
+    "featureUpdateErrorDescription": "Lütfen özellik bayrağını tekrar güncellemeyi deneyin."
   },
   "apiStatus": {
     "title": "API Durumu",

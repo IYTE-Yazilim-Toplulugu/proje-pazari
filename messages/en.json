@@ -278,7 +278,9 @@
     "notAuthorized": "You are not authorized to view this page.",
     "verifyingAccess": "Verifying access...",
     "loadingFeatures": "Loading feature flags...",
-    "errorFetching": "Error fetching features: {message}"
+    "errorFetching": "Error fetching features: {message}",
+    "featureUpdateErrorTitle": "Feature flag update failed",
+    "featureUpdateErrorDescription": "Please try updating the feature flag again."
   },
   "apiStatus": {
     "title": "API Status",

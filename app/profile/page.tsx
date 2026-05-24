@@ -31,7 +31,7 @@ export default function ProfilePage() {
     if (!isAuthLoading && !authContext?.isAuthenticated) {
       router.push(`/${locale}/login`);
     }
-  }, [isAuthLoading, authContext, router]);
+  }, [isAuthLoading, authContext, locale, router]);
 
   if (isLoading) {
     return (

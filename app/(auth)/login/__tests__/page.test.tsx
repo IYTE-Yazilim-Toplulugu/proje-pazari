@@ -2,20 +2,44 @@ import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import LoginPage from "../page";
+import { useLogin } from "@/lib/hooks/authHooks";
 
 // Mock the useLogin hook
 jest.mock("@/lib/hooks/authHooks", () => ({
   useLogin: jest.fn(),
 }));
 
+jest.mock("next-intl", () => ({
+  useTranslations: () => {
+    const translations: Record<string, string> = {
+      title: "Login",
+      email: "Email",
+      password: "Password",
+      rememberMe: "Remember Me",
+      forgotPassword: "Forgot Password",
+      submit: "Login",
+      submitting: "Logging in",
+      noAccount: "No account?",
+      registerLink: "Register here",
+      "placeholders.email": "you@std.iyte.edu.tr",
+      "placeholders.password": "Enter your password",
+      "errors.generic": "Unexpected error",
+    };
+
+    return (key: string) => translations[key] ?? key;
+  },
+}));
+
 // Mock next/link
 jest.mock("next/link", () => {
-  return ({ children, href }: { children: React.ReactNode; href: string }) => {
+  const MockLink = ({ children, href }: { children: React.ReactNode; href: string }) => {
     return <a href={href}>{children}</a>;
   };
+  MockLink.displayName = "MockLink";
+  return MockLink;
 });
 
-const { useLogin } = require("@/lib/hooks/authHooks");
+const mockUseLogin = jest.mocked(useLogin);
 
 describe("LoginPage", () => {
   let queryClient: QueryClient;
@@ -40,7 +64,7 @@ describe("LoginPage", () => {
 
   describe("Form Validation", () => {
     it("should render login form with all fields", () => {
-      useLogin.mockReturnValue({
+      mockUseLogin.mockReturnValue({
         mutate: jest.fn(),
         isPending: false,
         error: null,
@@ -56,7 +80,7 @@ describe("LoginPage", () => {
     });
 
     it.skip("should show validation errors for empty fields", async () => {
-      useLogin.mockReturnValue({
+      mockUseLogin.mockReturnValue({
         mutate: jest.fn(),
         isPending: false,
         error: null,
@@ -73,7 +97,7 @@ describe("LoginPage", () => {
     });
 
     it.skip("should show validation error for invalid email", async () => {
-      useLogin.mockReturnValue({
+      mockUseLogin.mockReturnValue({
         mutate: jest.fn(),
         isPending: false,
         error: null,
@@ -94,7 +118,7 @@ describe("LoginPage", () => {
 
     it("should submit form with valid data", async () => {
       const mockMutate = jest.fn();
-      useLogin.mockReturnValue({
+      mockUseLogin.mockReturnValue({
         mutate: mockMutate,
         isPending: false,
         error: null,
@@ -114,7 +138,7 @@ describe("LoginPage", () => {
 
       await waitFor(() => {
         expect(mockMutate).toHaveBeenCalledWith({
-          identity: "test@std.iyte.edu.tr",
+          email: "test@std.iyte.edu.tr",
           password: "password123",
         });
       });
@@ -123,7 +147,7 @@ describe("LoginPage", () => {
 
   describe("Error States", () => {
     it("should display error message when login fails", () => {
-      useLogin.mockReturnValue({
+      mockUseLogin.mockReturnValue({
         mutate: jest.fn(),
         isPending: false,
         error: new Error("Invalid credentials"),
@@ -136,7 +160,7 @@ describe("LoginPage", () => {
     });
 
     it("should display fallback error message for unknown errors", () => {
-      useLogin.mockReturnValue({
+      mockUseLogin.mockReturnValue({
         mutate: jest.fn(),
         isPending: false,
         error: { message: null },
@@ -150,7 +174,7 @@ describe("LoginPage", () => {
 
   describe("Loading States", () => {
     it("should disable button and show loading text when submitting", () => {
-      useLogin.mockReturnValue({
+      mockUseLogin.mockReturnValue({
         mutate: jest.fn(),
         isPending: true,
         error: null,
@@ -164,7 +188,7 @@ describe("LoginPage", () => {
     });
 
     it("should enable button when not loading", () => {
-      useLogin.mockReturnValue({
+      mockUseLogin.mockReturnValue({
         mutate: jest.fn(),
         isPending: false,
         error: null,
@@ -179,7 +203,7 @@ describe("LoginPage", () => {
 
   describe("UI Elements", () => {
     it('should render "Remember Me" checkbox', () => {
-      useLogin.mockReturnValue({
+      mockUseLogin.mockReturnValue({
         mutate: jest.fn(),
         isPending: false,
         error: null,
@@ -192,7 +216,7 @@ describe("LoginPage", () => {
     });
 
     it('should render "Forgot Password" link', () => {
-      useLogin.mockReturnValue({
+      mockUseLogin.mockReturnValue({
         mutate: jest.fn(),
         isPending: false,
         error: null,
@@ -209,7 +233,7 @@ describe("LoginPage", () => {
     });
 
     it("should render register link", () => {
-      useLogin.mockReturnValue({
+      mockUseLogin.mockReturnValue({
         mutate: jest.fn(),
         isPending: false,
         error: null,

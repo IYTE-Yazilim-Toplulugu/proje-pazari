@@ -3,20 +3,29 @@
 import { QueryClient, QueryClientProvider, QueryCache } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { AuthProvider } from '@/lib/contexts/AuthContext';
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useTranslations } from 'next-intl';
 import { useToast } from '@/lib/hooks/useToast';
 import ApiStatus from '@/components/shared/ApiStatus';
 
 type ErrorWithCode = Error & { code?: number };
+type ToastHandler = (message: string, description?: string) => void;
+
+const latestProviderHandlers: {
+  t?: (key: string) => string;
+  showError?: ToastHandler;
+  showWarning?: ToastHandler;
+} = {};
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   const { error: showError, warning: showWarning } = useToast();
   const t = useTranslations('common');
-  const tRef = useRef(t);
-  tRef.current = t;
-  const showWarningRef = useRef(showWarning);
-  showWarningRef.current = showWarning;
+
+  useEffect(() => {
+    latestProviderHandlers.t = t;
+    latestProviderHandlers.showError = showError;
+    latestProviderHandlers.showWarning = showWarning;
+  }, [showError, showWarning, t]);
 
   const [queryClient] = useState(() => new QueryClient({
     defaultOptions: {
@@ -35,19 +44,23 @@ export default function Providers({ children }: { children: React.ReactNode }) {
       onError: (error) => {
         console.error('Query error:', error);
         if (error instanceof Error) {
-          showError(tRef.current('fetchErrorTitle'), error.message);
+          const translate = latestProviderHandlers.t ?? t;
+          const showLatestError = latestProviderHandlers.showError ?? showError;
+          showLatestError(translate('fetchErrorTitle'), error.message);
         }
       },
     }),
   }));
 
   const handleSessionExpired = useCallback(() => {
-    showWarningRef.current(
-      tRef.current('sessionExpiredTitle'),
-      tRef.current('sessionExpiredDesc')
+    const translate = latestProviderHandlers.t ?? t;
+    const showLatestWarning = latestProviderHandlers.showWarning ?? showWarning;
+    showLatestWarning(
+      translate('sessionExpiredTitle'),
+      translate('sessionExpiredDesc')
     );
     queryClient.clear();
-  }, [queryClient]);
+  }, [queryClient, showWarning, t]);
 
   useEffect(() => {
     window.addEventListener('auth:session-expired', handleSessionExpired);

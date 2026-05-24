@@ -90,7 +90,7 @@ export type ProjectListResponse = z.infer<typeof MProjectListResponse>;
 
 /** Mirrors backend ApplicationDto. applicantEmail is optional — backend does not return it. */
 export const MApplicationSchema = z.object({
-  applicationId: z.string().optional(),
+  applicationId: z.string(),
   projectId: z.string().optional(),
   projectTitle: z.string().optional(),
   applicantId: z.string().optional(),

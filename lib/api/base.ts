@@ -81,6 +81,7 @@ export async function handleResponse<T extends z.ZodTypeAny>(
 
     const SUCCESS_CODES: ResponseCode[] = [
         ResponseCodeSchema.enum.SUCCESS,
+        ResponseCodeSchema.enum.CREATED,
         ResponseCodeSchema.enum.REGISTERED_NEEDS_VERIFICATION,
         ResponseCodeSchema.enum.EMAIL_SENT,
     ];

@@ -6,6 +6,7 @@ import { z } from 'zod';
 const ResponseCode = {
     SUCCESS: 0,
     EMAIL_SENT: 1,
+    CREATED: 2,
     REGISTERED_NEEDS_VERIFICATION: 11,
     BAD_REQUEST: 4,
     UNAUTHORIZED: 5,

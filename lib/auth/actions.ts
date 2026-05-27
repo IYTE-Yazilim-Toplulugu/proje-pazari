@@ -41,7 +41,18 @@ export async function loginAction(data: authModel.LoginRequest) {
 }
 
 export async function logoutAction() {
-    // Clear the cookie from the server
-    (await cookies()).delete(AUTH_TOKEN_KEY);
-    (await cookies()).delete(REFRESH_TOKEN_KEY);
+    const cookieStore = await cookies();
+    const refreshToken = cookieStore.get(REFRESH_TOKEN_KEY)?.value;
+
+    try {
+        if (refreshToken) {
+            await auth.logout({ refreshToken });
+        }
+    } catch (error: unknown) {
+        console.error('Logout failed:', error instanceof Error ? error.message : error);
+    } finally {
+        // Clear the cookie from the server
+        cookieStore.delete(AUTH_TOKEN_KEY);
+        cookieStore.delete(REFRESH_TOKEN_KEY);
+    }
 }

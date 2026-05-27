@@ -1,4 +1,6 @@
 import {
+  login,
+  logout,
   forgotPassword,
   resetPassword,
   resendVerificationEmail,
@@ -15,6 +17,44 @@ describe('Auth API Functions', () => {
     jest.clearAllMocks();
   });
 
+  describe('login', () => {
+    it('should call mutator with the login endpoint', async () => {
+      const payload = { email: 'test@std.iyte.edu.tr', password: 'secret' };
+      const mockResponse = { code: 0 };
+
+      (mutator as jest.Mock).mockResolvedValue(mockResponse);
+
+      const result = await login(payload as never);
+
+      expect(mutator).toHaveBeenCalledWith(
+        '/api/v1/auth/login',
+        'post',
+        expect.any(Object),
+        { arg: payload }
+      );
+      expect(result).toEqual(mockResponse);
+    });
+  });
+
+  describe('logout', () => {
+    it('should call mutator with the logout endpoint and refresh token payload', async () => {
+      const payload = { refreshToken: 'refresh-token-123' };
+      const mockResponse = { code: 0, message: 'Logged out' };
+
+      (mutator as jest.Mock).mockResolvedValue(mockResponse);
+
+      const result = await logout(payload);
+
+      expect(mutator).toHaveBeenCalledWith(
+        '/api/v1/auth/logout',
+        'post',
+        expect.any(Object),
+        { arg: payload }
+      );
+      expect(result).toEqual(mockResponse);
+    });
+  });
+
   describe('forgotPassword', () => {
     it('should call mutator with correct parameters', async () => {
       const email = 'test@std.iyte.edu.tr';
@@ -25,7 +65,7 @@ describe('Auth API Functions', () => {
       const result = await forgotPassword(email);
 
       expect(mutator).toHaveBeenCalledWith(
-        '/auth/forgot-password',
+        '/api/v1/auth/forgot-password',
         'post',
         expect.any(Object),
         { arg: { email } }
@@ -54,7 +94,7 @@ describe('Auth API Functions', () => {
       const result = await resetPassword(token, password);
 
       expect(mutator).toHaveBeenCalledWith(
-        '/auth/reset-password',
+        '/api/v1/auth/reset-password',
         'post',
         expect.any(Object),
         { arg: { token, password } }
@@ -85,7 +125,7 @@ describe('Auth API Functions', () => {
       const result = await resendVerificationEmail(email);
 
       expect(mutator).toHaveBeenCalledWith(
-        '/auth/resend-verification',
+        '/api/v1/auth/resend-verification',
         'post',
         expect.any(Object),
         { arg: { email } }
@@ -141,14 +181,14 @@ describe('Auth API Functions', () => {
       expect(mutator).toHaveBeenCalledTimes(2);
       expect(mutator).toHaveBeenNthCalledWith(
         1,
-        '/auth/forgot-password',
+        '/api/v1/auth/forgot-password',
         'post',
         expect.any(Object),
         { arg: { email } }
       );
       expect(mutator).toHaveBeenNthCalledWith(
         2,
-        '/auth/reset-password',
+        '/api/v1/auth/reset-password',
         'post',
         expect.any(Object),
         { arg: { token, password: newPassword } }
@@ -176,7 +216,7 @@ describe('Auth API Functions', () => {
 
       expect(mutator).toHaveBeenCalledTimes(2);
       expect(mutator).toHaveBeenCalledWith(
-        '/auth/resend-verification',
+        '/api/v1/auth/resend-verification',
         'post',
         expect.any(Object),
         { arg: { email } }

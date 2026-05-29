@@ -41,6 +41,18 @@ jest.mock("next/link", () => {
 
 const mockUseLogin = jest.mocked(useLogin);
 
+// The component only reads `mutate`, `isPending`, and `error`, so we provide a
+// partial mock and cast it to the full mutation result in one place.
+const mockLoginResult = (
+  overrides: Partial<ReturnType<typeof useLogin>> = {}
+) =>
+  ({
+    mutate: jest.fn(),
+    isPending: false,
+    error: null,
+    ...overrides,
+  }) as ReturnType<typeof useLogin>;
+
 describe("LoginPage", () => {
   let queryClient: QueryClient;
 
@@ -64,11 +76,7 @@ describe("LoginPage", () => {
 
   describe("Form Validation", () => {
     it("should render login form with all fields", () => {
-      mockUseLogin.mockReturnValue({
-        mutate: jest.fn(),
-        isPending: false,
-        error: null,
-      });
+      mockUseLogin.mockReturnValue(mockLoginResult());
 
       renderLoginPage();
 
@@ -80,11 +88,7 @@ describe("LoginPage", () => {
     });
 
     it.skip("should show validation errors for empty fields", async () => {
-      mockUseLogin.mockReturnValue({
-        mutate: jest.fn(),
-        isPending: false,
-        error: null,
-      });
+      mockUseLogin.mockReturnValue(mockLoginResult());
 
       renderLoginPage();
 
@@ -97,11 +101,7 @@ describe("LoginPage", () => {
     });
 
     it.skip("should show validation error for invalid email", async () => {
-      mockUseLogin.mockReturnValue({
-        mutate: jest.fn(),
-        isPending: false,
-        error: null,
-      });
+      mockUseLogin.mockReturnValue(mockLoginResult());
 
       renderLoginPage();
 
@@ -118,11 +118,7 @@ describe("LoginPage", () => {
 
     it("should submit form with valid data", async () => {
       const mockMutate = jest.fn();
-      mockUseLogin.mockReturnValue({
-        mutate: mockMutate,
-        isPending: false,
-        error: null,
-      });
+      mockUseLogin.mockReturnValue(mockLoginResult({ mutate: mockMutate }));
 
       renderLoginPage();
 
@@ -147,11 +143,9 @@ describe("LoginPage", () => {
 
   describe("Error States", () => {
     it("should display error message when login fails", () => {
-      mockUseLogin.mockReturnValue({
-        mutate: jest.fn(),
-        isPending: false,
-        error: new Error("Invalid credentials"),
-      });
+      mockUseLogin.mockReturnValue(
+        mockLoginResult({ error: new Error("Invalid credentials") })
+      );
 
       renderLoginPage();
 
@@ -160,11 +154,9 @@ describe("LoginPage", () => {
     });
 
     it("should display fallback error message for unknown errors", () => {
-      mockUseLogin.mockReturnValue({
-        mutate: jest.fn(),
-        isPending: false,
-        error: { message: null },
-      });
+      mockUseLogin.mockReturnValue(
+        mockLoginResult({ error: { message: null } as unknown as Error })
+      );
 
       renderLoginPage();
 
@@ -174,11 +166,7 @@ describe("LoginPage", () => {
 
   describe("Loading States", () => {
     it("should disable button and show loading text when submitting", () => {
-      mockUseLogin.mockReturnValue({
-        mutate: jest.fn(),
-        isPending: true,
-        error: null,
-      });
+      mockUseLogin.mockReturnValue(mockLoginResult({ isPending: true }));
 
       renderLoginPage();
 
@@ -188,11 +176,7 @@ describe("LoginPage", () => {
     });
 
     it("should enable button when not loading", () => {
-      mockUseLogin.mockReturnValue({
-        mutate: jest.fn(),
-        isPending: false,
-        error: null,
-      });
+      mockUseLogin.mockReturnValue(mockLoginResult());
 
       renderLoginPage();
 
@@ -203,11 +187,7 @@ describe("LoginPage", () => {
 
   describe("UI Elements", () => {
     it('should render "Remember Me" checkbox', () => {
-      mockUseLogin.mockReturnValue({
-        mutate: jest.fn(),
-        isPending: false,
-        error: null,
-      });
+      mockUseLogin.mockReturnValue(mockLoginResult());
 
       renderLoginPage();
 
@@ -216,11 +196,7 @@ describe("LoginPage", () => {
     });
 
     it('should render "Forgot Password" link', () => {
-      mockUseLogin.mockReturnValue({
-        mutate: jest.fn(),
-        isPending: false,
-        error: null,
-      });
+      mockUseLogin.mockReturnValue(mockLoginResult());
 
       renderLoginPage();
 
@@ -233,11 +209,7 @@ describe("LoginPage", () => {
     });
 
     it("should render register link", () => {
-      mockUseLogin.mockReturnValue({
-        mutate: jest.fn(),
-        isPending: false,
-        error: null,
-      });
+      mockUseLogin.mockReturnValue(mockLoginResult());
 
       renderLoginPage();
 
@@ -247,11 +219,7 @@ describe("LoginPage", () => {
     });
 
     it("should have proper placeholders", () => {
-      useLogin.mockReturnValue({
-        mutate: jest.fn(),
-        isPending: false,
-        error: null,
-      });
+      mockUseLogin.mockReturnValue(mockLoginResult());
 
       renderLoginPage();
 

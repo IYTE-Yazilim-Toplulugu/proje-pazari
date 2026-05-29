@@ -1,6 +1,6 @@
 'use client';
 
-import { QueryClient, QueryClientProvider, QueryCache } from '@tanstack/react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { AuthProvider } from '@/lib/contexts/AuthContext';
 import { useState, useEffect, useCallback } from 'react';
@@ -9,23 +9,10 @@ import { useToast } from '@/lib/hooks/useToast';
 import ApiStatus from '@/components/shared/ApiStatus';
 
 type ErrorWithCode = Error & { code?: number };
-type ToastHandler = (message: string, description?: string) => void;
-
-const latestProviderHandlers: {
-  t?: (key: string) => string;
-  showError?: ToastHandler;
-  showWarning?: ToastHandler;
-} = {};
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   const { error: showError, warning: showWarning } = useToast();
   const t = useTranslations('common');
-
-  useEffect(() => {
-    latestProviderHandlers.t = t;
-    latestProviderHandlers.showError = showError;
-    latestProviderHandlers.showWarning = showWarning;
-  }, [showError, showWarning, t]);
 
   const [queryClient] = useState(() => new QueryClient({
     defaultOptions: {
@@ -40,24 +27,29 @@ export default function Providers({ children }: { children: React.ReactNode }) {
         },
       },
     },
-    queryCache: new QueryCache({
-      onError: (error) => {
-        console.error('Query error:', error);
-        if (error instanceof Error) {
-          const translate = latestProviderHandlers.t ?? t;
-          const showLatestError = latestProviderHandlers.showError ?? showError;
-          showLatestError(translate('fetchErrorTitle'), error.message);
-        }
-      },
-    }),
   }));
 
+  // Surface query errors via a cache subscription instead of a QueryCache
+  // `onError` closure captured at client-creation time. The effect re-runs when
+  // the translation/toast handlers change, so it always uses the current ones
+  // without resorting to refs read during render or module-level state.
+  useEffect(() => {
+    const unsubscribe = queryClient.getQueryCache().subscribe((event) => {
+      if (event.type === 'updated' && event.action.type === 'error') {
+        const error = event.action.error;
+        console.error('Query error:', error);
+        if (error instanceof Error) {
+          showError(t('fetchErrorTitle'), error.message);
+        }
+      }
+    });
+    return unsubscribe;
+  }, [queryClient, showError, t]);
+
   const handleSessionExpired = useCallback(() => {
-    const translate = latestProviderHandlers.t ?? t;
-    const showLatestWarning = latestProviderHandlers.showWarning ?? showWarning;
-    showLatestWarning(
-      translate('sessionExpiredTitle'),
-      translate('sessionExpiredDesc')
+    showWarning(
+      t('sessionExpiredTitle'),
+      t('sessionExpiredDesc')
     );
     queryClient.clear();
   }, [queryClient, showWarning, t]);

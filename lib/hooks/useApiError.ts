@@ -30,6 +30,9 @@ const ERROR_MESSAGES: Partial<Record<string, { title: string; description: strin
     [ErrorCode.FILE_STORAGE_ERROR]: { title: 'Dosya hatası', description: 'Dosya işlenirken bir hata oluştu' },
     [ErrorCode.ILLEGAL_USER_STATE]: { title: 'İşlem yapılamadı', description: 'Hesap bu işlem için uygun durumda değil' },
     [ErrorCode.ILLEGAL_APPLICATION_STATE]: { title: 'İşlem yapılamadı', description: 'Başvuru bu işlem için uygun durumda değil' },
+    [ErrorCode.INVALID_CREDENTIALS]: { title: 'Giriş başarısız', description: 'Geçersiz e-posta veya şifre' },
+    [ErrorCode.ACCOUNT_DEACTIVATED]: { title: 'Hesap devre dışı', description: 'Hesabınız devre dışı bırakılmış' },
+    [ErrorCode.APPLICATION_ALREADY_EXISTS]: { title: 'Başvuru mevcut', description: 'Bu projeye zaten başvurdunuz' },
     [ErrorCode.INTERNAL_ERROR]: { title: 'Sunucu hatası', description: 'Bir hata oluştu, lütfen daha sonra tekrar deneyin' },
 };
 

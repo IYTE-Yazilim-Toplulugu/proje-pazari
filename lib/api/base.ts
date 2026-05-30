@@ -358,7 +358,7 @@ export async function fetcherWithRetry<T extends z.ZodTypeAny>(
     try {
         return await fetcher(config.endpoint, config.dataSchema, config.signal);
     } catch (error) {
-        if (retries > 0 && error instanceof ApiError && error.code >= 500) {
+        if (retries > 0 && error instanceof ApiError && error.code === ResponseCodeSchema.enum.INTERNAL_SERVER_ERROR) {
             await new Promise(resolve => setTimeout(resolve, backoff));
             return fetcherWithRetry(config, retries - 1, backoff * 2);
         }

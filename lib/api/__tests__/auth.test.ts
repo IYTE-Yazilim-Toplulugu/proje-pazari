@@ -86,30 +86,36 @@ describe('Auth API Functions', () => {
   describe('resetPassword', () => {
     it('should call mutator with correct parameters', async () => {
       const token = 'reset-token-123';
-      const password = 'newPassword123';
+      const newPassword = 'newPassword123';
       const mockResponse = { success: true, message: 'Password reset' };
 
       (mutator as jest.Mock).mockResolvedValue(mockResponse);
 
-      const result = await resetPassword(token, password);
+      const result = await resetPassword(token, newPassword);
 
       expect(mutator).toHaveBeenCalledWith(
         '/api/v1/auth/reset-password',
         'post',
         expect.any(Object),
-        { arg: { token, password } }
+        { arg: { token, newPassword } }
+      );
+      expect(mutator).toHaveBeenCalledWith(
+        '/api/v1/auth/reset-password',
+        'post',
+        expect.any(Object),
+        { arg: expect.not.objectContaining({ confirmPassword: expect.anything() }) }
       );
       expect(result).toEqual(mockResponse);
     });
 
     it('should handle invalid token errors', async () => {
       const token = 'invalid-token';
-      const password = 'newPassword123';
+      const newPassword = 'newPassword123';
       const mockError = new Error('Invalid or expired token');
 
       (mutator as jest.Mock).mockRejectedValue(mockError);
 
-      await expect(resetPassword(token, password)).rejects.toThrow(
+      await expect(resetPassword(token, newPassword)).rejects.toThrow(
         'Invalid or expired token'
       );
     });
@@ -191,7 +197,7 @@ describe('Auth API Functions', () => {
         '/api/v1/auth/reset-password',
         'post',
         expect.any(Object),
-        { arg: { token, password: newPassword } }
+        { arg: { token, newPassword } }
       );
     });
 

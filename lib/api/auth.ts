@@ -38,8 +38,8 @@ export async function forgotPassword(email: string): Promise<apiModel.BasicRespo
 }
 
 /** [POST] /api/v1/auth/reset-password - Resets user password with token. */
-export async function resetPassword(token: string, password: string): Promise<apiModel.BasicResponse> {
+export async function resetPassword(token: string, newPassword: string): Promise<apiModel.BasicResponse> {
     return mutator('/api/v1/auth/reset-password', 'post', apiModel.BasicResponseSchema, {
-        arg: { token, password },
+        arg: { token, newPassword },
     });
 }

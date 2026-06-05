@@ -408,12 +408,14 @@ type MutatorOptions = {
  */
 export const mutator = async <T extends z.ZodTypeAny>(
     endpoint: string,
-    method: 'post' | 'put' | 'delete' | 'patch',
+    method: 'get' | 'post' | 'put' | 'delete' | 'patch',
     responseSchema: T,
     options: MutatorOptions,
     signal?: AbortSignal
 ): Promise<z.infer<T>> => {
-    const response = await http(endpoint, {
+    const response = await http(endpoint, method === 'get' ? {
+        method: 'GET',
+    } : {
         method: method.toUpperCase(),
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(options.arg),

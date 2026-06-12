@@ -9,6 +9,7 @@ import { loginAction, logoutAction } from '../auth/actions';
 import { userModel, apiModel, authModel } from "../models";
 import { auth, user } from '../api';
 import { ApiError } from '../api/base';
+import { useApiError } from './useApiError';
 
 
 // The query key for the main user session from our previous discussion
@@ -86,6 +87,29 @@ export const useLogout = () => {
         },
         onError: (error: Error) => {
             console.error('Logout failed:', error.message);
+        },
+    });
+};
+
+/**
+ * Hook to delete the authenticated user's account.
+ * On success, reuses the logout mutation to clear auth cookies, drop the
+ * cached session/user data, and perform a locale-aware redirect to login.
+ */
+export const useDeleteAccount = () => {
+    const queryClient = useQueryClient();
+    const logout = useLogout();
+    const { handleError } = useApiError();
+
+    return useMutation({
+        mutationFn: user.deleteUser,
+        onSuccess: async () => {
+            queryClient.clear();
+            await logout.mutateAsync();
+        },
+        onError: (error) => {
+            console.error('Account deletion failed:', error);
+            handleError(error);
         },
     });
 };

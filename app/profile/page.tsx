@@ -1,13 +1,14 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useSession } from '@/lib/hooks/authHooks';
+import { useSession, useDeleteAccount } from '@/lib/hooks/authHooks';
 import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import ProfileEditForm from '@/components/profile/ProfileEditForm';
 import ProfilePictureUpload from '@/components/profile/ProfilePictureUpload';
+import ConfirmDialog from '@/components/shared/ConfirmDialog';
 import Link from 'next/link';
 import { useLocale } from 'next-intl';
 import { user as userApi } from '@/lib/api';
@@ -18,6 +19,8 @@ export default function ProfilePage() {
   const locale = useLocale();
   const t = useTranslations('profile');
   const [isEditing, setIsEditing] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const deleteAccountMutation = useDeleteAccount();
 
   const { data: user, isLoading: isUserLoading } = useQuery({
     queryKey: ['currentUser'],
@@ -31,7 +34,7 @@ export default function ProfilePage() {
     if (!isAuthLoading && !authContext?.isAuthenticated) {
       router.push(`/${locale}/login`);
     }
-  }, [isAuthLoading, authContext, router]);
+  }, [isAuthLoading, authContext, router, locale]);
 
   if (isLoading) {
     return (
@@ -47,9 +50,6 @@ export default function ProfilePage() {
   if (!authContext?.isAuthenticated || !user) {
     return null;
   }
-
-  const displayName = (user.fullName ?? `${user.firstName ?? ''} ${user.lastName ?? ''}`.trim()) || user.email;
-  const avatarInitial = (user.firstName ?? user.email ?? '').charAt(0).toUpperCase();
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -188,7 +188,34 @@ export default function ProfilePage() {
             </Link>
           </div>
         </div>
+
+        {/* Danger Zone */}
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8 mt-6 border border-red-200 dark:border-red-900">
+          <h2 className="text-2xl font-bold text-red-600 dark:text-red-400 mb-2">
+            {t('deleteAccount.sectionTitle')}
+          </h2>
+          <p className="text-gray-600 dark:text-gray-400 mb-4">
+            {t('deleteAccount.description')}
+          </p>
+          <button
+            onClick={() => setShowDeleteDialog(true)}
+            disabled={deleteAccountMutation.isPending}
+            className="px-4 py-2 rounded-lg text-white bg-red-600 hover:bg-red-700 disabled:opacity-50"
+          >
+            {t('deleteAccount.button')}
+          </button>
+        </div>
       </div>
+
+      <ConfirmDialog
+        open={showDeleteDialog}
+        onOpenChange={setShowDeleteDialog}
+        title={t('deleteAccount.dialogTitle')}
+        description={t('deleteAccount.dialogDescription')}
+        onConfirm={() => deleteAccountMutation.mutate()}
+        confirmText={t('deleteAccount.confirmButton')}
+        variant="destructive"
+      />
     </div>
   );
 }

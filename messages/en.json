@@ -225,6 +225,14 @@
     "contact": "Contact Information",
     "social": "Social Links",
     "language": "Language Preference",
+    "deleteAccount": {
+      "sectionTitle": "Delete Account",
+      "description": "Deleting your account permanently removes all your data. This action cannot be undone.",
+      "button": "Delete My Account",
+      "dialogTitle": "Are you sure you want to delete your account?",
+      "dialogDescription": "This action cannot be undone. Your account and all data associated with it will be permanently deleted.",
+      "confirmButton": "Delete Account"
+    },
     "edit": {
       "name": "First Name",
       "surname": "Last Name",

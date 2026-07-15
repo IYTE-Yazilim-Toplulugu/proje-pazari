@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { fetcher, mutator } from './base';
+import { fetcher, mutator, formDataMutator } from './base';
 import { apiModel, userModel, MApplicationSchema } from '../models';
 
 // ============================================================================
@@ -30,6 +30,13 @@ export const listUsers = (params: { page?: number, pageSize?: number, sby?: stri
 /** [PUT] /api/v1/users/me - Updates the user profile. */
 export const updateUser = (payload: userModel.UpdateUserProfileCommand) =>
     mutator('/api/v1/users/me', 'put', apiModel.BasicResponseSchema, { arg: payload });
+
+/** [POST] /api/v1/users/me/profile-picture - Uploads a new profile picture for the authenticated user. */
+export const updateProfilePicture = (file: File) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    return formDataMutator('/api/v1/users/me/profile-picture', 'post', apiModel.BasicResponseSchema, { arg: formData });
+};
 
 // Response schema for GET /api/v1/users/me/applications
 const PagedApplicationsResponseSchema = z.object({

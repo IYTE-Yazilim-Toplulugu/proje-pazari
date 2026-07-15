@@ -120,8 +120,13 @@ export const useRegister = () => {
     const locale = useLocale();
     return useMutation({
         mutationFn: (payload: authModel.RegisterRequest) => auth.register(payload),
-        onSuccess: () => {
+        onSuccess: (result, variables) => {
             alert('Registration successful! Please check your email to verify your account.');
+            if (result.code === apiModel.ResponseCodeSchema.enum.REGISTERED_NEEDS_VERIFICATION) {
+                router.push(`/${locale}/register/complete?email=${encodeURIComponent(variables.email)}`);
+                return;
+            }
+
             router.push(`/${locale}/login`);
         },
     });

@@ -27,7 +27,7 @@ A modern Next.js frontend application for IYTE Project Marketplace, where studen
 - **State Management**: TanStack Query (React Query) v5
 - **Form Handling**: React Hook Form + Zod
 - **HTTP Client**: Native Fetch with custom wrapper
-- **Authentication**: JWT (httpOnly cookies)
+- **Authentication**: JWT (client-readable cookies via `js-cookie`) — cookies are intentionally **not** httpOnly so the client API layer can attach them as `Authorization` headers. In production the `secure` flag is enabled; real authorization is enforced by the backend.
 - **UI Components**: shadcn/ui (to be integrated)
 
 ## ⚙️ Prerequisites

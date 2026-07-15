@@ -13,7 +13,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { resetPassword } from '@/lib/api/auth';
 import { ApiError } from '@/lib/api/base';
-import { ResponseCodeSchema, type ResponseCode } from '@/lib/models/Api';
+import { ErrorCode } from '@/lib/models/Api';
 
 const createResetPasswordSchema = (t: (key: string) => string) => z.object({
     password: z.string().min(8, t('errors.passwordMin')),
@@ -25,10 +25,9 @@ const createResetPasswordSchema = (t: (key: string) => string) => z.object({
 
 type ResetPasswordForm = z.infer<ReturnType<typeof createResetPasswordSchema>>;
 
-const invalidTokenCodes: ResponseCode[] = [
-    ResponseCodeSchema.enum.BAD_REQUEST,
-    ResponseCodeSchema.enum.UNAUTHORIZED,
-    ResponseCodeSchema.enum.NOT_FOUND,
+const invalidTokenErrorCodes: string[] = [
+    ErrorCode.INVALID_VERIFICATION_TOKEN,
+    ErrorCode.VERIFICATION_TOKEN_EXPIRED,
 ];
 
 function isInvalidResetTokenError(error: unknown) {
@@ -36,7 +35,7 @@ function isInvalidResetTokenError(error: unknown) {
         return false;
     }
 
-    return invalidTokenCodes.includes(error.code);
+    return error.errorCode !== undefined && invalidTokenErrorCodes.includes(error.errorCode);
 }
 
 function ResetPasswordContent() {

@@ -93,14 +93,14 @@ export async function updateProjectStatus(projectId: string, status: ProjectStat
   );
 }
 
-/** [PATCH] /api/v1/applications/{applicationId}/review - Approve or reject an application. */
+/** [PUT] /api/v1/applications/{applicationId}/review - Approve or reject an application. */
 export async function updateProjectApplicationStatus(
   applicationId: string,
   status: Extract<ProjectApplicationStatus, 'APPROVED' | 'REJECTED'>,
 ) {
   return mutator(
     `/api/v1/applications/${applicationId}/review`,
-    'patch',
+    'put',
     apiModel.BasicResponseSchema,
     { arg: { status, reviewMessage: '' } },
   );

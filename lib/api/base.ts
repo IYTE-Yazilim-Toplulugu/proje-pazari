@@ -40,12 +40,20 @@ function rejectQueue(err: unknown) {
  */
 export class ApiError extends Error {
     readonly code: ResponseCode;
+    /** Stable, granular machine-readable error identifier — branch on this. */
+    readonly errorCode?: string;
     readonly details?: Record<string, number>;
 
-    constructor(message: string, code: ResponseCode, details?: Record<string, number>) {
+    constructor(
+        message: string,
+        code: ResponseCode,
+        errorCode?: string,
+        details?: Record<string, number>
+    ) {
         super(message);
         this.name = 'ApiError';
         this.code = code;
+        this.errorCode = errorCode;
         this.details = details;
     }
 }
@@ -63,19 +71,26 @@ export async function handleResponse<T extends z.ZodTypeAny>(
         const json = await response.json().catch(() => null);
         throw new ApiError(
             json?.message || `HTTP error! status: ${response.status}`,
-            json?.code ?? response.status
+            json?.code ?? response.status,
+            json?.errorCode
         );
     }
 
     const json = await response.json();
     const parsedResponse = BasicResponseSchema.parse(json);
 
-    const SUCCESS_CODES: ResponseCode[] =[ResponseCodeSchema.enum.SUCCESS, ResponseCodeSchema.enum.REGISTERED_NEEDS_VERIFY, ResponseCodeSchema.enum.EMAIL_SENT];
+    const SUCCESS_CODES: ResponseCode[] = [
+        ResponseCodeSchema.enum.SUCCESS,
+        ResponseCodeSchema.enum.CREATED,
+        ResponseCodeSchema.enum.REGISTERED_NEEDS_VERIFICATION,
+        ResponseCodeSchema.enum.EMAIL_SENT,
+    ];
     if (!SUCCESS_CODES.includes(parsedResponse.code)) {
         // Handle API-level errors defined by the `code` field
         throw new ApiError(
             parsedResponse.message || 'An API error occurred.',
             parsedResponse.code,
+            parsedResponse.errorCode,
             parsedResponse.codes
         );
     }
@@ -343,7 +358,7 @@ export async function fetcherWithRetry<T extends z.ZodTypeAny>(
     try {
         return await fetcher(config.endpoint, config.dataSchema, config.signal);
     } catch (error) {
-        if (retries > 0 && error instanceof ApiError && error.code >= 500) {
+        if (retries > 0 && error instanceof ApiError && error.code === ResponseCodeSchema.enum.INTERNAL_SERVER_ERROR) {
             await new Promise(resolve => setTimeout(resolve, backoff));
             return fetcherWithRetry(config, retries - 1, backoff * 2);
         }

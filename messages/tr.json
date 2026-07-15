@@ -225,6 +225,14 @@
     "contact": "İletişim Bilgileri",
     "social": "Sosyal Bağlantılar",
     "language": "Dil Tercihi",
+    "deleteAccount": {
+      "sectionTitle": "Hesabı Sil",
+      "description": "Hesabınızı sildiğinizde tüm verileriniz kalıcı olarak silinir. Bu işlem geri alınamaz.",
+      "button": "Hesabımı Sil",
+      "dialogTitle": "Hesabınızı silmek istediğinize emin misiniz?",
+      "dialogDescription": "Bu işlem geri alınamaz. Hesabınız ve hesabınızla ilişkili tüm veriler kalıcı olarak silinecektir.",
+      "confirmButton": "Hesabı Sil"
+    },
     "edit": {
       "name": "İsim",
       "surname": "Soyisim",
@@ -278,7 +286,9 @@
     "notAuthorized": "Bu sayfayı görüntüleme yetkiniz yok.",
     "verifyingAccess": "Erişim doğrulanıyor...",
     "loadingFeatures": "Özellik bayrakları yükleniyor...",
-    "errorFetching": "Özellikler alınırken hata oluştu: {message}"
+    "errorFetching": "Özellikler alınırken hata oluştu: {message}",
+    "featureUpdateErrorTitle": "Özellik bayrağı güncellenemedi",
+    "featureUpdateErrorDescription": "Lütfen özellik bayrağını tekrar güncellemeyi deneyin."
   },
   "apiStatus": {
     "title": "API Durumu",

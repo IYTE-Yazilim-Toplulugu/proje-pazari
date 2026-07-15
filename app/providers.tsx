@@ -7,6 +7,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { useTranslations } from 'next-intl';
 import { useToast } from '@/lib/hooks/useToast';
 import ApiStatus from '@/components/shared/ApiStatus';
+import { ResponseCodeSchema } from '@/lib/models/Api';
 
 type ErrorWithCode = Error & { code?: number };
 
@@ -32,7 +33,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
         retry: (failureCount, error) => {
           if (error instanceof Error && 'code' in error) {
             const code = (error as ErrorWithCode).code;
-            if (typeof code === 'number' && code >= 400 && code < 500) return false;
+            if (typeof code === 'number' && code >= ResponseCodeSchema.enum.BAD_REQUEST && code <= ResponseCodeSchema.enum.VALIDATION_ERROR) return false;
           }
           return failureCount < 2;
         },

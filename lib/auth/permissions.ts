@@ -10,6 +10,8 @@ import {
     RoleSchema
 } from "../models/Auth";
 
+// UI-only guards: hasPermission, hasRole, and hasAuthLevel control what the UI renders.
+// Actual authorization is enforced by the backend on every request.
 const rolePermissions: Record<Role, Permission[]> = {
     [RoleSchema.enum.Guest]: [],
     [RoleSchema.enum.USER]: [

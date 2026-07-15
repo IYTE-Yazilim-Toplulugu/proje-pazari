@@ -56,9 +56,9 @@ export const createUser = (payload: userModel.MUser) =>
 export const updateUserLanguage = (language: 'tr' | 'en') =>
     mutator(`/api/v1/users/me/language`, 'put', apiModel.BasicResponseSchema, { arg: { language } });
 
-/** [DELETE] /api/v1/users/:id - Deletes the user. (Durumu meçhul) */
-export const deleteUser = (id?: number) =>
-    mutator(`/api/v1/users/${id ?? 'me'}`, 'delete', apiModel.BasicResponseSchema, { arg: {} });
+/** [DELETE] /api/v1/users/me - Deletes the authenticated user. */
+export const deleteUser = () =>
+    mutator('/api/v1/users/me', 'delete', apiModel.BasicResponseSchema, { arg: {} });
 
 /** [POST] /api/v1/users/verify/phone - Verifies the new phone number. (Durumu meçhul) */
 export const verifyPhone = (code: string) =>

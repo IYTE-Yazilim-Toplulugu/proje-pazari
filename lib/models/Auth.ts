@@ -60,6 +60,7 @@ export const RegisterCompleteQuerySchema = z.object({
 * Use createRegisterFormSchema(t) for translated error messages.
 */
 export const RegisterFormSchema = RegisterRequestSchema.extend({
+    password: z.string(),
     passwordConfirm: z.string(),
 }).refine((data) => data.password === data.passwordConfirm, {
     message: "Passwords do not match",
@@ -107,4 +108,3 @@ export type LogoutRequest = z.infer<typeof LogoutRequestSchema>;
 export type RegisterRequest = z.infer<typeof RegisterRequestSchema>;
 export type RefreshTokenRequest = z.infer<typeof RefreshTokenRequestSchema>;
 export type RegisterForm = z.infer<typeof RegisterFormSchema>;
-

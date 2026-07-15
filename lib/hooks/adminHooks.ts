@@ -1,7 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useTranslations } from 'next-intl';
 
 import { admin } from '../api';
 import { adminModel } from '../models';
+import { useToast } from './useToast';
 
 // The key for caching and invalidating our features data
 const FEATURES_QUERY_KEY = ['features'];
@@ -24,6 +26,8 @@ export const useFeatures = () => {
  */
 export const useChangeFeature = () => {
     const queryClient = useQueryClient();
+    const t = useTranslations('admin');
+    const { error: showError } = useToast();
 
     return useMutation({
         mutationFn: (payload: adminModel.ChangeFeaturePayload) => admin.changeFeature(payload),
@@ -33,9 +37,13 @@ export const useChangeFeature = () => {
             queryClient.invalidateQueries({ queryKey: FEATURES_QUERY_KEY });
         },
         onError: (error) => {
-            // Optional: Add global error handling, like a toast notification
             console.error('Failed to change feature:', error);
+            showError(
+                t('featureUpdateErrorTitle'),
+                error instanceof Error && error.message
+                    ? error.message
+                    : t('featureUpdateErrorDescription'),
+            );
         },
     });
 };
-

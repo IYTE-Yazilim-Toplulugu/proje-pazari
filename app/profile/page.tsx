@@ -13,6 +13,7 @@ import ConfirmDialog from '@/components/shared/ConfirmDialog';
 import Link from 'next/link';
 import { useLocale } from 'next-intl';
 import { user as userApi } from '@/lib/api';
+import { resolveMediaUrl } from '@/lib/utils/media';
 
 export default function ProfilePage() {
   const { data: authContext, isLoading: isAuthLoading } = useSession();
@@ -55,6 +56,7 @@ export default function ProfilePage() {
 
   const displayName = (user.fullName ?? `${user.firstName ?? ''} ${user.lastName ?? ''}`.trim()) || user.email;
   const avatarInitial = (user.firstName ?? user.email ?? '').charAt(0).toUpperCase();
+  const profilePictureUrl = resolveMediaUrl(user.profilePictureUrl);
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -66,16 +68,16 @@ export default function ProfilePage() {
               {/* Profile Picture */}
               {isEditing ? (
                 <ProfilePictureUpload
-                  currentUrl={user.profilePictureUrl ?? undefined}
+                  currentUrl={profilePictureUrl}
                   onUpload={async (file) => {
                     await uploadProfilePictureMutation.mutateAsync(file);
                   }}
                 />
               ) : (
                 <div className="relative">
-                  {user.profilePictureUrl ? (
+                  {profilePictureUrl ? (
                     <Image
-                      src={user.profilePictureUrl}
+                      src={profilePictureUrl}
                       alt={user.fullName ?? ''}
                       width={120}
                       height={120}

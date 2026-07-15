@@ -5,11 +5,13 @@ import { useRouter } from 'next/navigation';
 
 import { user } from '../../api';
 import { logoutAction } from '../../auth/actions';
-import { useDeleteAccount } from '../authHooks';
+import { useDeleteAccount, useRegister } from '../authHooks';
 import { useApiError } from '../useApiError';
 
 jest.mock('../../api', () => ({
-    auth: {},
+    auth: {
+        register: jest.fn(),
+    },
     user: {
         getCurrentUser: jest.fn(),
         deleteUser: jest.fn(),
@@ -37,6 +39,7 @@ jest.mock('next-intl', () => ({
     useLocale: jest.fn(() => 'tr'),
 }));
 
+const registerMock = jest.requireMock('../../api').auth.register as jest.Mock;
 const deleteUserMock = user.deleteUser as jest.Mock;
 const logoutActionMock = logoutAction as jest.Mock;
 const useApiErrorMock = useApiError as jest.Mock;
@@ -103,5 +106,110 @@ describe('useDeleteAccount', () => {
         expect(clearSpy).not.toHaveBeenCalled();
         expect(logoutActionMock).not.toHaveBeenCalled();
         expect(push).not.toHaveBeenCalled();
+    });
+});
+
+describe('useRegister', () => {
+    const push = jest.fn();
+    const alertSpy = jest.spyOn(window, 'alert').mockImplementation(() => undefined);
+
+    beforeEach(() => {
+        jest.clearAllMocks();
+        useRouterMock.mockReturnValue({ push });
+    });
+
+    afterAll(() => {
+        alertSpy.mockRestore();
+    });
+
+    it('redirects to the email verification screen when the backend returns code 11', async () => {
+        const { wrapper } = createWrapper();
+        registerMock.mockResolvedValueOnce({
+            code: 11,
+            message: 'User registered successfully',
+            timestamp: '2026-07-15T00:00:00',
+        });
+
+        const { result } = renderHook(() => useRegister(), { wrapper });
+
+        await act(async () => {
+            await result.current.mutateAsync({
+                firstName: 'Ada',
+                lastName: 'Lovelace',
+                email: 'ada@std.iyte.edu.tr',
+                password: 'Password123!',
+            });
+        });
+
+        expect(registerMock).toHaveBeenCalledWith({
+            firstName: 'Ada',
+            lastName: 'Lovelace',
+            email: 'ada@std.iyte.edu.tr',
+            password: 'Password123!',
+        });
+        expect(alertSpy).toHaveBeenCalledWith(
+            'Registration successful! Please check your email to verify your account.'
+        );
+        expect(push).toHaveBeenCalledWith('/tr/register/complete?email=ada%40std.iyte.edu.tr');
+    });
+
+    it('treats code 2 as a normal successful registration and does not redirect to verification', async () => {
+        const { wrapper } = createWrapper();
+        registerMock.mockResolvedValueOnce({
+            code: 2,
+            message: 'Resource created successfully',
+            timestamp: '2026-07-15T00:00:00',
+        });
+
+        const { result } = renderHook(() => useRegister(), { wrapper });
+
+        await act(async () => {
+            await result.current.mutateAsync({
+                firstName: 'Ada',
+                lastName: 'Lovelace',
+                email: 'ada@std.iyte.edu.tr',
+                password: 'Password123!',
+            });
+        });
+
+        expect(registerMock).toHaveBeenCalledWith({
+            firstName: 'Ada',
+            lastName: 'Lovelace',
+            email: 'ada@std.iyte.edu.tr',
+            password: 'Password123!',
+        });
+        expect(alertSpy).toHaveBeenCalledWith(
+            'Registration successful! Please check your email to verify your account.'
+        );
+        expect(push).toHaveBeenCalledWith('/tr/login');
+        expect(push).not.toHaveBeenCalledWith(
+            expect.stringContaining('/register/complete')
+        );
+    });
+
+    it('preserves the existing error flow when registration fails', async () => {
+        const { wrapper } = createWrapper();
+        const error = new Error('Registration failed');
+        registerMock.mockRejectedValueOnce(error);
+
+        const { result } = renderHook(() => useRegister(), { wrapper });
+
+        await act(async () => {
+            await result.current.mutateAsync({
+                firstName: 'Ada',
+                lastName: 'Lovelace',
+                email: 'ada@std.iyte.edu.tr',
+                password: 'Password123!',
+            }).catch(() => undefined);
+        });
+
+        expect(registerMock).toHaveBeenCalledWith({
+            firstName: 'Ada',
+            lastName: 'Lovelace',
+            email: 'ada@std.iyte.edu.tr',
+            password: 'Password123!',
+        });
+        expect(push).not.toHaveBeenCalled();
+        expect(alertSpy).not.toHaveBeenCalled();
     });
 });

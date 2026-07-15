@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useSession, useDeleteAccount } from '@/lib/hooks/authHooks';
+import { useUploadProfilePicture } from '@/lib/hooks/userHooks';
 import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
@@ -21,6 +22,7 @@ export default function ProfilePage() {
   const [isEditing, setIsEditing] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const deleteAccountMutation = useDeleteAccount();
+  const uploadProfilePictureMutation = useUploadProfilePicture();
 
   const { data: user, isLoading: isUserLoading } = useQuery({
     queryKey: ['currentUser'],
@@ -66,7 +68,7 @@ export default function ProfilePage() {
                 <ProfilePictureUpload
                   currentUrl={user.profilePictureUrl ?? undefined}
                   onUpload={async (file) => {
-                    console.log('Uploading file:', file.name);
+                    await uploadProfilePictureMutation.mutateAsync(file);
                   }}
                 />
               ) : (

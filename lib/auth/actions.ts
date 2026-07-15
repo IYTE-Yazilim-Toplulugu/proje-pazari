@@ -3,6 +3,7 @@ import { cookies } from 'next/headers';
 
 import { auth } from '@/lib/api';
 import { authModel } from '@/lib/models';
+import { env } from '@/lib/env';
 
 const AUTH_TOKEN_KEY = 'authToken';
 const REFRESH_TOKEN_KEY = 'refreshToken';
@@ -43,15 +44,25 @@ export async function loginAction(data: authModel.LoginRequest) {
 export async function logoutAction() {
     const cookieStore = await cookies();
     const refreshToken = cookieStore.get(REFRESH_TOKEN_KEY)?.value;
+    const authToken = cookieStore.get(AUTH_TOKEN_KEY)?.value;
 
     try {
         if (refreshToken) {
-            await auth.logout({ refreshToken });
+            const url = `${env.NEXT_PUBLIC_API_BASE_URL}/api/v1/auth/logout`;
+            await fetch(url, {
+                method: 'POST',
+                headers: {
+                    Authorization: authToken ? `Bearer ${authToken}` : '',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ refreshToken }),
+                cache: 'no-store',
+            });
         }
     } catch (error: unknown) {
         console.error('Logout failed:', error instanceof Error ? error.message : error);
     } finally {
-        // Clear the cookie from the server
+        // Always clear cookies server-side, even if logout fails
         cookieStore.delete(AUTH_TOKEN_KEY);
         cookieStore.delete(REFRESH_TOKEN_KEY);
     }

@@ -39,7 +39,9 @@ export async function forgotPassword(email: string): Promise<apiModel.BasicRespo
 
 /** [POST] /api/v1/auth/reset-password - Resets user password with token. */
 export async function resetPassword(token: string, newPassword: string): Promise<apiModel.BasicResponse> {
+    // Backend currently expects confirmPassword until issue #136 is merged.
+    // Send both newPassword and confirmPassword for compatibility.
     return mutator('/api/v1/auth/reset-password', 'post', apiModel.BasicResponseSchema, {
-        arg: { token, newPassword },
+        arg: { token, newPassword, confirmPassword: newPassword },
     });
 }

@@ -97,13 +97,13 @@ describe('Auth API Functions', () => {
         '/api/v1/auth/reset-password',
         'post',
         expect.any(Object),
-        { arg: { token, newPassword } }
+        { arg: { token, newPassword, confirmPassword: newPassword } }
       );
-      expect(mutator).toHaveBeenCalledWith(
+      expect(mutator).not.toHaveBeenCalledWith(
         '/api/v1/auth/reset-password',
         'post',
         expect.any(Object),
-        { arg: expect.not.objectContaining({ confirmPassword: expect.anything() }) }
+        { arg: expect.objectContaining({ password: expect.anything() }) }
       );
       expect(result).toEqual(mockResponse);
     });
@@ -197,7 +197,7 @@ describe('Auth API Functions', () => {
         '/api/v1/auth/reset-password',
         'post',
         expect.any(Object),
-        { arg: { token, newPassword } }
+        { arg: { token, newPassword, confirmPassword: newPassword } }
       );
     });
 

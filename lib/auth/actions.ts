@@ -49,7 +49,7 @@ export async function logoutAction() {
     try {
         if (refreshToken) {
             const url = `${env.NEXT_PUBLIC_API_BASE_URL}/api/v1/auth/logout`;
-            await fetch(url, {
+            const response = await fetch(url, {
                 method: 'POST',
                 headers: {
                     Authorization: authToken ? `Bearer ${authToken}` : '',
@@ -58,6 +58,10 @@ export async function logoutAction() {
                 body: JSON.stringify({ refreshToken }),
                 cache: 'no-store',
             });
+
+            if (!response.ok) {
+                throw new Error(`Logout request failed with status ${response.status}`);
+            }
         }
     } catch (error: unknown) {
         console.error('Logout failed:', error instanceof Error ? error.message : error);

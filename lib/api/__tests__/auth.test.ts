@@ -97,14 +97,10 @@ describe('Auth API Functions', () => {
         '/api/v1/auth/reset-password',
         'post',
         expect.any(Object),
-        { arg: { token, newPassword, confirmPassword: newPassword } }
+        { arg: { token, newPassword } }
       );
-      expect(mutator).not.toHaveBeenCalledWith(
-        '/api/v1/auth/reset-password',
-        'post',
-        expect.any(Object),
-        { arg: expect.objectContaining({ password: expect.anything() }) }
-      );
+      const requestPayload = (mutator as jest.Mock).mock.calls[0][3].arg;
+      expect(requestPayload).not.toHaveProperty('confirmPassword');
       expect(result).toEqual(mockResponse);
     });
 
@@ -197,7 +193,7 @@ describe('Auth API Functions', () => {
         '/api/v1/auth/reset-password',
         'post',
         expect.any(Object),
-        { arg: { token, newPassword, confirmPassword: newPassword } }
+        { arg: { token, newPassword } }
       );
     });
 

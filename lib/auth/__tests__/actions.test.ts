@@ -1,6 +1,10 @@
-// Ensure env is set before importing modules that validate it
-process.env.NEXT_PUBLIC_API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8080';
-const { logoutAction } = require('../actions');
+import { logoutAction } from '../actions';
+
+jest.mock('@/lib/env', () => ({
+  env: {
+    NEXT_PUBLIC_API_BASE_URL: 'http://localhost:8080',
+  },
+}));
 
 const mockDelete = jest.fn();
 const mockGet = jest.fn((key: string) => {
@@ -21,8 +25,7 @@ describe('logoutAction', () => {
       get: mockGet,
       delete: mockDelete,
     });
-    // Ensure fetch is present
-    (global as any).fetch = jest.fn().mockResolvedValue({ ok: true });
+    (global as any).fetch = jest.fn().mockResolvedValue({ ok: true, status: 200 });
   });
 
   it('sends Authorization header and refreshToken in body, then clears cookies', async () => {
@@ -50,6 +53,23 @@ describe('logoutAction', () => {
     expect(mockDelete).toHaveBeenCalledWith('authToken');
     expect(mockDelete).toHaveBeenCalledWith('refreshToken');
     expect(consoleErrorSpy).toHaveBeenCalledWith('Logout failed:', 'fetch failed');
+
+    consoleErrorSpy.mockRestore();
+  });
+
+  it('still clears cookies when the backend responds with a non-ok status', async () => {
+    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+    (global as any).fetch = jest.fn().mockResolvedValueOnce({ ok: false, status: 500 });
+
+    await expect(logoutAction()).resolves.toBeUndefined();
+
+    expect((global as any).fetch).toHaveBeenCalledTimes(1);
+    expect(mockDelete).toHaveBeenCalledWith('authToken');
+    expect(mockDelete).toHaveBeenCalledWith('refreshToken');
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      'Logout failed:',
+      'Logout request failed with status 500'
+    );
 
     consoleErrorSpy.mockRestore();
   });

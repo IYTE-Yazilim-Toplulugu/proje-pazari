@@ -3,12 +3,13 @@ import { act, renderHook, waitFor } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import { user } from '../../api';
-import { useUpdateProfile } from '../userHooks';
+import { useUpdateProfile, useUploadProfilePicture } from '../userHooks';
 import { useApiError } from '../useApiError';
 
 jest.mock('../../api', () => ({
     user: {
         updateUser: jest.fn(),
+        updateProfilePicture: jest.fn(),
     },
 }));
 
@@ -17,6 +18,7 @@ jest.mock('../useApiError', () => ({
 }));
 
 const updateUserMock = user.updateUser as jest.Mock;
+const updateProfilePictureMock = user.updateProfilePicture as jest.Mock;
 const useApiErrorMock = useApiError as jest.Mock;
 
 const createWrapper = () => {
@@ -73,6 +75,49 @@ describe('useUpdateProfile', () => {
         await waitFor(() => {
             expect(handleError).toHaveBeenCalledWith(error);
         });
+        expect(invalidateSpy).not.toHaveBeenCalled();
+    });
+});
+
+describe('useUploadProfilePicture', () => {
+    const handleError = jest.fn();
+    const file = new File(['content'], 'avatar.png', { type: 'image/png' });
+
+    beforeEach(() => {
+        jest.clearAllMocks();
+        useApiErrorMock.mockReturnValue({ handleError });
+    });
+
+    it('invalidates the session and currentUser queries on success', async () => {
+        const { queryClient, wrapper } = createWrapper();
+        const invalidateSpy = jest.spyOn(queryClient, 'invalidateQueries');
+        updateProfilePictureMock.mockResolvedValueOnce({ code: 0, message: 'Profile picture updated successfully' });
+
+        const { result } = renderHook(() => useUploadProfilePicture(), { wrapper });
+
+        await act(async () => {
+            await result.current.mutateAsync(file);
+        });
+
+        expect(updateProfilePictureMock).toHaveBeenCalledWith(file, expect.anything());
+        expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: ['session'] });
+        expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: ['currentUser'] });
+        expect(handleError).not.toHaveBeenCalled();
+    });
+
+    it('surfaces the error via useApiError and rethrows when the upload fails', async () => {
+        const { queryClient, wrapper } = createWrapper();
+        const invalidateSpy = jest.spyOn(queryClient, 'invalidateQueries');
+        const error = new Error('Upload failed');
+        updateProfilePictureMock.mockRejectedValueOnce(error);
+
+        const { result } = renderHook(() => useUploadProfilePicture(), { wrapper });
+
+        await act(async () => {
+            await expect(result.current.mutateAsync(file)).rejects.toThrow('Upload failed');
+        });
+
+        expect(handleError).toHaveBeenCalledWith(error);
         expect(invalidateSpy).not.toHaveBeenCalled();
     });
 });

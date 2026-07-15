@@ -2,9 +2,14 @@ import { http, HttpResponse } from 'msw';
 
 const API_URL = 'http://localhost:3000/api/v1';
 
+type LoginRequestBody = {
+  email?: string;
+  password?: string;
+};
+
 export const handlers = [
   http.post(`${API_URL}/auth/login`, async ({ request }) => {
-    const body = (await request.json()) as any;
+    const body = (await request.json()) as LoginRequestBody;
 
     return HttpResponse.json({
       code: 200,

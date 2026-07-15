@@ -1,11 +1,11 @@
-import { useQueryClient } from '@tanstack/react-query';
+import { QueryKey, useQueryClient } from '@tanstack/react-query';
 
-export function useOptimisticUpdate<T>(queryKey: any[]) {
+export function useOptimisticUpdate<T>(queryKey: QueryKey) {
     const queryClient = useQueryClient();
 
     const updateOptimistically = (
         updater: (old: T | undefined) => T,
-            mutation: Promise<any>
+            mutation: Promise<unknown>
         ) => {
             //Snapshot previous value
             const previousData = queryClient.getQueryData<T>(queryKey);

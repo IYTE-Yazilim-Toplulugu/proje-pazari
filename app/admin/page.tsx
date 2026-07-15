@@ -48,7 +48,7 @@ export default function AdminPage() {
         if (!isAuthLoading && !hasPermission(PermissionSchema.enum.AdminPanel)) {
             router.replace(`/${locale}/login`);
         }
-    }, [isAuthLoading, hasPermission, router]);
+    }, [isAuthLoading, hasPermission, locale, router]);
 
     // 2. Data Fetching and Mutations
     const { data: features, isLoading: isFeaturesLoading, error } = useFeatures();

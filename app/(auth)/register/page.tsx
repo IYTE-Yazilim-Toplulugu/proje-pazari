@@ -26,8 +26,12 @@ export default function RegisterPage() {
     const passwordValue = useWatch({ control, name: 'password' });
 
     const onSubmit = (data: RegisterForm) => {
-        const { passwordConfirm, ...apiData } = data;
-        registerUser(apiData);
+        registerUser({
+            firstName: data.firstName,
+            lastName: data.lastName,
+            email: data.email,
+            password: data.password,
+        });
     };
 
     return (

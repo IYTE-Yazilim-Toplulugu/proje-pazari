@@ -1,7 +1,7 @@
 export function logRequest(
     method: string,
     url: string,
-    data?: any
+    data?: unknown
 ){
     if (process.env.NODE_ENV !== 'development') return ;
 
@@ -19,7 +19,7 @@ export function logResponse(
     method: string,
     url: string,
     status: number,
-    data?: any
+    data?: unknown
 ){
     if(process.env.NODE_ENV !== 'development') return;
 

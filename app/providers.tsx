@@ -1,9 +1,9 @@
 'use client';
 
-import { QueryClient, QueryClientProvider, QueryCache } from '@tanstack/react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { AuthProvider } from '@/lib/contexts/AuthContext';
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useTranslations } from 'next-intl';
 import { useToast } from '@/lib/hooks/useToast';
 import ApiStatus from '@/components/shared/ApiStatus';
@@ -14,10 +14,17 @@ type ErrorWithCode = Error & { code?: number };
 export default function Providers({ children }: { children: React.ReactNode }) {
   const { error: showError, warning: showWarning } = useToast();
   const t = useTranslations('common');
-  const tRef = useRef(t);
-  tRef.current = t;
-  const showWarningRef = useRef(showWarning);
-  showWarningRef.current = showWarning;
+
+  // useToast()/useTranslations() return fresh references on every render, so we
+  // read them through a ref (updated in an effect, never during render) instead
+  // of putting them in the deps below. That keeps the cache subscription and the
+  // session-expired listener registered exactly once — otherwise they would be
+  // torn down and re-added every render, and an `auth:session-expired` event
+  // arriving in that gap would be silently dropped.
+  const handlersRef = useRef({ t, showError, showWarning });
+  useEffect(() => {
+    handlersRef.current = { t, showError, showWarning };
+  }, [showError, showWarning, t]);
 
   const [queryClient] = useState(() => new QueryClient({
     defaultOptions: {
@@ -32,20 +39,30 @@ export default function Providers({ children }: { children: React.ReactNode }) {
         },
       },
     },
-    queryCache: new QueryCache({
-      onError: (error) => {
-        console.error('Query error:', error);
-        if (error instanceof Error) {
-          showError(tRef.current('fetchErrorTitle'), error.message);
-        }
-      },
-    }),
   }));
 
+  // Surface query errors via a cache subscription instead of a QueryCache
+  // `onError` closure captured at client-creation time. Reads the latest
+  // handlers from the ref so the subscription is set up only once.
+  useEffect(() => {
+    const unsubscribe = queryClient.getQueryCache().subscribe((event) => {
+      if (event.type === 'updated' && event.action.type === 'error') {
+        const error = event.action.error;
+        console.error('Query error:', error);
+        if (error instanceof Error) {
+          const { t: translate, showError: showLatestError } = handlersRef.current;
+          showLatestError(translate('fetchErrorTitle'), error.message);
+        }
+      }
+    });
+    return unsubscribe;
+  }, [queryClient]);
+
   const handleSessionExpired = useCallback(() => {
-    showWarningRef.current(
-      tRef.current('sessionExpiredTitle'),
-      tRef.current('sessionExpiredDesc')
+    const { t: translate, showWarning: showLatestWarning } = handlersRef.current;
+    showLatestWarning(
+      translate('sessionExpiredTitle'),
+      translate('sessionExpiredDesc')
     );
     queryClient.clear();
   }, [queryClient]);

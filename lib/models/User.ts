@@ -20,18 +20,19 @@ export const MUserSchema = z.object({
     projectsCreated: z.number().optional(),
     applicationsSubmitted: z.number().optional(),
     projects: z.array(MProject).optional(),
+    preferredLanguage: z.enum(['tr', 'en']).optional(),
     // Not returned by profile endpoint — populated from token if needed
     role: z.string().optional(),
 });
 
 export const UpdateUserProfileCommandSchema = z.object({
-    userId: z.string(),
+    userId: z.string().optional(),
     firstName: z.string().optional(),
     lastName: z.string().optional(),
     description: z.string().optional(),
     linkedinUrl: z.string().optional(),
     githubUrl: z.string().optional(),
-    preferredLanguage: z.string().optional(),
+    preferredLanguage: z.enum(['tr', 'en']).optional(),
 });
 
 export type MUser = z.infer<typeof MUserSchema>;

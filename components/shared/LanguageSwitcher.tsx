@@ -4,18 +4,45 @@ import { useLocale } from 'next-intl';
 import { locales } from '@/i18n-config';
 import type { Locale } from '@/i18n-config';
 import { setLocale } from '@/lib/actions/locale';
+import { updateUserLanguage } from '@/lib/api/user';
+import { useApiError } from '@/lib/hooks/useApiError';
+import { useQueryClient } from '@tanstack/react-query';
 import { useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 
-export default function LanguageSwitcher() {
+interface LanguageSwitcherProps {
+  disabled?: boolean;
+  persistPreference?: boolean;
+}
+
+export default function LanguageSwitcher({
+  disabled = false,
+  persistPreference = false,
+}: LanguageSwitcherProps) {
   const locale = useLocale();
   const router = useRouter();
+  const queryClient = useQueryClient();
+  const { handleError } = useApiError();
   const [isPending, startTransition] = useTransition();
 
   const switchLocale = (newLocale: Locale) => {
     startTransition(async () => {
-      await setLocale(newLocale);
-      router.refresh();
+      try {
+        if (persistPreference) {
+          await updateUserLanguage(newLocale);
+        }
+
+        await setLocale(newLocale);
+
+        if (persistPreference) {
+          void queryClient.invalidateQueries({ queryKey: ['session'] });
+          void queryClient.invalidateQueries({ queryKey: ['currentUser'] });
+        }
+
+        router.refresh();
+      } catch (error) {
+        handleError(error);
+      }
     });
   };
 
@@ -25,7 +52,7 @@ export default function LanguageSwitcher() {
         <button
           key={loc}
           onClick={() => switchLocale(loc)}
-          disabled={isPending || locale === loc}
+          disabled={disabled || isPending || locale === loc}
           className={`px-3 py-1 rounded transition-colors ${
             locale === loc 
               ? 'bg-[var(--color-btn-primary)] text-[var(--color-text-inverse)]' 

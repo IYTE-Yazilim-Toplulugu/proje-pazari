@@ -20,7 +20,10 @@ export const MUserSchema = z.object({
     projectsCreated: z.number().optional(),
     applicationsSubmitted: z.number().optional(),
     projects: z.array(MProject).optional(),
-    preferredLanguage: z.enum(['tr', 'en']).optional(),
+    // Nullable: the backend column is nullable, so rows that predate the default
+    // serialize as null. Unsupported values are dropped rather than failing the
+    // whole profile parse, which would take the session query down with it.
+    preferredLanguage: z.enum(['tr', 'en']).nullable().optional().catch(undefined),
     // Not returned by profile endpoint — populated from token if needed
     role: z.string().optional(),
 });

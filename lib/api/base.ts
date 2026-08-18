@@ -109,7 +109,14 @@ export async function handleResponse<T extends z.ZodTypeAny>(
  * @param options The original RequestInit object.
  * @returns A sanitized copy safe for logging.
  */
-const SENSITIVE_KEYS = new Set(['password', 'accessToken', 'refreshToken', 'token']);
+const SENSITIVE_KEYS = new Set([
+    'password',
+    'newPassword',
+    'confirmPassword',
+    'accessToken',
+    'refreshToken',
+    'token',
+]);
 
 function sanitizeForLog(options: RequestInit): Record<string, unknown> {
     // Shallow-clone the top-level options so we never mutate the original

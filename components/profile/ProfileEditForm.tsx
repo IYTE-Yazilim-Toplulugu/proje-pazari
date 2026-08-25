@@ -3,9 +3,7 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { useState } from 'react';
-import { useQueryClient } from '@tanstack/react-query';
-import { user as userApi } from '@/lib/api';
+import { useUpdateProfile } from '@/lib/hooks/userHooks';
 import type { userModel } from '@/lib/models';
 import { useTranslations } from 'next-intl';
 
@@ -24,9 +22,7 @@ interface ProfileEditFormProps {
 
 export default function ProfileEditForm({ user, onSave }: ProfileEditFormProps) {
   const t = useTranslations('profile.edit');
-  const [saving, setSaving] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const queryClient = useQueryClient();
+  const { mutateAsync: updateProfile, isPending: saving, error } = useUpdateProfile();
 
   const ProfileEditSchema = z.object({
     firstName: z.string().min(2, t("errors.nameMin")),
@@ -48,18 +44,12 @@ export default function ProfileEditForm({ user, onSave }: ProfileEditFormProps) 
   });
 
   const onSubmit = async (data: ProfileEditFormData) => {
-    setSaving(true);
-    setError(null);
     try {
-      await userApi.updateUser({ ...data, userId: user.id ?? '' });
-      queryClient.invalidateQueries({ queryKey: ['session'] });
-      queryClient.invalidateQueries({ queryKey: ['currentUser'] });
+      await updateProfile({ ...data, userId: user.id ?? '' });
       onSave();
-    } catch (err) {
-      console.error('Error updating profile:', err);
-      setError(err instanceof Error ? err.message : t("errors.updateError"));
-    } finally {
-      setSaving(false);
+    } catch {
+      // Error UI is driven by the mutation's `error` state; toast feedback
+      // is handled inside useUpdateProfile.
     }
   };
 
@@ -67,7 +57,7 @@ export default function ProfileEditForm({ user, onSave }: ProfileEditFormProps) 
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       {error && (
         <div className="p-4 bg-red-100 dark:bg-red-900/30 border border-red-400 dark:border-red-700 text-red-700 dark:text-red-300 rounded-lg">
-          {error}
+          {error.message || t("errors.updateError")}
         </div>
       )}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

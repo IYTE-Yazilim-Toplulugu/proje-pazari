@@ -1,5 +1,4 @@
-import { z } from 'zod';
-import { fetcher, mutator } from './base';
+import { mutator } from './base';
 import { apiModel, authModel } from '../models';
 
 // ============================================================================
@@ -44,9 +43,3 @@ export async function resetPassword(token: string, password: string): Promise<ap
         arg: { token, password },
     });
 }
-
-/**
- * [GET] /api/v1/auth/status - Returns if the user is authenticated.
- * NOTE: This endpoint is not yet implemented on the backend.
- * */
-export const getStatus = () => fetcher('/api/v1/auth/status', z.boolean());

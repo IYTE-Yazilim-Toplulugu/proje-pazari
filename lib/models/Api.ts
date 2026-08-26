@@ -104,7 +104,7 @@ export const TokenResponseSchema = DataResponseSchema(
         userId: z.string().optional(),
         email: z.string().optional(),
         role: z.string().optional(),
-        accessToken: z.string().optional(),
+        accessToken: z.string(),
         refreshToken: z.string().optional(),
     }),
 );
@@ -124,4 +124,5 @@ export type ResponseCode = z.infer<typeof ResponseCodeSchema>;
 export type ErrorCode = z.infer<typeof ErrorCodeSchema>;
 export type BasicResponse = z.infer<typeof BasicResponseSchema>;
 export type LoginResult = z.infer<typeof LoginResultSchema>;
+export type TokenResponse = z.infer<typeof TokenResponseSchema>;
 export type RefreshResult = z.infer<typeof RefreshResultSchema>;

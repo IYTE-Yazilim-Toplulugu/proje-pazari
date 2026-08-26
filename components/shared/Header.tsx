@@ -59,7 +59,10 @@ export default function Header() {
 
         {/* Right side */}
         <div className="flex items-center gap-3">
-          <LanguageSwitcher />
+          <LanguageSwitcher
+            disabled={isLoading}
+            persistPreference={session?.isAuthenticated === true}
+          />
 
           {isLoading ? (
             <div className="h-8 w-8 rounded-full bg-muted animate-pulse" />

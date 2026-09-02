@@ -1,4 +1,5 @@
 import {
+  login,
   forgotPassword,
   resetPassword,
   resendVerificationEmail,
@@ -15,6 +16,25 @@ describe('Auth API Functions', () => {
     jest.clearAllMocks();
   });
 
+  describe('login', () => {
+    it('should call mutator with the login endpoint', async () => {
+      const payload = { email: 'test@std.iyte.edu.tr', password: 'secret' };
+      const mockResponse = { code: 0 };
+
+      (mutator as jest.Mock).mockResolvedValue(mockResponse);
+
+      const result = await login(payload as never);
+
+      expect(mutator).toHaveBeenCalledWith(
+        '/api/v1/auth/login',
+        'post',
+        expect.any(Object),
+        { arg: payload }
+      );
+      expect(result).toEqual(mockResponse);
+    });
+  });
+
   describe('forgotPassword', () => {
     it('should call mutator with correct parameters', async () => {
       const email = 'test@std.iyte.edu.tr';
@@ -25,7 +45,7 @@ describe('Auth API Functions', () => {
       const result = await forgotPassword(email);
 
       expect(mutator).toHaveBeenCalledWith(
-        '/auth/forgot-password',
+        '/api/v1/auth/forgot-password',
         'post',
         expect.any(Object),
         { arg: { email } }
@@ -46,30 +66,32 @@ describe('Auth API Functions', () => {
   describe('resetPassword', () => {
     it('should call mutator with correct parameters', async () => {
       const token = 'reset-token-123';
-      const password = 'newPassword123';
+      const newPassword = 'newPassword123';
       const mockResponse = { success: true, message: 'Password reset' };
 
       (mutator as jest.Mock).mockResolvedValue(mockResponse);
 
-      const result = await resetPassword(token, password);
+      const result = await resetPassword(token, newPassword);
 
       expect(mutator).toHaveBeenCalledWith(
-        '/auth/reset-password',
+        '/api/v1/auth/reset-password',
         'post',
         expect.any(Object),
-        { arg: { token, password } }
+        { arg: { token, newPassword } }
       );
+      const requestPayload = (mutator as jest.Mock).mock.calls[0][3].arg;
+      expect(requestPayload).not.toHaveProperty('confirmPassword');
       expect(result).toEqual(mockResponse);
     });
 
     it('should handle invalid token errors', async () => {
       const token = 'invalid-token';
-      const password = 'newPassword123';
+      const newPassword = 'newPassword123';
       const mockError = new Error('Invalid or expired token');
 
       (mutator as jest.Mock).mockRejectedValue(mockError);
 
-      await expect(resetPassword(token, password)).rejects.toThrow(
+      await expect(resetPassword(token, newPassword)).rejects.toThrow(
         'Invalid or expired token'
       );
     });
@@ -85,7 +107,7 @@ describe('Auth API Functions', () => {
       const result = await resendVerificationEmail(email);
 
       expect(mutator).toHaveBeenCalledWith(
-        '/auth/resend-verification',
+        '/api/v1/auth/resend-verification',
         'post',
         expect.any(Object),
         { arg: { email } }
@@ -141,17 +163,17 @@ describe('Auth API Functions', () => {
       expect(mutator).toHaveBeenCalledTimes(2);
       expect(mutator).toHaveBeenNthCalledWith(
         1,
-        '/auth/forgot-password',
+        '/api/v1/auth/forgot-password',
         'post',
         expect.any(Object),
         { arg: { email } }
       );
       expect(mutator).toHaveBeenNthCalledWith(
         2,
-        '/auth/reset-password',
+        '/api/v1/auth/reset-password',
         'post',
         expect.any(Object),
-        { arg: { token, password: newPassword } }
+        { arg: { token, newPassword } }
       );
     });
 
@@ -176,7 +198,7 @@ describe('Auth API Functions', () => {
 
       expect(mutator).toHaveBeenCalledTimes(2);
       expect(mutator).toHaveBeenCalledWith(
-        '/auth/resend-verification',
+        '/api/v1/auth/resend-verification',
         'post',
         expect.any(Object),
         { arg: { email } }

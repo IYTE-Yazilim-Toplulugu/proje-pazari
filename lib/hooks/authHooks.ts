@@ -114,6 +114,86 @@ export const useDeleteAccount = () => {
     });
 };
 
+/**
+ * The outcome of an email-verification attempt.
+ *
+ * Every backend failure is mapped onto one of these instead of being surfaced as
+ * a thrown error — see `useVerifyEmail` for why.
+ */
+export type VerifyEmailStatus =
+    | 'success'
+    | 'invalidToken'
+    | 'expiredToken'
+    | 'alreadyVerified'
+    | 'error';
+
+function mapVerifyEmailError(error: unknown): VerifyEmailStatus {
+    if (error instanceof ApiError) {
+        switch (error.errorCode) {
+            case apiModel.ErrorCode.INVALID_VERIFICATION_TOKEN:
+                return 'invalidToken';
+            case apiModel.ErrorCode.VERIFICATION_TOKEN_EXPIRED:
+                return 'expiredToken';
+            case apiModel.ErrorCode.EMAIL_ALREADY_VERIFIED:
+                return 'alreadyVerified';
+        }
+    }
+
+    // Log the message only — never the token, which is not part of these errors.
+    console.error(
+        'Email verification failed:',
+        error instanceof Error ? error.message : 'Unknown error'
+    );
+    return 'error';
+}
+
+/**
+ * Hook that verifies an email address from a verification-link token.
+ *
+ * The query function deliberately never rejects: it resolves to a
+ * `VerifyEmailStatus` instead. Two reasons — the page renders a distinct state
+ * for each outcome rather than a generic error, and the global query-cache
+ * subscription in `app/providers.tsx` raises an error toast for any query that
+ * lands in an error state, which would stack a generic toast on top of the
+ * page's own message.
+ *
+ * React Query also dedupes in-flight requests per key, so React Strict Mode's
+ * double effect invocation in development still results in exactly one request.
+ *
+ * @param token The verification token from the URL, or null when absent.
+ */
+export const useVerifyEmail = (token: string | null) => {
+    return useQuery({
+        queryKey: ['verify-email', token],
+        enabled: Boolean(token),
+        queryFn: async (): Promise<VerifyEmailStatus> => {
+            try {
+                await user.verifyEmail(token as string);
+                return 'success';
+            } catch (error) {
+                return mapVerifyEmailError(error);
+            }
+        },
+        // A verification token is single-use: never retry it and never refetch it.
+        retry: false,
+        staleTime: Infinity,
+        gcTime: Infinity,
+        refetchOnMount: false,
+        refetchOnWindowFocus: false,
+        refetchOnReconnect: false,
+    });
+};
+
+/** Hook to request a fresh verification email for the given address. */
+export const useResendVerificationEmail = () => {
+    return useMutation({
+        mutationFn: (email: string) => auth.resendVerificationEmail(email),
+        onError: (error: Error) => {
+            console.error('Resending the verification email failed:', error.message);
+        },
+    });
+};
+
 /** Hook for user registration. */
 export const useRegister = () => {
     const router = useRouter();

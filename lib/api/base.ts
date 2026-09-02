@@ -109,7 +109,41 @@ export async function handleResponse<T extends z.ZodTypeAny>(
  * @param options The original RequestInit object.
  * @returns A sanitized copy safe for logging.
  */
-const SENSITIVE_KEYS = new Set(['password', 'accessToken', 'refreshToken', 'token']);
+const SENSITIVE_KEYS = new Set([
+    'password',
+    'newPassword',
+    'confirmPassword',
+    'accessToken',
+    'refreshToken',
+    'token',
+]);
+
+/**
+ * Redacts sensitive query parameters from a URL for safe console logging.
+ *
+ * Some endpoints take secrets in the query string (`/auth/verify-email?token=`,
+ * `/auth/refresh?refreshToken=`), so the URL needs the same treatment as the body.
+ *
+ * @param url The absolute or relative request URL.
+ * @returns The URL with sensitive query values replaced by "[REDACTED]".
+ */
+function sanitizeUrlForLog(url: string): string {
+    try {
+        const isRelative = !/^https?:\/\//i.test(url);
+        const parsed = new URL(url, 'http://relative.invalid');
+
+        for (const key of Array.from(parsed.searchParams.keys())) {
+            if (SENSITIVE_KEYS.has(key)) {
+                parsed.searchParams.set(key, '[REDACTED]');
+            }
+        }
+
+        return isRelative ? `${parsed.pathname}${parsed.search}` : parsed.toString();
+    } catch {
+        // Unparseable URL — drop the whole query string rather than risk a leak
+        return url.includes('?') ? `${url.split('?')[0]}?[REDACTED]` : url;
+    }
+}
 
 function sanitizeForLog(options: RequestInit): Record<string, unknown> {
     // Shallow-clone the top-level options so we never mutate the original
@@ -171,7 +205,7 @@ async function http(endpoint: string, options: RequestInit, signal?: AbortSignal
     // Add request/response logging in dev
     if (process.env.NODE_ENV === 'development') {
         console.group('API Request');
-        console.log('URL:', url);
+        console.log('URL:', sanitizeUrlForLog(url));
         console.log('Options:', sanitizeForLog(options));
         console.groupEnd();
     }
@@ -408,12 +442,14 @@ type MutatorOptions = {
  */
 export const mutator = async <T extends z.ZodTypeAny>(
     endpoint: string,
-    method: 'post' | 'put' | 'delete' | 'patch',
+    method: 'get' | 'post' | 'put' | 'delete' | 'patch',
     responseSchema: T,
     options: MutatorOptions,
     signal?: AbortSignal
 ): Promise<z.infer<T>> => {
-    const response = await http(endpoint, {
+    const response = await http(endpoint, method === 'get' ? {
+        method: 'GET',
+    } : {
         method: method.toUpperCase(),
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(options.arg),

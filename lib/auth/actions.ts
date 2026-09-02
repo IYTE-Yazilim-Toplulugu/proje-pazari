@@ -3,6 +3,7 @@ import { cookies } from 'next/headers';
 
 import { auth } from '@/lib/api';
 import { authModel } from '@/lib/models';
+import { env } from '@/lib/env';
 
 const AUTH_TOKEN_KEY = 'authToken';
 const REFRESH_TOKEN_KEY = 'refreshToken';
@@ -41,7 +42,39 @@ export async function loginAction(data: authModel.LoginRequest) {
 }
 
 export async function logoutAction() {
-    // Clear the cookie from the server
-    (await cookies()).delete(AUTH_TOKEN_KEY);
-    (await cookies()).delete(REFRESH_TOKEN_KEY);
+    const cookieStore = await cookies();
+    const refreshToken = cookieStore.get(REFRESH_TOKEN_KEY)?.value;
+    const authToken = cookieStore.get(AUTH_TOKEN_KEY)?.value;
+
+    try {
+        // The backend logout endpoint is `isAuthenticated()` and blacklists the access
+        // token it reads from the Authorization header, so both tokens are required —
+        // calling it without an access token could only ever return 401.
+        if (refreshToken && authToken) {
+            const url = `${env.NEXT_PUBLIC_API_BASE_URL}/api/v1/auth/logout`;
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    Authorization: `Bearer ${authToken}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ refreshToken }),
+                cache: 'no-store',
+            });
+
+            if (!response.ok) {
+                throw new Error(`Logout request failed with status ${response.status}`);
+            }
+        } else if (refreshToken) {
+            console.warn(
+                'Skipping backend logout: access token missing, refresh token cannot be revoked.'
+            );
+        }
+    } catch (error: unknown) {
+        console.error('Logout failed:', error instanceof Error ? error.message : error);
+    } finally {
+        // Always clear cookies server-side, even if logout fails
+        cookieStore.delete(AUTH_TOKEN_KEY);
+        cookieStore.delete(REFRESH_TOKEN_KEY);
+    }
 }

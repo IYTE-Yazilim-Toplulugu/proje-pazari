@@ -139,6 +139,33 @@
         "generic": "An error occurred. Please try again.",
         "invalidToken": "Reset link is invalid or has expired."
       }
+    },
+    "verifyEmail": {
+      "loading": "Verifying your email address...",
+      "successTitle": "Email Verified",
+      "successDesc": "Your account is now active. You can log in.",
+      "alreadyVerifiedTitle": "Email Already Verified",
+      "alreadyVerifiedDesc": "This address has already been verified. You can log in directly.",
+      "invalidTitle": "Verification Link Invalid",
+      "invalidDesc": "This link is invalid or has already been used. You can request a new verification email below.",
+      "expiredTitle": "Verification Link Expired",
+      "expiredDesc": "This link has expired. You can request a new verification email below.",
+      "tokenMissingTitle": "Verification Link Missing",
+      "tokenMissingDesc": "The link looks incomplete or malformed. Please open the link from your email again.",
+      "errorTitle": "Verification Could Not Be Completed",
+      "errorDesc": "An unexpected error occurred. Please try opening the link again.",
+      "goToLogin": "Log in",
+      "backToLogin": "Back to login",
+      "resend": {
+        "prompt": "Enter your email address to receive a new verification email:",
+        "emailLabel": "Email",
+        "emailPlaceholder": "you@std.iyte.edu.tr",
+        "submitBtn": "Send new verification email",
+        "sending": "Sending...",
+        "success": "Verification email sent. Please check your inbox.",
+        "invalidEmail": "Enter a valid email address.",
+        "error": "The email could not be sent. Please try again."
+      }
     }
   },
   "projects": {

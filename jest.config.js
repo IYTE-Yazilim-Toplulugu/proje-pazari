@@ -15,6 +15,9 @@ const customJestConfig = {
     '/.next/',
     '/lib/models/__test__/',
     '/lib/hooks/__test__/',
+    // Playwright specs — they import @playwright/test, which cannot load under
+    // jsdom. Run them with `npx playwright test`, not Jest.
+    '/tests/e2e/',
   ],
   collectCoverageFrom: [
     'app/**/*.{js,jsx,ts,tsx}',

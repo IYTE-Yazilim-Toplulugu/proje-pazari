@@ -47,12 +47,15 @@ export async function logoutAction() {
     const authToken = cookieStore.get(AUTH_TOKEN_KEY)?.value;
 
     try {
-        if (refreshToken) {
+        // The backend logout endpoint is `isAuthenticated()` and blacklists the access
+        // token it reads from the Authorization header, so both tokens are required —
+        // calling it without an access token could only ever return 401.
+        if (refreshToken && authToken) {
             const url = `${env.NEXT_PUBLIC_API_BASE_URL}/api/v1/auth/logout`;
             const response = await fetch(url, {
                 method: 'POST',
                 headers: {
-                    Authorization: authToken ? `Bearer ${authToken}` : '',
+                    Authorization: `Bearer ${authToken}`,
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({ refreshToken }),
@@ -62,6 +65,10 @@ export async function logoutAction() {
             if (!response.ok) {
                 throw new Error(`Logout request failed with status ${response.status}`);
             }
+        } else if (refreshToken) {
+            console.warn(
+                'Skipping backend logout: access token missing, refresh token cannot be revoked.'
+            );
         }
     } catch (error: unknown) {
         console.error('Logout failed:', error instanceof Error ? error.message : error);

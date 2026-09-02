@@ -26,9 +26,9 @@ export const resendVerificationEmail = (email: string) =>
 // DİKKAT: BACKEND'DE HENÜZ OLMAYANLAR! (Bunlar çağrılırsa 404 atar)
 // ============================================================================
 
-/** [POST] /api/v1/auth/logout - Deletes the specified session. */
-export const logout = (payload: authModel.LogoutRequest) =>
-    mutator('/api/v1/auth/logout', 'post', apiModel.BasicResponseSchema, { arg: payload });
+// NOTE: There is intentionally no `logout` helper here. The logout request must run
+// server-side (it is issued from the `logoutAction` server action), but `mutator`/`http`
+// reads the access token via js-cookie, which is browser-only. See `lib/auth/actions.ts`.
 
 /** [POST] /api/v1/auth/forgot-password - Sends password reset email. */
 export async function forgotPassword(email: string): Promise<apiModel.BasicResponse> {

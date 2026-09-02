@@ -1,6 +1,5 @@
 import {
   login,
-  logout,
   forgotPassword,
   resetPassword,
   resendVerificationEmail,
@@ -28,25 +27,6 @@ describe('Auth API Functions', () => {
 
       expect(mutator).toHaveBeenCalledWith(
         '/api/v1/auth/login',
-        'post',
-        expect.any(Object),
-        { arg: payload }
-      );
-      expect(result).toEqual(mockResponse);
-    });
-  });
-
-  describe('logout', () => {
-    it('should call mutator with the logout endpoint and refresh token payload', async () => {
-      const payload = { refreshToken: 'refresh-token-123' };
-      const mockResponse = { code: 0, message: 'Logged out' };
-
-      (mutator as jest.Mock).mockResolvedValue(mockResponse);
-
-      const result = await logout(payload);
-
-      expect(mutator).toHaveBeenCalledWith(
-        '/api/v1/auth/logout',
         'post',
         expect.any(Object),
         { arg: payload }

@@ -83,5 +83,25 @@ describe('logoutAction', () => {
     expect(mockDelete).toHaveBeenCalledWith('authToken');
     expect(mockDelete).toHaveBeenCalledWith('refreshToken');
   });
-});
 
+  it('skips the backend call when the access token is missing', async () => {
+    const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+    // logoutAction reads refreshToken first, then authToken
+    mockGet
+      .mockImplementationOnce(() => ({ value: 'refresh-token-123' }))
+      .mockImplementationOnce(() => undefined);
+
+    await logoutAction();
+
+    // The backend endpoint is isAuthenticated() and blacklists the access token from
+    // the Authorization header, so the request could only ever fail without one.
+    expect((global as any).fetch).not.toHaveBeenCalled();
+    expect(consoleWarnSpy).toHaveBeenCalledWith(
+      'Skipping backend logout: access token missing, refresh token cannot be revoked.'
+    );
+    expect(mockDelete).toHaveBeenCalledWith('authToken');
+    expect(mockDelete).toHaveBeenCalledWith('refreshToken');
+
+    consoleWarnSpy.mockRestore();
+  });
+});

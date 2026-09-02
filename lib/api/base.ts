@@ -118,6 +118,33 @@ const SENSITIVE_KEYS = new Set([
     'token',
 ]);
 
+/**
+ * Redacts sensitive query parameters from a URL for safe console logging.
+ *
+ * Some endpoints take secrets in the query string (`/auth/verify-email?token=`,
+ * `/auth/refresh?refreshToken=`), so the URL needs the same treatment as the body.
+ *
+ * @param url The absolute or relative request URL.
+ * @returns The URL with sensitive query values replaced by "[REDACTED]".
+ */
+function sanitizeUrlForLog(url: string): string {
+    try {
+        const isRelative = !/^https?:\/\//i.test(url);
+        const parsed = new URL(url, 'http://relative.invalid');
+
+        for (const key of Array.from(parsed.searchParams.keys())) {
+            if (SENSITIVE_KEYS.has(key)) {
+                parsed.searchParams.set(key, '[REDACTED]');
+            }
+        }
+
+        return isRelative ? `${parsed.pathname}${parsed.search}` : parsed.toString();
+    } catch {
+        // Unparseable URL — drop the whole query string rather than risk a leak
+        return url.includes('?') ? `${url.split('?')[0]}?[REDACTED]` : url;
+    }
+}
+
 function sanitizeForLog(options: RequestInit): Record<string, unknown> {
     // Shallow-clone the top-level options so we never mutate the original
     const sanitized: Record<string, unknown> = { ...options };
@@ -178,7 +205,7 @@ async function http(endpoint: string, options: RequestInit, signal?: AbortSignal
     // Add request/response logging in dev
     if (process.env.NODE_ENV === 'development') {
         console.group('API Request');
-        console.log('URL:', url);
+        console.log('URL:', sanitizeUrlForLog(url));
         console.log('Options:', sanitizeForLog(options));
         console.groupEnd();
     }

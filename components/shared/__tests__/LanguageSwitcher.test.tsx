@@ -120,4 +120,30 @@ describe('LanguageSwitcher', () => {
 
     expect(screen.getByRole('button', { name: 'EN' })).toBeDisabled();
   });
+  it('rolls back the saved preference and refreshes caches when setting the cookie fails', async () => {
+    const error = new Error('Cookie failed');
+    setLocaleMock.mockRejectedValueOnce(error);
+    const { invalidateQueries } = renderSwitcher({ persistPreference: true });
+    fireEvent.click(screen.getByRole('button', { name: 'EN' }));
+    await waitFor(() => expect(handleError).toHaveBeenCalledWith(error));
+    expect(updateUserLanguageMock).toHaveBeenNthCalledWith(2, 'tr');
+    expect(invalidateQueries).toHaveBeenCalledWith({ queryKey: ['session'] });
+    expect(invalidateQueries).toHaveBeenCalledWith({ queryKey: ['currentUser'] });
+    expect(refresh).toHaveBeenCalled();
+  });
+
+  it('surfaces rollback failure and still refreshes profile data', async () => {
+    const cookieError = new Error('Cookie failed');
+    const rollbackError = new Error('Rollback failed');
+    setLocaleMock.mockRejectedValueOnce(cookieError);
+    updateUserLanguageMock.mockResolvedValueOnce({ code: 0 }).mockRejectedValueOnce(rollbackError);
+    const { invalidateQueries } = renderSwitcher({ persistPreference: true });
+    fireEvent.click(screen.getByRole('button', { name: 'EN' }));
+    await waitFor(() => expect(handleError).toHaveBeenCalledWith(cookieError));
+    expect(handleError).toHaveBeenCalledWith(rollbackError);
+    expect(invalidateQueries).toHaveBeenCalledWith({ queryKey: ['session'] });
+    expect(invalidateQueries).toHaveBeenCalledWith({ queryKey: ['currentUser'] });
+    expect(refresh).toHaveBeenCalled();
+  });
+
 });

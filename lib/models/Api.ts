@@ -104,8 +104,8 @@ export const TokenResponseSchema = DataResponseSchema(
         userId: z.string().optional(),
         email: z.string().optional(),
         role: z.string().optional(),
-        accessToken: z.string(),
-        refreshToken: z.string().optional(),
+        accessToken: z.string().min(1),
+        refreshToken: z.string().min(1),
     }),
 );
 

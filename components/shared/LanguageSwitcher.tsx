@@ -6,8 +6,7 @@ import type { Locale } from '@/i18n-config';
 import { setLocale } from '@/lib/actions/locale';
 import { updateUserLanguage } from '@/lib/api/user';
 import { useApiError } from '@/lib/hooks/useApiError';
-import { useQueryClient } from '@tanstack/react-query';
-import { useTransition } from 'react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 
 interface LanguageSwitcherProps {
@@ -23,28 +22,46 @@ export default function LanguageSwitcher({
   const router = useRouter();
   const queryClient = useQueryClient();
   const { handleError } = useApiError();
-  const [isPending, startTransition] = useTransition();
-
-  const switchLocale = (newLocale: Locale) => {
-    startTransition(async () => {
-      try {
-        if (persistPreference) {
-          await updateUserLanguage(newLocale);
-        }
-
-        await setLocale(newLocale);
-
-        if (persistPreference) {
-          void queryClient.invalidateQueries({ queryKey: ['session'] });
-          void queryClient.invalidateQueries({ queryKey: ['currentUser'] });
-        }
-
-        router.refresh();
-      } catch (error) {
-        handleError(error);
-      }
-    });
+  const refreshProfile = async () => {
+    await Promise.all([
+      queryClient.invalidateQueries({ queryKey: ['session'] }),
+      queryClient.invalidateQueries({ queryKey: ['currentUser'] }),
+    ]);
   };
+
+  const { mutate: switchLocale, isPending } = useMutation({
+    retry: false,
+    mutationFn: async (newLocale: Locale) => {
+      if (persistPreference) {
+        await updateUserLanguage(newLocale);
+      }
+
+      try {
+        await setLocale(newLocale);
+      } catch (error) {
+        if (persistPreference) {
+          try {
+            // Restore the preference to the locale still displayed by the UI.
+            await updateUserLanguage(locale as Locale);
+          } catch (rollbackError) {
+            handleError(rollbackError);
+          } finally {
+            // Refetch even if rollback fails so cached profile data stays truthful.
+            await refreshProfile();
+            router.refresh();
+          }
+        }
+        throw error;
+      }
+    },
+    onSuccess: async () => {
+      if (persistPreference) {
+        await refreshProfile();
+      }
+      router.refresh();
+    },
+    onError: (error) => handleError(error),
+  });
 
   return (
     <div className="flex gap-2">

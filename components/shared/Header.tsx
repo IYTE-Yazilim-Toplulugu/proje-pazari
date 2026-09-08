@@ -20,7 +20,7 @@ import LanguageSwitcher from '@/components/shared/LanguageSwitcher';
 export default function Header() {
   const t = useTranslations('nav');
   const tProfile = useTranslations('profile');
-  const { data: session, isLoading } = useSession();
+  const { data: session, isLoading, isError } = useSession();
   const { mutate: logout } = useLogout();
   const router = useRouter();
 
@@ -60,7 +60,7 @@ export default function Header() {
         {/* Right side */}
         <div className="flex items-center gap-3">
           <LanguageSwitcher
-            disabled={isLoading}
+            disabled={isLoading || isError || !session}
             persistPreference={session?.isAuthenticated === true}
           />
 

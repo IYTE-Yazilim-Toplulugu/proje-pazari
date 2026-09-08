@@ -30,3 +30,11 @@ describe('TokenResponseSchema', () => {
     expect(TokenResponseSchema.safeParse(responseWithoutAccessToken).success).toBe(false);
   });
 });
+
+it.each(['accessToken', 'refreshToken'])('rejects missing or empty %s', (field) => {
+  for (const value of [undefined, '']) {
+    expect(TokenResponseSchema.safeParse({code: 0, data: {
+      accessToken: 'access', refreshToken: 'refresh', [field]: value,
+    }}).success).toBe(false);
+  }
+});

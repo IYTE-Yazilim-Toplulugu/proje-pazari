@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { fetcher, mutator } from './base';
-import { MProject, MProjectListResponse, MApplicationSchema, MSearchProjectResult, mapSearchResultToProject } from '@/lib/models';
+import { MProject, MProjectListResponse, MApplicationSchema } from '@/lib/models';
 import { apiModel } from '@/lib/models';
 import type { Project, ProjectListResponse, ProjectApplicationStatus, ProjectStatus } from '@/lib/models';
 
@@ -40,19 +40,10 @@ export async function searchProjects(keyword: string, params?: GetProjectsParams
   if (params?.page !== undefined) queryParams.append('page', params.page.toString());
   if (params?.size !== undefined) queryParams.append('size', params.size.toString());
 
-  // Search endpoint returns a flat array with a different project shape than the list endpoint.
-  // We map it to the standard ProjectListResponse so callers don't need to know the difference.
-  const results = await fetcher(
+  return fetcher(
     `/api/v1/search/projects?${queryParams.toString()}`,
-    z.array(MSearchProjectResult),
+    MProjectListResponse,
   );
-
-  return {
-    projects: results.map(mapSearchResultToProject),
-    currentPage: params?.page ?? 0,
-    totalPages: 1,
-    totalElements: results.length,
-  };
 }
 
 /** [POST] /api/v1/projects/{projectId}/applications - Apply to a project. No request body needed. */

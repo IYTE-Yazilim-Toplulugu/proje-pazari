@@ -25,7 +25,7 @@ export default defineConfig({
       use: {
         ...devices['Desktop Chrome'],
       },
-      testMatch: /auth\.spec\.ts/,
+      testMatch: /(auth|verify-email)\.spec\.ts/,
     },
     {
       name: 'chromium-authenticated',

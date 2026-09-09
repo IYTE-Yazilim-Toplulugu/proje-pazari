@@ -64,6 +64,6 @@ export const deleteUser = () =>
 export const verifyPhone = (code: string) =>
     mutator(`/api/v1/users/verify/phone?code=${code}`, 'post', apiModel.BasicResponseSchema, { arg: {} });
 
-/** [POST] /api/v1/users/verify/email - Verifies the new email. (Durumu meçhul) */
-export const verifyEmail = (code: string) =>
-    mutator(`/api/v1/users/verify/email?code=${code}`, 'post', apiModel.BasicResponseSchema, { arg: {} });
+/** [GET] /api/v1/auth/verify-email - Verifies the email using a token. */
+export const verifyEmail = (token: string) =>
+    mutator(`/api/v1/auth/verify-email?token=${encodeURIComponent(token)}`, 'get', apiModel.BasicResponseSchema, { arg: {} });

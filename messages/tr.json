@@ -139,6 +139,33 @@
         "generic": "Bir hata oluştu. Lütfen tekrar deneyin.",
         "invalidToken": "Sıfırlama bağlantısı geçersiz veya süresi dolmuş."
       }
+    },
+    "verifyEmail": {
+      "loading": "E-posta adresiniz doğrulanıyor...",
+      "successTitle": "E-postanız Doğrulandı",
+      "successDesc": "Hesabınız etkinleştirildi. Artık giriş yapabilirsiniz.",
+      "alreadyVerifiedTitle": "E-postanız Zaten Doğrulanmış",
+      "alreadyVerifiedDesc": "Bu adres daha önce doğrulanmış. Doğrudan giriş yapabilirsiniz.",
+      "invalidTitle": "Doğrulama Bağlantısı Geçersiz",
+      "invalidDesc": "Bu bağlantı geçersiz veya daha önce kullanılmış. Aşağıdan yeni bir doğrulama e-postası isteyebilirsiniz.",
+      "expiredTitle": "Doğrulama Bağlantısının Süresi Doldu",
+      "expiredDesc": "Bu bağlantının süresi dolmuş. Aşağıdan yeni bir doğrulama e-postası isteyebilirsiniz.",
+      "tokenMissingTitle": "Doğrulama Bağlantısı Eksik",
+      "tokenMissingDesc": "Bağlantı eksik veya hatalı görünüyor. Lütfen e-postanızdaki bağlantıyı tekrar kullanın.",
+      "errorTitle": "Doğrulama Tamamlanamadı",
+      "errorDesc": "Beklenmeyen bir hata oluştu. Lütfen bağlantıyı tekrar açmayı deneyin.",
+      "goToLogin": "Giriş yap",
+      "backToLogin": "Giriş sayfasına dön",
+      "resend": {
+        "prompt": "Yeni bir doğrulama e-postası almak için e-posta adresinizi girin:",
+        "emailLabel": "E-posta",
+        "emailPlaceholder": "ornek@std.iyte.edu.tr",
+        "submitBtn": "Yeni doğrulama e-postası gönder",
+        "sending": "Gönderiliyor...",
+        "success": "Doğrulama e-postası gönderildi. Lütfen gelen kutunuzu kontrol edin.",
+        "invalidEmail": "Geçerli bir e-posta adresi girin.",
+        "error": "E-posta gönderilemedi. Lütfen tekrar deneyin."
+      }
     }
   },
   "projects": {

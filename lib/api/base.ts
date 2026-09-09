@@ -289,26 +289,28 @@ async function http(endpoint: string, options: RequestInit, signal?: AbortSignal
                 refreshToken: currentRefreshToken,
             });
 
-            if (refreshResponse.data?.accessToken && refreshResponse.data?.refreshToken) {
-                // 5. Store the new tokens using js-cookie for client-side access
-                Cookies.set('authToken', refreshResponse.data.accessToken, {
-                    path: '/',
-                    expires: AUTH_COOKIE_EXPIRES_DAYS,
-                    sameSite: 'lax',
-                    secure: process.env.NODE_ENV === 'production',
-                });
-                Cookies.set('refreshToken', refreshResponse.data.refreshToken, {
-                    path: '/',
-                    expires: AUTH_COOKIE_EXPIRES_DAYS,
-                    sameSite: 'lax',
-                    secure: process.env.NODE_ENV === 'production',
-                });
-
-                console.log('Token refreshed successfully. Retrying original request...');
-                drainQueue(refreshResponse.data.accessToken);
-                // 6. Retry the original request with the new token
-                response = await makeRequest(refreshResponse.data.accessToken);
+            if (!refreshResponse.data?.accessToken || !refreshResponse.data?.refreshToken) {
+                throw new Error('Refresh response is missing tokens');
             }
+
+            // 5. Store the new tokens using js-cookie for client-side access
+            Cookies.set('authToken', refreshResponse.data.accessToken, {
+                path: '/',
+                expires: AUTH_COOKIE_EXPIRES_DAYS,
+                sameSite: 'lax',
+                secure: process.env.NODE_ENV === 'production',
+            });
+            Cookies.set('refreshToken', refreshResponse.data.refreshToken, {
+                path: '/',
+                expires: AUTH_COOKIE_EXPIRES_DAYS,
+                sameSite: 'lax',
+                secure: process.env.NODE_ENV === 'production',
+            });
+
+            console.log('Token refreshed successfully. Retrying original request...');
+            drainQueue(refreshResponse.data.accessToken);
+            // 6. Retry the original request with the new token
+            response = await makeRequest(refreshResponse.data.accessToken);
         } catch (error) {
             console.error('Failed to refresh token. Logging out.', error);
             rejectQueue(error);

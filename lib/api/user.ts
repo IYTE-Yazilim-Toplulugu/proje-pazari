@@ -31,6 +31,10 @@ export const listUsers = (params: { page?: number, pageSize?: number, sby?: stri
 export const updateUser = (payload: userModel.UpdateUserProfileCommand) =>
     mutator('/api/v1/users/me', 'put', apiModel.BasicResponseSchema, { arg: payload });
 
+/** Updates the authenticated user's persisted language preference. */
+export const updateUserLanguage = (preferredLanguage: 'tr' | 'en') =>
+    updateUser({ preferredLanguage });
+
 // Response schema for GET /api/v1/users/me/applications
 const PagedApplicationsResponseSchema = z.object({
     applications: z.array(MApplicationSchema),
@@ -51,10 +55,6 @@ export const getMyApplications = () =>
 /** [POST] /api/v1/users - Creates a new user manually. (TABLODA 'NO SUCH ENDPOINT' DİYOR) */
 export const createUser = (payload: userModel.MUser) =>
     mutator('/api/v1/users', 'post', apiModel.DataResponseSchema(z.number()), { arg: payload });
-
-/** [PUT] /api/v1/users/me/language - Updates the user's language. (TABLODA 'NO SUCH ENDPOINT' DİYOR) */
-export const updateUserLanguage = (language: 'tr' | 'en') =>
-    mutator(`/api/v1/users/me/language`, 'put', apiModel.BasicResponseSchema, { arg: { language } });
 
 /** [DELETE] /api/v1/users/me - Deletes the authenticated user. */
 export const deleteUser = () =>

@@ -1,4 +1,4 @@
-import { deleteUser, verifyEmail } from '../user';
+import { deleteUser, updateUserLanguage, verifyEmail } from '../user';
 import { mutator } from '../base';
 
 jest.mock('../base', () => ({
@@ -51,6 +51,23 @@ describe('User API Functions', () => {
         'delete',
         expect.any(Object),
         { arg: {} },
+      );
+      expect(result).toBe(response);
+    });
+  });
+
+  describe('updateUserLanguage', () => {
+    it('updates preferredLanguage through the profile endpoint', async () => {
+      const response = { code: 0, message: 'Profile updated successfully' };
+      (mutator as jest.Mock).mockResolvedValue(response);
+
+      const result = await updateUserLanguage('en');
+
+      expect(mutator).toHaveBeenCalledWith(
+        '/api/v1/users/me',
+        'put',
+        expect.any(Object),
+        { arg: { preferredLanguage: 'en' } },
       );
       expect(result).toBe(response);
     });

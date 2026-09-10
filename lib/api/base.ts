@@ -116,6 +116,7 @@ const SENSITIVE_KEYS = new Set([
     'accessToken',
     'refreshToken',
     'token',
+    'body',
 ]);
 
 /**

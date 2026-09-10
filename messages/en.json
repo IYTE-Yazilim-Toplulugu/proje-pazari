@@ -230,7 +230,21 @@
       "empty": "No applications yet.",
       "approve": "Approve",
       "reject": "Reject",
-      "noMessage": "No application message."
+      "noMessage": "No application message.",
+      "chat": {
+        "title": "Application messages",
+        "loading": "Loading messages...",
+        "empty": "No messages yet.",
+        "loadError": "Messages could not be loaded.",
+        "retry": "Try again",
+        "you": "You",
+        "participant": "Participant",
+        "inputLabel": "Message",
+        "characterCount": "{count}/2000",
+        "send": "Send",
+        "sending": "Sending...",
+        "sendError": "Message could not be sent. Please try again."
+      }
     }
   },
   "profile": {

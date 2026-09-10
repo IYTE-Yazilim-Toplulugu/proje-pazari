@@ -230,7 +230,21 @@
       "empty": "Henüz hiç başvuru bulunmuyor.",
       "approve": "Onayla",
       "reject": "Reddet",
-      "noMessage": "Başvuru mesajı yok."
+      "noMessage": "Başvuru mesajı yok.",
+      "chat": {
+        "title": "Başvuru mesajları",
+        "loading": "Mesajlar yükleniyor...",
+        "empty": "Henüz mesaj yok.",
+        "loadError": "Mesajlar yüklenemedi.",
+        "retry": "Tekrar dene",
+        "you": "Siz",
+        "participant": "Katılımcı",
+        "inputLabel": "Mesaj",
+        "characterCount": "{count}/2000",
+        "send": "Gönder",
+        "sending": "Gönderiliyor...",
+        "sendError": "Mesaj gönderilemedi. Lütfen tekrar deneyin."
+      }
     }
   },
   "profile": {

@@ -63,6 +63,10 @@ describe('dev request logging', () => {
 
   const loggedUrl = () =>
     logSpy.mock.calls.find(([label]) => label === 'URL:')?.[1] as string | undefined;
+  const loggedOptions = () =>
+    logSpy.mock.calls.find(([label]) => label === 'Options:')?.[1] as
+      | Record<string, unknown>
+      | undefined;
 
   it('redacts the token query parameter from the logged URL', async () => {
     await mutator(
@@ -104,5 +108,21 @@ describe('dev request logging', () => {
 
     expect(loggedUrl()).toContain('page=2');
     expect(loggedUrl()).toContain('size=20');
+  });
+
+  it('redacts application message bodies from logs without changing the request', async () => {
+    const body = 'private application message';
+
+    await mutator(
+      '/api/v1/applications/application-1/messages',
+      'post',
+      BasicResponseSchema,
+      { arg: { body } },
+    );
+
+    expect(JSON.stringify(loggedOptions())).not.toContain(body);
+    expect(JSON.stringify(loggedOptions())).toContain('[REDACTED]');
+    const requestOptions = (global.fetch as jest.Mock).mock.calls[0][1] as RequestInit;
+    expect(requestOptions.body).toContain(body);
   });
 });

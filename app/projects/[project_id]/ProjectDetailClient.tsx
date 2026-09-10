@@ -54,7 +54,7 @@ export default function ProjectDetailClient({ projectId }: ProjectDetailClientPr
   const projectSchema = {
     '@context': 'https://schema.org',
     '@type': 'CreativeWork',
-    name: project.title,
+    name: project.projectName,
     description: project.description,
     author: { '@type': 'Person', name: project.ownerName },
     dateCreated: project.createdAt,
@@ -84,7 +84,7 @@ export default function ProjectDetailClient({ projectId }: ProjectDetailClientPr
 
           <div className="mb-6 rounded-lg bg-white p-8 shadow-md dark:bg-gray-800">
             <div className="mb-6 flex items-start justify-between">
-              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{project.title}</h1>
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{project.projectName}</h1>
               <span className="rounded-full bg-[var(--color-primary)] px-3 py-1 text-sm font-medium text-white">
                 {t(`status.${project.status}`)}
               </span>

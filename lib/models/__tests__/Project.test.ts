@@ -4,11 +4,11 @@ describe('MProjectListResponse', () => {
   const projectPage = {
     projects: [
       {
-        id: 'project-123',
+        projectId: 'project-123',
         ownerId: 'owner-123',
         ownerName: 'Ada Lovelace',
         ownerEmail: 'ada@std.iyte.edu.tr',
-        title: 'Searchable Project',
+        projectName: 'Searchable Project',
         description: 'A project returned by search.',
         applicationCount: 7,
         status: 'OPEN',
@@ -24,10 +24,14 @@ describe('MProjectListResponse', () => {
     const parsed = MProjectListResponse.parse(projectPage);
 
     expect(parsed.projects[0]).toMatchObject({
+      projectId: 'project-123',
+      projectName: 'Searchable Project',
       ownerId: 'owner-123',
       ownerName: 'Ada Lovelace',
       applicationCount: 7,
     });
+    expect(parsed.projects[0]).not.toHaveProperty('id');
+    expect(parsed.projects[0]).not.toHaveProperty('title');
     expect(parsed).toMatchObject({
       currentPage: 1,
       totalPages: 3,

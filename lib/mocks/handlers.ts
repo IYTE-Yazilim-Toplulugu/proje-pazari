@@ -34,8 +34,8 @@ export const handlers = [
       data: {
         projects: [
           {
-            id: 1,
-            title: 'Campus Navigation App',
+            projectId: '1',
+            projectName: 'Campus Navigation App',
             description: 'A mobile application helping students find classrooms.',
             tags: ['React Native', 'Java', 'Maps'],
             status: 'OPEN',
@@ -43,8 +43,8 @@ export const handlers = [
             created_at: new Date().toISOString(),
           },
           {
-            id: 2,
-            title: 'Refectory Menu Bot',
+            projectId: '2',
+            projectName: 'Refectory Menu Bot',
             description: 'Telegram bot that sends daily lunch menus.',
             tags: ['Python', 'Telegram API'],
             status: 'OPEN',
@@ -66,8 +66,8 @@ export const handlers = [
       code: 200,
       message: 'Project details retrieved successfully',
       data: {
-        id: Number(id),
-        title: `Mock Project Details ${id}`,
+        projectId: id,
+        projectName: `Mock Project Details ${id}`,
         description: 'This is a detailed description for testing purposes. It simulates a full project page content.',
         tags: ['Mock', 'Test', 'Education'],
         status: 'OPEN',

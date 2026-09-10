@@ -1,9 +1,19 @@
 import { MUserSchema, UpdateUserProfileCommandSchema } from '../User';
 
-describe('user language schemas', () => {
+describe('user profile schemas', () => {
+  it('retains the canonical userId returned by the profile endpoint', () => {
+    const profile = MUserSchema.parse({
+      userId: 'user-123',
+      email: 'user@std.iyte.edu.tr',
+    });
+
+    expect(profile.userId).toBe('user-123');
+    expect(profile).not.toHaveProperty('id');
+  });
+
   it('retains the preferred language returned by the profile endpoint', () => {
     const profile = MUserSchema.parse({
-      id: 'user-123',
+      userId: 'user-123',
       email: 'user@std.iyte.edu.tr',
       preferredLanguage: 'en',
     });
@@ -13,7 +23,7 @@ describe('user language schemas', () => {
 
   it('parses a profile whose preferred language is null', () => {
     const profile = MUserSchema.parse({
-      id: 'user-123',
+      userId: 'user-123',
       email: 'user@std.iyte.edu.tr',
       preferredLanguage: null,
     });
@@ -23,7 +33,7 @@ describe('user language schemas', () => {
 
   it('drops an unsupported preferred language instead of failing the profile', () => {
     const profile = MUserSchema.parse({
-      id: 'user-123',
+      userId: 'user-123',
       email: 'user@std.iyte.edu.tr',
       preferredLanguage: 'en-US',
     });

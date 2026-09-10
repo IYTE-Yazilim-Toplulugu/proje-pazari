@@ -7,7 +7,7 @@ import { MProject } from './Project';
  * `role` is optional — it comes from the token (RefreshTokenResult), not the profile endpoint.
  */
 export const MUserSchema = z.object({
-    id: z.string().optional(),
+    userId: z.string().optional(),
     email: z.string().optional(),
     firstName: z.string().optional(),
     lastName: z.string().optional(),

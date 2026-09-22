@@ -55,10 +55,10 @@ describe('Project API functions', () => {
       const response = {
         projects: [
           {
-            id: 'project-123',
+            projectId: 'project-123',
             ownerId: 'owner-123',
             ownerName: 'Ada Lovelace',
-            title: 'Searchable Project',
+            projectName: 'Searchable Project',
             applicationCount: 4,
             status: 'OPEN',
           },

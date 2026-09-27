@@ -187,6 +187,17 @@ describe('VerifyEmailPage', () => {
       await screen.findByText(t.invalidTitle);
       expect(container.textContent).not.toContain('verification-token-123');
     });
+
+    it('never logs a token echoed in an unexpected error message', async () => {
+      mockVerifyEmail.mockRejectedValue(new Error(
+        'Request failed: /api/v1/auth/verify-email?token=verification-token-123'
+      ));
+      renderPage();
+
+      await screen.findByText(t.errorTitle);
+      expect(JSON.stringify(jest.mocked(console.error).mock.calls))
+        .not.toContain('verification-token-123');
+    });
   });
 
   describe('resend form', () => {

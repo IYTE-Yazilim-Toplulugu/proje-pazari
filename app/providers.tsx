@@ -64,7 +64,17 @@ export default function Providers({ children }: { children: React.ReactNode }) {
       translate('sessionExpiredTitle'),
       translate('sessionExpiredDesc')
     );
-    queryClient.clear();
+    // Verification is public and single-use: session expiry must not discard
+    // or restart it. Cancel authenticated work before replacing session data so
+    // a late response cannot restore the expired identity.
+    void queryClient.cancelQueries({
+      predicate: query => query.queryKey[0] !== 'verify-email',
+    });
+    queryClient.setQueryData(['session'], null);
+    queryClient.removeQueries({
+      predicate: query => !['session', 'verify-email'].includes(String(query.queryKey[0])),
+    });
+    queryClient.getMutationCache().clear();
   }, [queryClient]);
 
   useEffect(() => {

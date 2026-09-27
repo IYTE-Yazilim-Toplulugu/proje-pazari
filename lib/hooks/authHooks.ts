@@ -139,11 +139,9 @@ function mapVerifyEmailError(error: unknown): VerifyEmailStatus {
         }
     }
 
-    // Log the message only — never the token, which is not part of these errors.
-    console.error(
-        'Email verification failed:',
-        error instanceof Error ? error.message : 'Unknown error'
-    );
+    // Upstream error messages may echo the request URL or verification token.
+    // Keep diagnostics fixed rather than logging untrusted error content.
+    console.error('Email verification failed.');
     return 'error';
 }
 

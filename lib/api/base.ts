@@ -257,6 +257,7 @@ async function http(endpoint: string, options: RequestInit, signal?: AbortSignal
         const isPublicRoute = typeof window !== 'undefined' && (
             unlocalizedPath.startsWith('/login') ||
             unlocalizedPath.startsWith('/register') ||
+            unlocalizedPath === '/verify-email' ||
             unlocalizedPath.startsWith('/oauth/complete') ||
             unlocalizedPath === '/'
         );
@@ -320,9 +321,13 @@ async function http(endpoint: string, options: RequestInit, signal?: AbortSignal
             
             if (typeof window !== 'undefined') {
                 window.dispatchEvent(new CustomEvent('auth:session-expired'));
-                setTimeout(() => {
-                    window.location.href = `/${locale}/login`;
-                }, 1500);
+                // Clear expired session data on every route, but let public
+                // flows such as email verification continue without navigation.
+                if (!isPublicRoute) {
+                    setTimeout(() => {
+                        window.location.href = `/${locale}/login`;
+                    }, 1500);
+                }
             }
             
             // We still throw the original error to let React Query know the request failed

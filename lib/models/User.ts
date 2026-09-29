@@ -28,8 +28,9 @@ export const MUserSchema = z.object({
     role: z.string().optional(),
 });
 
+// No userId: the backend's AutoRequestMapper always overwrites it with the
+// authenticated user's id, so the profile being updated is implied by the token.
 export const UpdateUserProfileCommandSchema = z.object({
-    userId: z.string().optional(),
     firstName: z.string().optional(),
     lastName: z.string().optional(),
     description: z.string().optional(),

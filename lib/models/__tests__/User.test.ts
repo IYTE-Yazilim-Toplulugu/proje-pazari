@@ -3,12 +3,14 @@ import { MUserSchema, UpdateUserProfileCommandSchema } from '../User';
 describe('user profile schemas', () => {
   it('retains the canonical userId returned by the profile endpoint', () => {
     const profile = MUserSchema.parse({
+      id: 'legacy-id',
       userId: 'user-123',
       email: 'user@std.iyte.edu.tr',
     });
 
     expect(profile.userId).toBe('user-123');
     expect(profile).not.toHaveProperty('id');
+    expect(MUserSchema.shape).not.toHaveProperty('id');
   });
 
   it('retains the preferred language returned by the profile endpoint', () => {

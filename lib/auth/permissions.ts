@@ -38,7 +38,7 @@ export const getAuthContextFromUser = (user: MUser): AuthContext => {
 
     return {
         isAuthenticated: true,
-        userId: user.id,
+        userId: user.userId,
         role: role,
         authLevel: roleAuthLevels[role],
         permissions: rolePermissions[role],

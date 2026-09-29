@@ -49,10 +49,10 @@ describe('useUpdateProfile', () => {
         const { result } = renderHook(() => useUpdateProfile(), { wrapper });
 
         await act(async () => {
-            await result.current.mutateAsync({ userId: 'u1', firstName: 'Ada' });
+            await result.current.mutateAsync({ firstName: 'Ada' });
         });
 
-        expect(updateUserMock.mock.calls[0][0]).toEqual({ userId: 'u1', firstName: 'Ada' });
+        expect(updateUserMock.mock.calls[0][0]).toEqual({ firstName: 'Ada' });
         expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: ['session'] });
         expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: ['currentUser'] });
         expect(handleError).not.toHaveBeenCalled();
@@ -67,7 +67,7 @@ describe('useUpdateProfile', () => {
         const { result } = renderHook(() => useUpdateProfile(), { wrapper });
 
         await act(async () => {
-            await result.current.mutateAsync({ userId: 'u1', firstName: 'Ada' }).catch(() => undefined);
+            await result.current.mutateAsync({ firstName: 'Ada' }).catch(() => undefined);
         });
 
         await waitFor(() => {

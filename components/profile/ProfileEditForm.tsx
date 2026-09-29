@@ -45,7 +45,7 @@ export default function ProfileEditForm({ user, onSave }: ProfileEditFormProps) 
 
   const onSubmit = async (data: ProfileEditFormData) => {
     try {
-      await updateProfile({ ...data, userId: user.id ?? '' });
+      await updateProfile(data);
       onSave();
     } catch {
       // Error UI is driven by the mutation's `error` state; toast feedback

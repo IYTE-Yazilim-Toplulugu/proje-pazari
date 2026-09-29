@@ -12,7 +12,7 @@ export const getCurrentUser = () =>
     fetcher('/api/v1/users/me', userModel.MUserSchema);
 
 /** [GET] /api/v1/users/:userId - Returns a user by a given id. */
-export const getUserById = (userId: number, fields?: string[]) =>
+export const getUserById = (userId: string, fields?: string[]) =>
     fetcher(`/api/v1/users/${userId}${fields ? `?fields=${fields.join(',')}` : ''}`, userModel.MUserSchema);
 
 /** [GET] /api/v1/users - Gets all users with pagination and sorting. */

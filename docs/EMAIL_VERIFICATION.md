@@ -24,8 +24,8 @@ redirect away from verification or clear its in-flight query.
 | Other API or network failure | Generic message asking the user to reopen the link; no automatic retry |
 
 Application request logging redacts token query parameters. Unexpected
-verification errors log only a fixed diagnostic because upstream messages can
-contain credentials. The page never renders the token or upstream error text.
+verification errors log only the error name and API code/errorCode, because upstream
+messages and stacks can contain credentials. The page never renders the token or upstream error text.
 Infrastructure/access logs must also redact query strings on this route;
 Next.js development access logs include the requested URL, so use synthetic
 tokens during local testing.
@@ -52,13 +52,29 @@ In another terminal, with Playwright Chromium installed:
 PLAYWRIGHT_BASE_URL=http://127.0.0.1:3111 npx playwright test tests/e2e/verify-email.spec.ts --project=chromium-public --workers=2
 ```
 
-The 22 browser cases cover both locales, loading, encoded tokens, single-request
+The 38 browser cases cover both locales, loading, encoded tokens, single-request
 behavior, login navigation, missing/empty tokens, invalid/expired tokens,
 resending, already-verified responses, server/network errors, token privacy, and
 direct refresh, and guest/expired-session behavior beyond the session-redirect
-delay. Component coverage additionally checks React Strict Mode and
+delay. Guest probes also cover password-reset, forgot-password, terms and privacy;
+protected-page guards cover applications, my-projects, profile and admin. Visibility
+and offline-to-online events include a session-query control that proves refetch
+was triggered while verification stayed single-use. Component coverage additionally checks React Strict Mode and
 resend validation/failure states. These browser tests stub the external API;
 they do not establish actual email delivery or production deployment status.
+
+## Session handling and public credentials
+
+A tokenless guest receiving a 401 does not dispatch session expiry or navigate.
+A failed refresh or partial session clears authenticated data while preserving
+public flows. Session-expiry redirects and profile/admin guest guards use
+`/login`, retaining `NEXT_LOCALE`.
+
+The backend's `SecurityConfig` permits `/api/v1/auth/**`; its
+`JwtAuthenticationFilter` continues the filter chain without authentication for
+blacklisted or invalid/expired JWTs. This code review confirms that a stale Bearer
+cookie does not itself reject verification or resend on these public routes.
+Browser tests stub the API and do not independently prove backend runtime behavior.
 
 ## Backend and deployment
 

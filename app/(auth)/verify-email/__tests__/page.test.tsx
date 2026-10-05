@@ -180,6 +180,21 @@ describe('VerifyEmailPage', () => {
       expect(await screen.findByText(t.errorTitle)).toBeInTheDocument();
     });
 
+    it('logs safe error metadata without logging the upstream message', async () => {
+      mockVerifyEmail.mockRejectedValue(new ApiError(
+        'Failed for verification-token-123',
+        ResponseCodeSchema.enum.INTERNAL_SERVER_ERROR,
+        'VERIFICATION_UNAVAILABLE',
+      ));
+      renderPage();
+      await screen.findByText(t.errorTitle);
+      expect(console.error).toHaveBeenCalledWith('Email verification failed.', {
+        name: 'ApiError', code: ResponseCodeSchema.enum.INTERNAL_SERVER_ERROR,
+        errorCode: 'VERIFICATION_UNAVAILABLE',
+      });
+      expect(JSON.stringify(jest.mocked(console.error).mock.calls)).not.toContain('verification-token-123');
+    });
+
     it('never renders the token', async () => {
       mockVerifyEmail.mockRejectedValue(apiError(ErrorCode.INVALID_VERIFICATION_TOKEN));
       const { container } = renderPage();

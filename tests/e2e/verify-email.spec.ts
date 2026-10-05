@@ -49,18 +49,51 @@ for (const [locale, messages] of Object.entries({ en, tr })) {
       release();
       await expect(page.getByRole('heading', { name: t.successTitle, exact: true })).toBeVisible();
       await expect(page.locator('body')).not.toContainText(TOKEN);
+      // v5 uses visibilitychange, and reconnect requires an offline -> online
+      // transition. The guest-session request is a control proving each event
+      // actually triggered a query refetch while verification stayed single-use.
+      const sessionOnFocus = page.waitForResponse(response => response.url().includes('/api/v1/users/me'));
+      await page.evaluate(() => window.dispatchEvent(new Event('visibilitychange')));
+      await sessionOnFocus;
+      const sessionOnReconnect = page.waitForResponse(response => response.url().includes('/api/v1/users/me'));
       await page.evaluate(() => {
-        window.dispatchEvent(new Event('focus'));
+        window.dispatchEvent(new Event('offline'));
         window.dispatchEvent(new Event('online'));
       });
+      await sessionOnReconnect;
+      await page.clock.runFor(100);
+      expect(requests).toHaveLength(1);
+      await expect(page.locator('[data-sonner-toast]')).toHaveCount(0);
       const login = page.getByRole('link', { name: t.goToLogin, exact: true });
       await expect(login).toHaveAttribute('href', '/login');
       await login.click();
-      await expect(page).toHaveURL(/\/login$/);
+      await expect(page).toHaveURL(new URL('/login', page.url()).toString());
       await expect(page.getByRole('heading', { name: messages.auth.login.title, exact: true })).toBeVisible();
       await expect(page.locator('html')).toHaveAttribute('lang', locale);
       expect(requests).toEqual([{ method: 'GET', token: TOKEN }]);
     });
+
+    for (const path of ['/reset-password?token=synthetic', '/forgot-password', '/terms', '/privacy']) {
+      test(`guest stays on public page ${path}`, async ({ page }) => {
+        await page.clock.install();
+        const sessionResponse = page.waitForResponse(response => response.url().includes('/api/v1/users/me'));
+        await page.goto(path);
+        await sessionResponse;
+        await page.clock.runFor(2000);
+        await expect(page).toHaveURL(new RegExp(`${path.split('?')[0]}(?:\\?|$)`));
+        await expect(page.locator('[data-sonner-toast]')).toHaveCount(0);
+      });
+    }
+
+    for (const path of ['/my-projects', '/applications', '/profile', '/admin']) {
+      test(`guest guard on ${path} goes to the real login route`, async ({ page }) => {
+        await page.route('**/api/v1/admin/**', route => route.fulfill({ status: 401, json: { code: 5, message: 'Not authenticated' } }));
+        await page.goto(path);
+        await expect(page).toHaveURL(new URL('/login', page.url()).toString());
+        await expect(page.getByRole('heading', { name: messages.auth.login.title, exact: true })).toBeVisible();
+        await expect(page.locator('html')).toHaveAttribute('lang', locale);
+      });
+    }
 
     test('an expired existing session does not interrupt verification', async ({ page, context, baseURL }) => {
       await page.clock.install();
@@ -101,7 +134,7 @@ for (const [locale, messages] of Object.entries({ en, tr })) {
         await expect(page.getByRole('heading', { name: t.tokenMissingTitle })).toBeVisible();
         // Navigate after hydration, so the zero-request assertion isn't just SSR.
         await page.getByRole('link', { name: t.backToLogin, exact: true }).click();
-        await expect(page).toHaveURL(/\/login$/);
+        await expect(page).toHaveURL(new URL('/login', page.url()).toString());
         expect(requests).toEqual([]);
       });
     }

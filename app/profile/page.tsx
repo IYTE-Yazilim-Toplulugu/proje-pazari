@@ -10,13 +10,11 @@ import ProfileEditForm from '@/components/profile/ProfileEditForm';
 import ProfilePictureUpload from '@/components/profile/ProfilePictureUpload';
 import ConfirmDialog from '@/components/shared/ConfirmDialog';
 import Link from 'next/link';
-import { useLocale } from 'next-intl';
 import { user as userApi } from '@/lib/api';
 
 export default function ProfilePage() {
   const { data: authContext, isLoading: isAuthLoading } = useSession();
   const router = useRouter();
-  const locale = useLocale();
   const t = useTranslations('profile');
   const [isEditing, setIsEditing] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
@@ -32,9 +30,9 @@ export default function ProfilePage() {
 
   useEffect(() => {
     if (!isAuthLoading && !authContext?.isAuthenticated) {
-      router.push(`/${locale}/login`);
+      router.push('/login');
     }
-  }, [isAuthLoading, authContext, router, locale]);
+  }, [isAuthLoading, authContext, router]);
 
   if (isLoading) {
     return (

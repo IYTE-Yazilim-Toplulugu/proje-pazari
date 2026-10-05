@@ -3,12 +3,14 @@
 import { useTranslations } from 'next-intl';
 import type { ProjectApplication } from '@/lib/models';
 import { ProjectApplicationStatusEnum } from '@/lib/models';
+import ApplicationMessageThread from './ApplicationMessageThread';
 
 type ApplicationsListProps = {
   applications: ProjectApplication[];
   onApprove: (id: string) => void;
   onReject: (id: string) => void;
   loading?: boolean;
+  currentUserId?: string;
 };
 
 export default function ApplicationsList({
@@ -16,6 +18,7 @@ export default function ApplicationsList({
   onApprove,
   onReject,
   loading = false,
+  currentUserId,
 }: ApplicationsListProps) {
   const t = useTranslations('projects.applications');
 
@@ -40,10 +43,6 @@ export default function ApplicationsList({
             </span>
           </div>
 
-          <p className="mb-4 whitespace-pre-wrap text-sm text-gray-700 dark:text-gray-300">
-            {t('noMessage')}
-          </p>
-
           {application.status === ProjectApplicationStatusEnum.enum.PENDING ? (
             <div className="flex flex-wrap gap-2">
               <button
@@ -62,6 +61,11 @@ export default function ApplicationsList({
               </button>
             </div>
           ) : null}
+
+          <ApplicationMessageThread
+            applicationId={application.applicationId}
+            currentUserId={currentUserId}
+          />
         </div>
       ))}
     </div>

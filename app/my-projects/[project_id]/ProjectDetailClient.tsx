@@ -182,6 +182,7 @@ export default function ProjectDetailClient({ projectId }: ProjectDetailClientPr
                 <ApplicationsList
                   applications={applications}
                   loading={applicationsLoading || reviewMutation.isPending}
+                  currentUserId={session?.userId}
                   onApprove={(id) => handleReview(id, ProjectApplicationStatusEnum.enum.APPROVED)}
                   onReject={(id) => handleReview(id, ProjectApplicationStatusEnum.enum.REJECTED)}
                 />

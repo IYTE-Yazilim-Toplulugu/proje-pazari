@@ -8,6 +8,8 @@ import { useTranslations } from 'next-intl';
 import { useToast } from '@/lib/hooks/useToast';
 import ApiStatus from '@/components/shared/ApiStatus';
 import { ResponseCodeSchema } from '@/lib/models/Api';
+import { ApiError } from '@/lib/api/base';
+import { SESSION_QUERY_KEY, VERIFY_EMAIL_QUERY_KEY } from '@/lib/hooks/authHooks';
 
 type ErrorWithCode = Error & { code?: number };
 
@@ -48,6 +50,9 @@ export default function Providers({ children }: { children: React.ReactNode }) {
     const unsubscribe = queryClient.getQueryCache().subscribe((event) => {
       if (event.type === 'updated' && event.action.type === 'error') {
         const error = event.action.error;
+        // A missing guest session is expected; the page owns any login guard.
+        if (event.query.queryKey[0] === SESSION_QUERY_KEY[0] &&
+            error instanceof ApiError && error.code === ResponseCodeSchema.enum.UNAUTHORIZED) return;
         console.error('Query error:', error);
         if (error instanceof Error) {
           const { t: translate, showError: showLatestError } = handlersRef.current;
@@ -64,7 +69,15 @@ export default function Providers({ children }: { children: React.ReactNode }) {
       translate('sessionExpiredTitle'),
       translate('sessionExpiredDesc')
     );
-    queryClient.clear();
+    // Verification is public and single-use: session expiry must not discard
+    // or restart it. Cancel authenticated work before replacing session data so
+    // a late response cannot restore the expired identity.
+    void queryClient.cancelQueries({ queryKey: SESSION_QUERY_KEY });
+    queryClient.setQueryData(SESSION_QUERY_KEY, null);
+    queryClient.removeQueries({
+      predicate: query => query.queryKey[0] !== SESSION_QUERY_KEY[0] && query.queryKey[0] !== VERIFY_EMAIL_QUERY_KEY[0],
+    });
+    queryClient.getMutationCache().clear();
   }, [queryClient]);
 
   useEffect(() => {

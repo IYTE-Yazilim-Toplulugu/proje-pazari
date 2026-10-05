@@ -236,38 +236,24 @@ async function http(endpoint: string, options: RequestInit, signal?: AbortSignal
         const currentToken = Cookies.get('authToken');
         const currentRefreshToken = Cookies.get('refreshToken');
 
-        // --- LOCALE EXTRACTION AND PATH NORMALIZATION ---
-        let locale = 'tr'; // Default fallback
-        let unlocalizedPath = '/';
+        // A guest's session probe is an expected 401, not an expired session.
+        // Protected pages own their guest guards.
+        if (!currentToken && !currentRefreshToken) return response;
 
-        if (typeof window !== 'undefined') {
-            const pathname = window.location.pathname;
-            const pathParts = pathname.split('/').filter(Boolean);
-
-            // Extract locale from the first segment if it exists
-            if (pathParts[0] === 'en' || pathParts[0] === 'tr') {
-                locale = pathParts[0];
-            }
-
-            // Remove the locale prefix to normalize the path for checking
-            unlocalizedPath = pathname.replace(new RegExp(`^/${locale}`), '') || '/';
-        }
-
-        // Check if the user is already on a public/auth route
-        const isPublicRoute = typeof window !== 'undefined' && (
-            unlocalizedPath.startsWith('/login') ||
-            unlocalizedPath.startsWith('/register') ||
-            unlocalizedPath.startsWith('/oauth/complete') ||
-            unlocalizedPath === '/'
-        );
+        const pathname = typeof window !== 'undefined' ? window.location.pathname : '/';
+        const isPublicRoute = [
+            '/', '/login', '/register', '/register/complete', '/verify-email',
+            '/forgot-password', '/reset-password', '/terms', '/privacy',
+        ].includes(pathname) || pathname === '/projects' || pathname.startsWith('/projects/');
 
         if (!currentToken || !currentRefreshToken) {
-            if (!isPublicRoute && typeof window !== 'undefined') {
-                isRefreshing = false;
+            Cookies.remove('authToken', { path: '/' });
+            Cookies.remove('refreshToken', { path: '/' });
+            if (typeof window !== 'undefined') {
                 window.dispatchEvent(new CustomEvent('auth:session-expired'));
-                setTimeout(() => {
-                    window.location.href = `/${locale}/login`;
-                }, 1500);
+                if (!isPublicRoute) {
+                    setTimeout(() => { window.location.href = '/login'; }, 1500);
+                }
             }
             return response;
         }
@@ -320,9 +306,13 @@ async function http(endpoint: string, options: RequestInit, signal?: AbortSignal
             
             if (typeof window !== 'undefined') {
                 window.dispatchEvent(new CustomEvent('auth:session-expired'));
-                setTimeout(() => {
-                    window.location.href = `/${locale}/login`;
-                }, 1500);
+                // Clear expired session data on every route, but let public
+                // flows such as email verification continue without navigation.
+                if (!isPublicRoute) {
+                    setTimeout(() => {
+                        window.location.href = '/login';
+                    }, 1500);
+                }
             }
             
             // We still throw the original error to let React Query know the request failed

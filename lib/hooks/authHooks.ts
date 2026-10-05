@@ -13,7 +13,8 @@ import { useApiError } from './useApiError';
 
 
 // The query key for the main user session from our previous discussion
-const SESSION_QUERY_KEY = ['session'];
+export const SESSION_QUERY_KEY = ['session'] as const;
+export const VERIFY_EMAIL_QUERY_KEY = ['verify-email'] as const;
 
 export const useSession = () => {
     return useQuery({
@@ -139,11 +140,12 @@ function mapVerifyEmailError(error: unknown): VerifyEmailStatus {
         }
     }
 
-    // Log the message only — never the token, which is not part of these errors.
-    console.error(
-        'Email verification failed:',
-        error instanceof Error ? error.message : 'Unknown error'
-    );
+    // Upstream error messages may echo the request URL or verification token.
+    // Preserve useful metadata while excluding messages/stacks that may echo secrets.
+    console.error('Email verification failed.', {
+        name: error instanceof Error ? error.name : 'UnknownError',
+        ...(error instanceof ApiError ? { code: error.code, errorCode: error.errorCode } : {}),
+    });
     return 'error';
 }
 
@@ -164,7 +166,7 @@ function mapVerifyEmailError(error: unknown): VerifyEmailStatus {
  */
 export const useVerifyEmail = (token: string | null) => {
     return useQuery({
-        queryKey: ['verify-email', token],
+        queryKey: [...VERIFY_EMAIL_QUERY_KEY, token],
         enabled: Boolean(token),
         queryFn: async (): Promise<VerifyEmailStatus> => {
             try {

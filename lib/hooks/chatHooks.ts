@@ -5,20 +5,25 @@ import { getApplicationMessages, sendApplicationMessage } from '@/lib/api/chat';
 export const CHAT_KEYS = {
   all: ['application-messages'] as const,
   thread: (applicationId: string) => [...CHAT_KEYS.all, applicationId] as const,
-  page: (applicationId: string, page: number, size: number) =>
+  page: (applicationId: string, page: number | undefined, size: number) =>
     [...CHAT_KEYS.thread(applicationId), { page, size }] as const,
 };
 
 export function useApplicationMessages(
   applicationId: string,
-  page = 0,
+  page: number | undefined = undefined,
   size = 100,
   enabled = true,
 ) {
   return useQuery({
     queryKey: CHAT_KEYS.page(applicationId, page, size),
-    queryFn: ({ signal }) =>
-      getApplicationMessages(applicationId, { page, size }, signal),
+    queryFn: async ({ signal }) => {
+      // The backend returns oldest-first pages. Discover the newest page on
+      // every refetch so sending across a page boundary stays visible.
+      const first = await getApplicationMessages(applicationId, { page: page ?? 0, size }, signal);
+      if (page !== undefined || first.totalPages <= 1) return first;
+      return getApplicationMessages(applicationId, { page: first.totalPages - 1, size }, signal);
+    },
     enabled: enabled && applicationId.length > 0,
   });
 }

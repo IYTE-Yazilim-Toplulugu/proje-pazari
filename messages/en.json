@@ -230,7 +230,6 @@
       "empty": "No applications yet.",
       "approve": "Approve",
       "reject": "Reject",
-      "noMessage": "No application message.",
       "chat": {
         "title": "Application messages",
         "loading": "Loading messages...",

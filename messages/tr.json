@@ -230,7 +230,6 @@
       "empty": "Henüz hiç başvuru bulunmuyor.",
       "approve": "Onayla",
       "reject": "Reddet",
-      "noMessage": "Başvuru mesajı yok.",
       "chat": {
         "title": "Başvuru mesajları",
         "loading": "Mesajlar yükleniyor...",

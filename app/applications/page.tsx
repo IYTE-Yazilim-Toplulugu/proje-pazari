@@ -17,6 +17,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
+import ApplicationMessageThread from '@/components/projects/ApplicationMessageThread';
 
 export default function ApplicationsPage() {
   const { data: authContext, isLoading: isAuthLoading } = useSession();
@@ -140,6 +141,12 @@ export default function ApplicationsPage() {
                     {tApplications(`status${application.status ?? 'PENDING'}`)}
                   </Badge>
                 </CardHeader>
+                <CardContent>
+                  <ApplicationMessageThread
+                    applicationId={application.applicationId}
+                    currentUserId={authContext.userId}
+                  />
+                </CardContent>
               </Card>
             ))}
           </div>

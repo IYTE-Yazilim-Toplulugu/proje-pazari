@@ -53,3 +53,20 @@ describe('user profile schemas', () => {
     ).toBe(false);
   });
 });
+
+it('preserves canonical project summaries embedded in a user profile', () => {
+  const profile = MUserSchema.parse({
+    id: 'user-123',
+    projects: [{
+      projectId: 'project-123',
+      projectName: 'Profile project',
+      description: 'A project owned by this user',
+      status: 'OPEN',
+      createdAt: '2026-09-22T12:00:00',
+    }],
+  });
+  expect(profile.projects?.[0]).toMatchObject({
+    projectId: 'project-123',
+    projectName: 'Profile project',
+  });
+});

@@ -11,11 +11,11 @@ export const ProjectStatusEnum = z.enum([
 export type ProjectStatus = z.infer<typeof ProjectStatusEnum>;
 
 export const MProject = z.object({
-  id: z.string().nullish(),
+  projectId: z.string().nullish(),
   ownerId: z.string().nullish(),
   ownerName: z.string().nullish(),
   ownerEmail: z.string().nullish(),
-  title: z.string().nullish(),
+  projectName: z.string().nullish(),
   description: z.string().nullish(),
   summary: z.string().nullish(),
   applicationCount: z.number().nullish(),

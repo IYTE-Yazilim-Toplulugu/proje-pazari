@@ -1,14 +1,14 @@
-import { MProjectListResponse } from '../Project';
+import { MProject, MProjectListResponse } from '../Project';
 
 describe('MProjectListResponse', () => {
   const projectPage = {
     projects: [
       {
-        id: 'project-123',
+        projectId: 'project-123',
         ownerId: 'owner-123',
         ownerName: 'Ada Lovelace',
         ownerEmail: 'ada@std.iyte.edu.tr',
-        title: 'Searchable Project',
+        projectName: 'Searchable Project',
         description: 'A project returned by search.',
         applicationCount: 7,
         status: 'OPEN',
@@ -24,6 +24,8 @@ describe('MProjectListResponse', () => {
     const parsed = MProjectListResponse.parse(projectPage);
 
     expect(parsed.projects[0]).toMatchObject({
+      projectId: 'project-123',
+      projectName: 'Searchable Project',
       ownerId: 'owner-123',
       ownerName: 'Ada Lovelace',
       applicationCount: 7,
@@ -44,5 +46,20 @@ describe('MProjectListResponse', () => {
     delete pageWithoutTotalPages.totalPages;
 
     expect(MProjectListResponse.safeParse(pageWithoutTotalPages).success).toBe(false);
+  });
+});
+
+// Project identity must survive parsing before cards and detail pages consume it.
+describe('canonical project identity', () => {
+  it('preserves the detail response name, id, and summary', () => {
+    expect(MProject.parse({
+      projectId: 'project-123',
+      projectName: 'Canonical project',
+      summary: 'Persisted summary',
+    })).toMatchObject({
+      projectId: 'project-123',
+      projectName: 'Canonical project',
+      summary: 'Persisted summary',
+    });
   });
 });

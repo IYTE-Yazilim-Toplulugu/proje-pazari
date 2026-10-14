@@ -1,4 +1,25 @@
-import { resolveMediaUrl } from '../media';
+import { resolveMediaUrl, withMediaVersion } from '../media';
+
+describe('withMediaVersion', () => {
+    const url = 'https://api.projepazari.site/api/v1/files/proje-pazari-avatars/users/42/avatar.png';
+
+    it('appends the version so a replaced avatar at the same path is refetched', () => {
+        expect(withMediaVersion(url, 1700000000000)).toBe(`${url}?v=1700000000000`);
+    });
+
+    it('leaves the URL unchanged without a version', () => {
+        expect(withMediaVersion(url, undefined)).toBe(url);
+    });
+
+    it('does not modify URLs that already have a query string, such as presigned URLs', () => {
+        const presigned = `${url}?X-Amz-Signature=abc`;
+        expect(withMediaVersion(presigned, 1)).toBe(presigned);
+    });
+
+    it('returns undefined when there is no URL', () => {
+        expect(withMediaVersion(undefined, 1)).toBeUndefined();
+    });
+});
 
 describe('resolveMediaUrl', () => {
     const originalApiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -8,7 +29,9 @@ describe('resolveMediaUrl', () => {
     });
 
     afterAll(() => {
-        process.env.NEXT_PUBLIC_API_BASE_URL = originalApiBaseUrl;
+        // Assigning undefined would leave the string "undefined" for later suites.
+        if (originalApiBaseUrl === undefined) delete process.env.NEXT_PUBLIC_API_BASE_URL;
+        else process.env.NEXT_PUBLIC_API_BASE_URL = originalApiBaseUrl;
     });
 
     it('resolves a bare MinIO storage path to a browser-usable /api/v1/files/ URL', () => {

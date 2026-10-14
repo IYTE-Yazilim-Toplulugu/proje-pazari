@@ -33,6 +33,25 @@ const cspDirectives = [
 
 const cspHeaderValue = cspDirectives.join('; ');
 
+// ---------------------------------------------------------------------------
+// Media served by the configured API
+// ---------------------------------------------------------------------------
+// resolveMediaUrl() builds image URLs from NEXT_PUBLIC_API_BASE_URL, so that
+// origin must be an allowed next/image source. Locally it is typically
+// http://localhost:8080, which next/image would otherwise reject outright and
+// whose loopback address the optimizer refuses to fetch.
+// ---------------------------------------------------------------------------
+const configuredApiUrl = (() => {
+  try {
+    return process.env.NEXT_PUBLIC_API_BASE_URL ? new URL(process.env.NEXT_PUBLIC_API_BASE_URL) : null;
+  } catch {
+    return null;
+  }
+})();
+
+const isLocalApiHost = configuredApiUrl !== null &&
+  ['localhost', '127.0.0.1', '[::1]'].includes(configuredApiUrl.hostname);
+
 const nextConfig: NextConfig = {
   output: 'standalone',
   images: {
@@ -48,7 +67,15 @@ const nextConfig: NextConfig = {
         hostname: 'api.projepazari.iyte.edu.tr',
         pathname: '/api/v1/files/**',
       },
+      ...(configuredApiUrl ? [{
+        protocol: configuredApiUrl.protocol.replace(':', '') as 'http' | 'https',
+        hostname: configuredApiUrl.hostname,
+        port: configuredApiUrl.port,
+        pathname: '/api/v1/files/**',
+      }] : []),
     ],
+    // Only a local development API may be fetched over loopback.
+    dangerouslyAllowLocalIP: isLocalApiHost && process.env.NODE_ENV !== 'production',
   },
   async headers() {
     return [

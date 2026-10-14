@@ -12,7 +12,7 @@ import ProfilePictureUpload from '@/components/profile/ProfilePictureUpload';
 import ConfirmDialog from '@/components/shared/ConfirmDialog';
 import Link from 'next/link';
 import { user as userApi } from '@/lib/api';
-import { resolveMediaUrl } from '@/lib/utils/media';
+import { resolveMediaUrl, withMediaVersion } from '@/lib/utils/media';
 
 export default function ProfilePage() {
   const { data: authContext, isLoading: isAuthLoading } = useSession();
@@ -20,6 +20,7 @@ export default function ProfilePage() {
   const t = useTranslations('profile');
   const [isEditing, setIsEditing] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [pictureVersion, setPictureVersion] = useState<number>();
   const deleteAccountMutation = useDeleteAccount();
   const uploadProfilePictureMutation = useUploadProfilePicture();
 
@@ -54,7 +55,7 @@ export default function ProfilePage() {
 
   const displayName = (user.fullName ?? `${user.firstName ?? ''} ${user.lastName ?? ''}`.trim()) || user.email;
   const avatarInitial = (user.firstName ?? user.email ?? '').charAt(0).toUpperCase();
-  const profilePictureUrl = resolveMediaUrl(user.profilePictureUrl);
+  const profilePictureUrl = withMediaVersion(resolveMediaUrl(user.profilePictureUrl), pictureVersion);
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -69,6 +70,7 @@ export default function ProfilePage() {
                   currentUrl={profilePictureUrl}
                   onUpload={async (file) => {
                     await uploadProfilePictureMutation.mutateAsync(file);
+                    setPictureVersion(Date.now());
                   }}
                 />
               ) : (
@@ -99,7 +101,9 @@ export default function ProfilePage() {
 
             <button
               onClick={() => setIsEditing(!isEditing)}
-              className="px-4 py-2 rounded-lg text-[var(--color-text-inverse)] bg-[var(--color-btn-primary)] hover:bg-[var(--color-btn-primary-hover)]"
+              // Leaving edit mode mid-upload would unmount the upload control.
+              disabled={uploadProfilePictureMutation.isPending}
+              className="px-4 py-2 rounded-lg text-[var(--color-text-inverse)] bg-[var(--color-btn-primary)] hover:bg-[var(--color-btn-primary-hover)] disabled:opacity-50"
             >
               {isEditing ? t('cancelButton') : t('editButton')}
             </button>

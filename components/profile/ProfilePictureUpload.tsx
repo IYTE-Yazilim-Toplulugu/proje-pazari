@@ -1,11 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 
 interface ProfilePictureUploadProps {
   currentUrl?: string;
+  /** Should settle once currentUrl reflects the uploaded picture. */
   onUpload: (file: File) => Promise<void>;
 }
 
@@ -15,8 +16,16 @@ export default function ProfilePictureUpload({ currentUrl, onUpload }: ProfilePi
   const [preview, setPreview] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  // Release the object URL when it is replaced or the component unmounts.
+  useEffect(() => {
+    if (!preview) return;
+    return () => URL.revokeObjectURL(preview);
+  }, [preview]);
+
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
+    // Reset so choosing the same file again (e.g. retrying) fires a change event.
+    e.target.value = '';
     if (!file) return;
 
     setError(null);
@@ -32,20 +41,19 @@ export default function ProfilePictureUpload({ currentUrl, onUpload }: ProfilePi
       return;
     }
 
-    // Show preview
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setPreview(reader.result as string);
-    };
-    reader.readAsDataURL(file);
+    // Show preview synchronously so it cannot race the upload result.
+    setPreview(URL.createObjectURL(file));
 
     // Upload
     setUploading(true);
     try {
       await onUpload(file);
+      // currentUrl now points at the uploaded picture.
+      setPreview(null);
     } catch (err) {
       console.error('Upload error:', err);
-      setError(err instanceof Error ? err.message : t("errors.generic"));
+      // The caller reports the detailed error; never show raw backend messages.
+      setError(t("errors.generic"));
       setPreview(null);
     } finally {
       setUploading(false);

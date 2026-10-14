@@ -28,10 +28,11 @@ export const useUploadProfilePicture = () => {
 
     return useMutation({
         mutationFn: user.updateProfilePicture,
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['session'] });
-            queryClient.invalidateQueries({ queryKey: ['currentUser'] });
-        },
+        // Returned so mutateAsync settles only after the new picture is refetched.
+        onSuccess: () => Promise.all([
+            queryClient.invalidateQueries({ queryKey: ['session'] }),
+            queryClient.invalidateQueries({ queryKey: ['currentUser'] }),
+        ]),
         onError: (error) => {
             console.error('Profile picture upload failed:', error);
             handleError(error);

@@ -1,6 +1,6 @@
 import React, { type ReactNode } from 'react';
 import { act, renderHook, waitFor } from '@testing-library/react';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClient, QueryClientProvider, useQuery } from '@tanstack/react-query';
 
 import { user } from '../../api';
 import { useUpdateProfile, useUploadProfilePicture } from '../userHooks';
@@ -103,6 +103,40 @@ describe('useUploadProfilePicture', () => {
         expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: ['session'] });
         expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: ['currentUser'] });
         expect(handleError).not.toHaveBeenCalled();
+    });
+
+    it('settles only after the current user has been refetched', async () => {
+        const { wrapper } = createWrapper();
+        let finishRefetch!: () => void;
+        const getCurrentUser = jest.fn()
+            .mockResolvedValueOnce({ profilePictureUrl: 'old' })
+            .mockImplementationOnce(() => new Promise(resolve => {
+                finishRefetch = () => resolve({ profilePictureUrl: 'new' });
+            }));
+        updateProfilePictureMock.mockResolvedValueOnce({ code: 0, message: 'ok' });
+
+        // An active observer, like the profile page, so invalidation refetches.
+        const { result } = renderHook(() => ({
+            currentUser: useQuery({ queryKey: ['currentUser'], queryFn: getCurrentUser }),
+            upload: useUploadProfilePicture(),
+        }), { wrapper });
+        await waitFor(() => expect(result.current.currentUser.isSuccess).toBe(true));
+
+        let settled = false;
+        let upload!: Promise<unknown>;
+        act(() => {
+            upload = result.current.upload.mutateAsync(file).then(() => { settled = true; });
+        });
+
+        await waitFor(() => expect(getCurrentUser).toHaveBeenCalledTimes(2));
+        expect(settled).toBe(false);
+
+        await act(async () => {
+            finishRefetch();
+            await upload;
+        });
+        expect(settled).toBe(true);
+        await waitFor(() => expect(result.current.currentUser.data).toEqual({ profilePictureUrl: 'new' }));
     });
 
     it('surfaces the error via useApiError and rethrows when the upload fails', async () => {
